@@ -56,7 +56,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Gradle and create coverage report
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew jacocoTestReport --no-build-cache --no-configuration-cache
 
       - name: Run Lint
         run: ./gradlew lint
