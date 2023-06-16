@@ -47,7 +47,7 @@ internal fun Project.configureJacoco(
         val debugPrefix = "project: ${this@configureJacoco.project.name}, variant: ${variant.name}"
         logger.trace("configureJacoco androidComponentExtension.onVariants invokes for $debugPrefix")
         val testTaskName = "test${variant.name.capitalize()}UnitTest"
-        val testJacocoExecPath = "$buildDir/outputs/unit_test_code_coverage/${variant.name.capitalize()}UnitTest/test${variant.name.capitalize()}UnitTest.exec"
+        val testJacocoExecPath = "$buildDir/outputs/unit_test_code_coverage/${variant.name}UnitTest/test${variant.name.capitalize()}UnitTest.exec"
         logger.debug("configureJacoco androidComponentExtension.onVariants invokes for $debugPrefix execution data path: $testJacocoExecPath")
         val taskName = "jacoco${testTaskName.capitalize()}Report"
 

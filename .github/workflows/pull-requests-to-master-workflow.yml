@@ -47,7 +47,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Gradle and create coverage report
-        run: ./gradlew jacocoTestReport --debug
+        run: ./gradlew jacocoTestReport
 
       - name: Run Lint
         run: ./gradlew lint
