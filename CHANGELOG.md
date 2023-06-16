@@ -1,3 +1,10 @@
+# [3.3.0](https://github.com/goldy1992/Mp3Player/compare/v3.2.0...v3.3.0) (2023-06-16)
+
+
+### Features
+
+* **permissions:** Allowed the user to configure permissions on the Settings Screen ([39310f1](https://github.com/goldy1992/Mp3Player/commit/39310f15fd0ea289386f09e2b90dd1e219cac30b))
+
 # [3.2.0](https://github.com/goldy1992/Mp3Player/compare/v3.1.0...v3.2.0) (2023-03-18)
 
 
