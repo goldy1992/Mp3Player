@@ -15,7 +15,11 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MediaItemBuilder
+import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -56,7 +60,7 @@ class SearchScreenViewModel
                 _searchResults.value = SearchResults.NO_RESULTS
             }
             mediaRepository.search(query, Bundle())
-            Log.i(logTag(), "New searchQueryValue: ${query}")
+            Log.i(logTag(), "New searchQueryValue: $query")
         }
     }
 
@@ -70,7 +74,7 @@ class SearchScreenViewModel
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
                     val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = mapResults(results)
-                    Log.i(logTag(), "got search results ${results}")
+                    Log.i(logTag(), "got search results $results")
                 } else {
                     _searchResults.value = SearchResults(State.NO_RESULTS)
                     Log.i(logTag(), "No search results returned")
@@ -109,7 +113,6 @@ class SearchScreenViewModel
         extras.putString(Constants.PLAYLIST_ID, "SearchResults")
 
         val mediaMetadata = MediaMetadata.Builder()
-            .setMediaType(MediaMetadata.MEDIA_TYPE_FOLDER_MIXED)
             .setAlbumTitle("Search Results")
             .setExtras(extras)
             .build()
@@ -154,6 +157,6 @@ class SearchScreenViewModel
 
 
     override fun logTag(): String {
-        return "SrchScrnViewModel"
+        return "SearchScreenViewModel"
     }
 }

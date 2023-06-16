@@ -1,11 +1,11 @@
 {
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/changelog": "6.0.3",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "8.0.7",
-    "semantic-release": "19.0.3",
-    "trim-newlines": "4.0.2",
+    "@semantic-release/github": "9.0.3",
+    "semantic-release": "21.0.5",
+    "trim-newlines": "5.0.0",
     "normalize-url": "8.0.0"
   },
   "scripts": {

@@ -1,12 +1,8 @@
 package com.github.goldy1992.mp3player.commons
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 
 object PermissionsUtils : LogTagger {
 
@@ -24,23 +20,6 @@ object PermissionsUtils : LogTagger {
         } else {
             STANDARD_PERMISSIONS
         }
-    }
-
-    fun hasPermission(permission : String, context : Context) : Boolean {
-        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
-    }
-
-    fun appHasPermissions(context: Context) : Boolean {
-        val permissions = getAppPermissions()
-        for (permission in permissions) {
-
-            if (!hasPermission(permission, context)) {
-                Log.i(logTag(), "permission: ${permission} denied")
-                return false
-            }
-            Log.i(logTag(), "permission: ${permission} accepted")
-        }
-        return true
     }
 
     override fun logTag(): String {

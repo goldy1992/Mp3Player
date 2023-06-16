@@ -12,8 +12,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.data.search.managers.FolderDatabaseManager
-import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
+import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagers
 import dagger.hilt.android.scopes.ServiceScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -32,16 +31,19 @@ import javax.inject.Inject
 class AudioObserver
 /**
  * Creates a content observer.
+ * @param contentResolver The [ContentResolver]
+ * @param contentManager The [ContentManager]
+ * @param searchDatabaseManagers The [SearchDatabaseManagers]
+ * @param ioDispatcher The [CoroutineDispatcher] of type [IoDispatcher]
+ * @param mediaItemTypeIds The [MediaItemTypeIds]
  */
-@Inject constructor(contentResolver: ContentResolver,
-                    /** Content manager  */
-                    private val contentManager: ContentManager,
-                    /** Search Database Manager  */
-                    private val songDatabaseManager: SongDatabaseManager,
-                    /** Search Database Manager  */
-                    private val folderDatabaseManager: FolderDatabaseManager,
-                    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-                    mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
+@Inject
+constructor(
+    contentResolver: ContentResolver,
+    private val contentManager: ContentManager,
+    private val searchDatabaseManagers: SearchDatabaseManagers,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
 
     /** {@inheritDoc}  */
     override fun onChange(selfChange: Boolean) {
@@ -63,8 +65,8 @@ class AudioObserver
      * @param uri the uri that has changed
      * @param userId not used
      */
-    @Suppress("UNUSED_PARAMETER")
     override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
+        Log.v(logTag(), "onChange() invoked with uri: ${uri?.path ?: "null"}")
         if (startsWithUri(uri)) {
                 runBlocking(ioDispatcher) {
                     updateSearchDatabase(uri)
@@ -73,7 +75,7 @@ class AudioObserver
                 }
             }
             // when there is a "change" to the meta data the exact id will given as the uri
-            Log.d(logTag(), "hit on change")
+
 
     }
 
@@ -87,24 +89,22 @@ class AudioObserver
         // If we know the id then just get that id
         if (INVALID_ID != id) {
             val result = contentManager.getContentById(id.toString())
-            if (null != result) {
-                Log.i(logTag(), "UPDATING songs and folders index")
-                songDatabaseManager.insert(result)
-                folderDatabaseManager.insert(result)
-                Log.i(logTag(), "UPDATED songs and folders")
-                val directoryPath = getDirectoryPath(result)
-                if (StringUtils.isNotEmpty(directoryPath)) {
-                    mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
-                }
+            Log.v(logTag(), "updateSearchDatabase() UPDATING songs and folders index")
+            searchDatabaseManagers.getSongDatabaseManager().insert(result)
+            searchDatabaseManagers.getFolderDatabaseManager().insert(result)
+            Log.v(logTag(), "updateSearchDatabase() UPDATED songs and folders")
+            val directoryPath = getDirectoryPath(result)
+            if (StringUtils.isNotEmpty(directoryPath)) {
+                mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
             }
         } else {
-            songDatabaseManager.reindex()
-            folderDatabaseManager.reindex()
+            searchDatabaseManagers.getSongDatabaseManager().reindex()
+            searchDatabaseManagers.getSongDatabaseManager().reindex()
         }
     }
 
     override fun logTag(): String {
-        return "AUDIO_OBSERVER"
+        return "AudioObserver"
     }
 
     override val uri: Uri

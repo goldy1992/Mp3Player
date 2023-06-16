@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,7 +30,7 @@ import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private const val logTag = "seekbar"
+private const val LOG_TAG = "SeekBar"
 
 @Composable
 fun SeekBar(isPlayingProvider: () -> Boolean = {true},
@@ -36,14 +40,14 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
             seekTo: (value: Long) -> Unit = {},
             scope: CoroutineScope = rememberCoroutineScope()) {
 
-    //Log.i(logTag, "seek bar created")
+    Log.v(LOG_TAG, "SeekBar() recomposed")
     val isPlaying = isPlayingProvider()
     val metadata = metadataProvider()
     val playbackSpeed = playbackSpeedProvider()
     val playbackPositionEvent = playbackPositionProvider()
     val duration = MetadataUtils.getDuration(metadata).toFloat()
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
-    Log.i(logTag, "current playback position: $currentPosition")
+    Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
     val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
     val durationDescription = stringResource(id = R.string.duration)
     val currentPositionDescription = stringResource(id = R.string.current_position)
@@ -71,15 +75,12 @@ private fun SeekBarUi(currentPosition : Float,
                       seekTo : (value : Long) -> Unit
                     ) {
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
-    //  Log.i(logTag, "Anim1Value: ${anim1.value}")
 
     if (isPlaying) {
-        //   Log.i(logTag, "playback state playing")
         LaunchedEffect(seekBarAnimation) {
-            Log.i(logTag, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
+            Log.i(LOG_TAG, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
             seekBarAnimation.value.animateTo(duration,
                 animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
-            //      Log.i(logTag, "animating")
         }
     }
     val isTouchTracking = remember { mutableStateOf(false)   }

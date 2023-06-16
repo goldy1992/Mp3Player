@@ -8,13 +8,19 @@ data class Settings
     constructor(
         val darkMode : Boolean = false,
         val useSystemDarkMode : Boolean = true,
-        val theme : Theme = Theme.BLUE
+        val theme : Theme = Theme.BLUE,
+        val dynamicColor : Boolean = false
     ) {
 
     enum class Type {
         DARK_MODE,
         USE_SYSTEM_DARK_MODE,
-        THEME
+        THEME,
+        DYNAMIC_COLOR
+    }
+
+    companion object {
+        val DEFAULT = Settings()
     }
 
 }

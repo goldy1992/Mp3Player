@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.lists.folders;
+package com.github.goldy1992.mp3player.client.ui.lists.folders
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -19,8 +19,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Folder
 
 @OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalFoundationApi::class
 )
 @Preview
 @Composable
@@ -35,13 +34,13 @@ fun FolderListItem(folder : Folder = Folder(),
             ),
         colors = ListItemDefaults.colors(containerColor = containerColor) ,
         leadingContent = { FolderIcon()},
-        headlineText = {
+        headlineContent = {
             Text(text = folder.name,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis)
         },
-        supportingText = {
+        supportingContent = {
             Text(
                 text = folder.path,
                 maxLines = 1,

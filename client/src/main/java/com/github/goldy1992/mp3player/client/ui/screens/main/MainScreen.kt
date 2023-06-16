@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.ui.WindowSize
-import com.google.accompanist.pager.ExperimentalPagerApi
 
 /**
  * The Main Screen of the app.
@@ -16,7 +15,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
  * @param viewModel The [MainScreenViewModel].
  */
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun MainScreen(navController: NavController,
                windowSize: WindowSize,

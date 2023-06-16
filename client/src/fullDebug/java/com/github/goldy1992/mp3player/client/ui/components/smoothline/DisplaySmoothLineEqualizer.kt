@@ -56,12 +56,11 @@ val testAudio =  flow<List<Float>> {
 @Preview
 @Composable
 fun DisplaySmoothLineEqualizer() {
-   val testAudio by testAudio.collectAsState(listOf<Float>(0f, 0f, 0f, 0f))
+   val testAudio by testAudio.collectAsState(listOf(0f, 0f, 0f, 0f))
 
     SmoothLineCard(
         modifier = Modifier.fillMaxSize(),
         frequencyPhases =  {testAudio},
   //  isPlayingProvider = {true},
-    scope = scope
     )
 }

@@ -27,20 +27,9 @@ class FolderResultsParser
             val index = cursor.getColumnIndex(MediaStore.Audio.Media.DATA)
             if (index >= 0) {
                 val path = cursor.getString(index)
-                val file = File(path)
-                if (file.exists()) {
-                    val directory = file.parentFile
-                    if (null != directory) {
-                        val directoryPath = directory.absolutePath
-                        if (directoryPathMap.containsKey(directoryPath)) {
-                            directoryPathMap[directoryPath]?.fileCount?.incrementAndGet()
-                        } else {
-                            directoryPathMap[directoryPath] = DirectoryInfo(directory)
-                        }
-                    }
-                }
+                addToDirectoryMap(path, directoryPathMap)
             } else {
-                Log.e(logTag(), "Could not find column index")
+                Log.e(logTag(), "create() could not find column index")
             }
         }
 
@@ -51,7 +40,7 @@ class FolderResultsParser
         return ArrayList(listToReturn)
     }
 
-    override val type: MediaItemType?
+    override val type: MediaItemType
         get() = MediaItemType.FOLDER
 
     private fun createFolderMediaItem(directoryInfo: DirectoryInfo) : MediaItem { /* append a file separator so that folders with an "extended" name are discarded...
@@ -68,6 +57,21 @@ class FolderResultsParser
             .build()
     }
 
+    private fun addToDirectoryMap(path : String, directoryPathMap : MutableMap<String, DirectoryInfo>) {
+        val file = File(path)
+        if (file.exists()) {
+            val directory = file.parentFile
+            if (null != directory) {
+                val directoryPath = directory.absolutePath
+                if (directoryPathMap.containsKey(directoryPath)) {
+                    directoryPathMap[directoryPath]?.fileCount?.incrementAndGet()
+                } else {
+                    directoryPathMap[directoryPath] = DirectoryInfo(directory)
+                }
+            }
+        }
+    }
+
     override fun compare(m1: MediaItem, m2: MediaItem): Int {
         return ComparatorUtils.Companion.caseSensitiveStringCompare.compare(getDirectoryPath(m1), getDirectoryPath(m2))
     }
@@ -76,7 +80,7 @@ class FolderResultsParser
      * @return the name of the log tag given to the class
      */
     override fun logTag(): String {
-        return "Flder_Res_Prser"
+        return "FolderResultsParser"
     }
 
     /**

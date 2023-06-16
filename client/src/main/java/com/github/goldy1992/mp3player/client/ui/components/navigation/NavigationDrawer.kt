@@ -23,7 +23,6 @@ import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavController(),

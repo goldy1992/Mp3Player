@@ -2,7 +2,11 @@ package com.github.goldy1992.mp3player.client.data.repositories.preferences
 
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
@@ -14,12 +18,13 @@ import javax.inject.Singleton
 
 
 data class UserPreferences(
-    val darkMode: Boolean,
-    val systemDarkMode : Boolean,
-    val theme: String
+    val darkMode: Boolean = true,
+    val systemDarkMode : Boolean = false,
+    val theme: String = "None",
+    val useDynamicColor: Boolean = false
 )  {
     companion object {
-        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None")
+        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true)
     }
 }
 
@@ -35,6 +40,7 @@ open class UserPreferencesRepository
         val THEME = stringPreferencesKey("theme")
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val USE_SYSTEM_DARK_MODE = booleanPreferencesKey("system_dark_mode")
+        val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
     }
 
     /**
@@ -44,7 +50,7 @@ open class UserPreferencesRepository
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
-                Log.e(logTag(), "Error reading preferences.", exception)
+                Log.e(logTag(), "userPreferencesFlow: IOException reading preferences.", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -58,8 +64,15 @@ open class UserPreferencesRepository
             val darkMode : Boolean = preferences[PreferencesKeys.DARK_MODE] ?: false
             // default to System dark mode if no preferences are stored!
             val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
-            UserPreferences(darkMode, systemDarkMode, theme.name)
+            val useDynamicColor : Boolean = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: true
+            val userPreferences = UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
+            Log.d(logTag(), "userPreferencesFlow: preferences mapped to $userPreferences")
+            userPreferences
         }
+
+    override fun userPreferencesFlow(): Flow<UserPreferences> {
+        return userPreferencesFlow
+    }
 
     override suspend fun updateTheme(newTheme: Theme) {
         dataStore.edit { preferences ->
@@ -67,9 +80,9 @@ open class UserPreferencesRepository
         }
     }
 
-    override suspend fun updateDarkMode(darkMode: Boolean) {
+    override suspend fun updateDarkMode(useDarkMode: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferencesKeys.DARK_MODE] = darkMode
+            preferences[PreferencesKeys.DARK_MODE] = useDarkMode
         }
     }
 
@@ -79,22 +92,34 @@ open class UserPreferencesRepository
         }
     }
 
-    override open fun getTheme() : Flow<Theme> {
+    override suspend fun updateUseDynamicColor(useDynamicColor: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.USE_DYNAMIC_COLOR] = useDynamicColor
+        }
+    }
+
+    override fun getTheme() : Flow<Theme> {
         return userPreferencesFlow.map { preferences ->
             val currentTheme = preferences.theme
             Theme.valueOf(currentTheme)
         }
     }
 
-    override open fun getDarkMode() : Flow<Boolean> {
+    override fun getDarkMode() : Flow<Boolean> {
        return userPreferencesFlow.map { preferences ->
            preferences.darkMode
         }
     }
 
-    override open fun getSystemDarkMode() : Flow<Boolean> {
+    override fun getSystemDarkMode() : Flow<Boolean> {
         return userPreferencesFlow.map {
             preferences -> preferences.systemDarkMode
+        }
+    }
+
+    override fun getUseDynamicColor(): Flow<Boolean> {
+        return userPreferencesFlow.map {
+                preferences -> preferences.useDynamicColor
         }
     }
 

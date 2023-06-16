@@ -5,9 +5,12 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 import android.util.Base64
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -17,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
@@ -28,19 +30,16 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.Navigation
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.ui.states.LibraryResultState
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
-private const val logTag = "LibraryScreen"
+private const val LOG_TAG = "LibraryScreen"
 /**
  * The Main Screen of the app.
  *
@@ -49,10 +48,10 @@ private const val logTag = "LibraryScreen"
  * @param viewModel The [LibraryScreenViewModel].
  */
 @OptIn(
-    ExperimentalMaterial3Api::class,
     ExperimentalAnimationApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalPagerApi::class)
+    ExperimentalFoundationApi::class
+)
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   pagerState: PagerState = rememberPagerState(initialPage = 0),
@@ -76,7 +75,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val encodedFolderLibraryId = it.encodedLibraryId
         val encodedFolderPath = it.encodedPath
         val folderName = it.name
-        Log.w(logTag, "Folder name: ${folderName}")
+        Log.d(LOG_TAG, "onFolderSelected() Folder name: $folderName")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
@@ -89,7 +88,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         val albumTitle = it.albumTitle
         val albumArtist = it.albumArtist
         val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.w(logTag, "Album ${albumTitle} uri: ${it.albumArt}")
+        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${it.albumArt}")
         navController.navigate(
             Screen.ALBUM.name
                     + "/" + albumId
@@ -130,9 +129,9 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         PlayToolbar(
             isPlayingProvider = { isPlaying },
             onClickPlay = { viewModel.play()
-                          Log.i(logTag, "clicked play")},
+                          Log.v(LOG_TAG, "PlayToolbar.onClickPlay() clicked play")},
             onClickPause = {viewModel.pause()
-                           Log.i(logTag, "clicked pause")},
+                           Log.v(LOG_TAG, "PlayToolbar.onClickPause() clicked pause")},
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
             onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
@@ -191,9 +190,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
  * @param bottomBar The Bottom Bar.
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
 @Composable
 fun LargeLibraryScreen(
     navDrawerContent : @Composable () -> Unit = {},
@@ -217,15 +214,12 @@ fun LargeLibraryScreen(
 /**
  * The large Library Screen.
  *
- * @param scaffoldState The [ScaffoldState].
  * @param topBar The Top Bar.
  * @param bottomBar The Bottom Bar.
- * @param navigationColumn The Navigation Column.
+ * @param navDrawerContent The composable content of the [ModalNavigationDrawer].
+ * @param drawerState The [ModalNavigationDrawer] [DrawerState].
  * @param content The content of the Library Screen.
  */
-@OptIn(ExperimentalMaterial3Api::class
-)
-
 @Composable
 fun SmallLibraryScreen(
     bottomBar : @Composable () -> Unit,
@@ -248,39 +242,40 @@ fun SmallLibraryScreen(
 }
 
 
-@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
-    rootItemsProvider:  () -> LibraryResultState,
+    rootItemsProvider:  () -> RootItems,
     scope: CoroutineScope
 ) {
 
     val rootItemsState = rootItemsProvider()
 
     if (rootItemsState.state == State.LOADED) {
-        val rootItems = rootItemsState.results
+        val rootItems = rootItemsState.items
         Column {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
             ) {
                 rootItems.forEachIndexed { index, item ->
                     val isSelected = index == pagerState.currentPage
+                    val context = LocalContext.current
                     Tab(
                         selected = isSelected,
                         modifier = Modifier.height(48.dp),
                         content = {
                             Text(
-                                text = getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
+                                text = MediaItemNameUtils.getMediaItemTypeName(context, item.type).uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
                                 style = MaterialTheme.typography.titleSmall,
                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                             )
                         },
                         onClick = {                    // Animate to the selected page when clicked
                             scope.launch {
-                                Log.i(
-                                    "MainScreen",
-                                    "Clicked to go to index ${index}, string: ${item.mediaId} "
+                                Log.d(
+                                    LOG_TAG,
+                                    "Clicked to go to index ${index}, string: ${item.id} "
                                 )
                                 pagerState.animateScrollToPage(index)
                             }
@@ -294,13 +289,13 @@ private fun LibraryTabs(
 
 
 @ExperimentalMaterialApi
-@ExperimentalPagerApi
+@ExperimentalFoundationApi
 @Composable
 fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(initialPage = 0),
-    rootItemsProvider: () -> LibraryResultState,
+    rootItemsProvider: () -> RootItems,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     songs : () -> Songs = { Songs(State.NOT_LOADED) },
     folders : () -> Folders = { Folders(State.NOT_LOADED) },
@@ -335,14 +330,10 @@ fun LibraryScreenContent(
 
 /**
  * Displays the pages for each of the Home bar tabs.
- * @param navController The [NavController].
  * @param pagerState The [PagerState] of the Tab Bar.
- * @param rootItems The [List] of [MediaItem]s to display on the Tab Bar.
  * @param modifier The [Modifier].
- * @param viewModel The [LibraryScreenViewModel].
  */
-@OptIn(ExperimentalCoilApi::class)
-@ExperimentalPagerApi
+@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun TabBarPages(
     modifier: Modifier = Modifier,
@@ -362,10 +353,9 @@ fun TabBarPages(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            count = tabPages.size
+            pageCount = tabPages.size
         ) { pageIndex ->
-            val currentDataType = tabPages[pageIndex]
-            when (currentDataType) {
+            when (tabPages[pageIndex]) {
                 MediaItemType.SONGS ->
                     SongList(
                         songs = songs(),

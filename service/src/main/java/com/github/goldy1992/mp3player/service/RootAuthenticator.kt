@@ -1,8 +1,10 @@
 package com.github.goldy1992.mp3player.service
 
+import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.annotation.VisibleForTesting
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.LibraryResult
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
@@ -12,6 +14,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import javax.inject.Inject
 
+@AndroidXOptIn(UnstableApi::class)
 class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
     private val acceptedMediaId: String = ids.getId(MediaItemType.ROOT)
 
@@ -27,7 +30,6 @@ class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
         .setMediaItemType(MediaItemType.ROOT)
         .build()
 
-    @Suppress("UNUSED_PARAMETER")
     fun authenticate(params : MediaLibraryService.LibraryParams): LibraryResult<MediaItem> {
         val clientPackageName : String = params.extras.getString(PACKAGE_NAME_KEY) ?: ""
         // (Optional) Control the level of access for the specified package name.

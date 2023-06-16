@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
+package com.github.goldy1992.mp3player.client.ui.components.fountainspring
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -53,10 +53,10 @@ val testAudio =  flow<List<Float>> {
 @Preview
 @Composable
 fun DisplayFireworkEqualizer() {
-   val testAudio by testAudio.collectAsState(listOf<Float>(0f))
+   val testAudio by testAudio.collectAsState(listOf(0f))
 
     FountainSpringCard(
         modifier = Modifier.fillMaxSize(),
-        frequencyPhases =  {testAudio},
-    scope = scope)
+        frequencyPhases =  {testAudio}
+    )
 }

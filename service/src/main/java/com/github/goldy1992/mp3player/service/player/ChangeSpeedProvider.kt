@@ -16,14 +16,9 @@ class ChangeSpeedProvider
 constructor() : LogTagger {
 
     fun changeSpeed(player: Player, args : Bundle) {
-        Log.i(logTag(), "hit speed change")
-        val newSpeed: Float? = args?.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
-        if (newSpeed == null) {
-            Log.w(logTag(), "ChangeSpeedProvider invoked without a valid speed")
-        } else {
-            changeSpeed(newSpeed, player)
-        }
-
+        Log.v(logTag(), "changeSpeed() invoked")
+        val newSpeed: Float = args.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
+        changeSpeed(newSpeed, player)
     }
 
     /**
@@ -45,7 +40,7 @@ constructor() : LogTagger {
     companion object {
         private const val MINIMUM_PLAYBACK_SPEED = 0.25f
         private const val MAXIMUM_PLAYBACK_SPEED = 2f
-        private const val LOG_TAG = "ACTN_PRVDR"
+        private const val LOG_TAG = "ChangeSpeedProvider"
     }
 
     override fun logTag(): String {

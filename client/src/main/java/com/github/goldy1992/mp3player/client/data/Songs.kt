@@ -12,5 +12,6 @@ data class Songs
             val NOT_LOADED = Songs(State.NOT_LOADED)
             val LOADED = Songs(State.LOADED)
             val NO_RESULTS = Songs(State.NO_RESULTS)
+            val NO_PERMISSIONS = Songs(State.NO_PERMISSIONS)
         }
     }

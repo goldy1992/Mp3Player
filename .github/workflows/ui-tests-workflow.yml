@@ -18,49 +18,40 @@ jobs:
     environment: release_env
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3.6.0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
           distribution: corretto
-          java-version: 11
+          java-version: 17
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Cache SonarCloud packages
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2.0.10
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
-      - name: Gradle Clean
-        run: ./gradlew clean
-
       - name: Assemble debug and androidTest APKs
         run: ./gradlew assembleDebug assembleAndroidTest
 
       - id: 'auth'
-        uses: google-github-actions/auth@v1.0.0
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
 
       - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v1.0.1
+        uses: google-github-actions/setup-gcloud@v1
 
       - name: Run firebase tests on gcloud and pull coverage data
         run: |
@@ -87,11 +78,11 @@ jobs:
         run: gsutil -m cp -R -U gs://test-lab-$BUCKET_ID/**/sdcard/coverage.ec $TEST_OUTPUT_FOLDER || true
 
       - name: Gradle and create Debug test report
-        run: ./gradlew createDebugUnitTestCoverageReport
-      - name: Gradle and create FullDebug test report
-        run: ./gradlew createFullDebugUnitTestCoverageReport
+        run: ./gradlew jacocoTestReport
+
       - name: Run Lint
         run: ./gradlew lint
+
       - name: Run Sonar
         run: ./gradlew sonar --info --stacktrace
         env:

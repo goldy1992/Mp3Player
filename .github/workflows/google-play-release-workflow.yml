@@ -38,14 +38,14 @@ jobs:
           fetch-depth: 0
           ref: "${{ github.event.inputs.release_commit_ref }}"
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3.6.0
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
           distribution: corretto
-          java-version: 11
+          java-version: 17
 
       - name: Cache Gradle packages
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -54,9 +54,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
 
       - name: Base64 Decode Key Store value and write to file named $SIGNING_KEY_FILE
         run: |

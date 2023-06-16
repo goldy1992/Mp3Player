@@ -3,11 +3,33 @@ package com.github.goldy1992.mp3player.client.ui.screens.album
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,12 +42,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
+import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
-import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -124,8 +145,8 @@ fun AlbumScreen(
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
                         leadingContent = { Text("$currentAlbumSongIndex") },
-                        headlineText = { Text(albumSong.title) },
-                        supportingText = { Text(albumSong.artist) }
+                        headlineContent = { Text(albumSong.title) },
+                        supportingContent = { Text(albumSong.artist) }
                     )
                 }
             }
@@ -142,7 +163,6 @@ private fun isAlbumPlaying(
 
 @Preview
 @Composable
-@OptIn(ExperimentalCoilApi::class)
 private fun AlbumHeaderItem(
     albumProvider: () -> Album = { Album() },
     onClickShuffle : () -> Unit = {},
@@ -156,7 +176,7 @@ private fun AlbumHeaderItem(
     ) {
         val album = albumProvider()
         Card {
-            AlbumArt(uri = album.albumArt, modifier = Modifier.size(200.dp))
+            AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(200.dp))
         }
 
         Column(

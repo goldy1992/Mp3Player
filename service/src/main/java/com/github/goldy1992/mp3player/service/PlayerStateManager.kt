@@ -47,7 +47,8 @@ class PlayerStateManager
         }
         scope.launch {
             contentManager.isInitialised.collect {
-                Log.i(logTag(), "ConentManager isInitialised collect")
+                isInitialised = it
+                Log.v(logTag(), "ContentManager isInitialised: $it")
                 if (it) {
                     loadPlayerState()
                 }
@@ -59,7 +60,7 @@ class PlayerStateManager
     private suspend fun loadPlayerState() {
         withContext(mainDispatcher) {
             val currentSavedState = savedState.value
-            Log.i(logTag(), "player state value: ${currentSavedState}")
+            Log.d(logTag(), "loadPlayerState() loading SavedState: $currentSavedState")
             if (isValidSavedState(currentSavedState)) {
                 val currentPlaylistIds = currentSavedState.playlist
                 val currentTrackPosition = currentSavedState.currentTrackPosition
@@ -67,12 +68,12 @@ class PlayerStateManager
                 val playlist = contentManager.getContentByIds(currentPlaylistIds)
                 val currentTrackIndex = currentSavedState.currentTrackIndex
 
-                Log.i(logTag(), "adding to queue")
+                Log.v(logTag(), "loadPlayerState() Adding SavedState to Player queue.")
                 player.addMediaItems(playlist)
                 player.seekTo(currentTrackIndex, currentTrackPosition)
-                Log.i(logTag(), "calling prepare")
+                Log.v(logTag(), "loadPlayerState() Calling Player.prepare()")
                 player.prepare()
-                Log.i(logTag(), "Player prepared")
+                Log.v(logTag(), "loadPlayerState() Player prepared")
             } else {
                 setDefaultPlaylist()
             }
@@ -82,7 +83,7 @@ class PlayerStateManager
     }
 
     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-        Log.i(logTag(), "onMediaMetadataChanged")
+        Log.d(logTag(), "onMediaMetadataChanged() invoked with MediaMetaData: $mediaMetadata")
         scope.launch(ioDispatcher) {
             var playlist : List<MediaItem>? = null
             var currentMediaId: String? = null
@@ -95,114 +96,116 @@ class PlayerStateManager
             }
             if (currentMediaId != null) {
                 savedStateRepository.updateCurrentTrack(currentMediaId!!)
-                Log.i(logTag(), "updated currentTrack in SaveStateRepository to ${currentMediaId}")
+                Log.d(logTag(), "onMediaMetadataChanged() updated currentTrack in SaveStateRepository to $currentMediaId")
             }
             if (playlist != null) {
                 val playlistIds : List<String> = playlist!!.map { item -> item.mediaId }
                 savedStateRepository.updatePlaylist(playlistIds)
 
-                Log.i(logTag(), "updated playlist in SaveStateRepository")
+                Log.i(logTag(), "onMediaMetadataChanged() updated playlist in SaveStateRepository")
             }
             if (currentTrackIndex != null) {
                 savedStateRepository.updateCurrentTrackIndex(currentTrackIndex!!)
-                Log.i(logTag(), "updated currentTrackIndex in SaveStateRepository to: ${currentTrackIndex}")
+                Log.i(logTag(), "onMediaMetadataChanged() updated currentTrackIndex in SaveStateRepository to: $currentTrackIndex")
             }
         }
 
     }
 
     override fun onIsPlayingChanged(isPlaying: Boolean) {
-        Log.i(logTag(), "onIsPlayingChanged: $isPlaying")
+        Log.d(logTag(), "onIsPlayingChanged() invoked with: $isPlaying")
         scope.launch(ioDispatcher) {
             var currentTrackPosition : Long?
             withContext(mainDispatcher) {
                 currentTrackPosition = player.currentPosition
-                Log.i(logTag(), "currentPosition: $currentTrackPosition")
+                Log.v(logTag(), "onIsPlayingChanged() currentPosition: $currentTrackPosition")
 
             }
             if (currentTrackPosition != null) {
                 savedStateRepository.updateCurrentTrackPosition(currentTrackPosition!!)
-                Log.i(logTag(), "updated currentPosition in SaveStateRepository to $currentTrackPosition")
+                Log.v(logTag(), "onIsPlayingChanged() updated currentPosition in SaveStateRepository to $currentTrackPosition")
             }
         }
         super.onIsPlayingChanged(isPlaying)
     }
 
     fun saveState() {
+        Log.v(logTag(), "saveState() invoked. isInitialised: $isInitialised")
         if (isInitialised) {
             val savedState: SavedState?
-            Log.i(logTag(), "Invoked save state")
             val playbackState = player.playbackState
             val playbackStateStr: String = playbackStateDebugMap[playbackState] ?: "UNKNOWN_STATE"
-            Log.i(logTag(), "currentPlaybackState: $playbackStateStr")
-            val playlist = getPlaylist(player)
-            val playlistIdList = playlist.map { m -> m.mediaId }
-            Log.i(logTag(), "got playlist id list")
+            Log.d(logTag(), "saveState() currentPlaybackState: $playbackStateStr")
+            val currentPlaylist = getPlaylist(player)
+            val currentPlaylistIdList = currentPlaylist.map { m -> m.mediaId }
+            Log.d(logTag(), "saveState() got current playlist list: ${currentPlaylistIdList.joinToString(",")}")
             val currentMediaItemIndex = player.currentMediaItemIndex
-            Log.i(logTag(), "currentMediaItemIndex: $currentMediaItemIndex")
+            Log.d(logTag(), "saveState() currentMediaItemIndex: $currentMediaItemIndex")
             val currentTrack = player.currentMediaItem?.mediaId ?: ""
-            Log.i(logTag(), "currentTrack: $currentTrack")
+            Log.d(logTag(), "saveState() currentTrack: $currentTrack")
             val shuffleEnabled = player.shuffleModeEnabled
-            Log.i(logTag(), "shuffle enabled: $shuffleEnabled")
+            Log.d(logTag(), "saveState() shuffle enabled: $shuffleEnabled")
             val currentPosition = player.currentPosition
-            Log.i(logTag(), "currentPosition: $currentPosition")
+            Log.d(logTag(), "saveState() currentPosition: $currentPosition")
             val repeatMode = player.repeatMode
-            Log.i(logTag(), "repeatMode: $repeatMode")
+            Log.d(logTag(), "saveState() repeatMode: $repeatMode")
             savedState = SavedState(
-                playlist = playlistIdList,
+                playlist = currentPlaylistIdList,
                 currentTrackIndex = currentMediaItemIndex,
                 currentTrack = currentTrack,
                 shuffleEnabled = shuffleEnabled,
                 currentTrackPosition = currentPosition,
                 repeatMode = repeatMode
             )
-            Log.i(logTag(), "Created Save State object for saving: $savedState")
-            scope.launch(ioDispatcher) {
+            Log.d(logTag(), "saveState() created SaveState object for saving: $savedState")
+            scope.launch(mainDispatcher) {
                 savedStateRepository.updateSavedState(savedState)
-                Log.i(logTag(), "Saved new Save State object")
+                Log.i(logTag(), "saveState() saved new SaveState object $savedState")
             }
         } else {
-            Log.w(logTag(), "No need to save state since PlayerStateManager not initialised")
+            Log.w(logTag(), "saveState() PlayerStateManager not initialised, not saving")
         }
 
     }
 
     private fun getPlaylist(player: Player) : List<MediaItem> {
-        Log.i(logTag(), "getting playlist from player: $player")
+        Log.v(logTag(), "getPlaylist() invoked from player: $player")
         val count = player.mediaItemCount
-        Log.i(logTag(), "mediaItemCount: $count")
+        Log.d(logTag(), "getPlaylist() mediaItemCount: $count")
         val mediaItems = mutableListOf<MediaItem>()
 
         for (index in 0 until  count) {
             val mediaItem = player.getMediaItemAt(index)
             mediaItems.add(mediaItem)
         }
-        Log.i(logTag(), "playlist retrieved, size: ${mediaItems.size}")
+        Log.v(logTag(), "playlist retrieved, size: ${mediaItems.size}")
         return mediaItems.toList()
     }
 
     private fun isValidSavedState(savedState : SavedState) : Boolean {
+        Log.v(logTag(), "isValidSavedState() invoked with SavedState $savedState")
         val playlistSize = savedState.playlist.size
         val validPlaylist = playlistSize > 0
 
         val currentTrackIndex = savedState.currentTrackIndex
         val validCurrentTrackIndex = currentTrackIndex in 0 until playlistSize
         val isValid = validPlaylist && validCurrentTrackIndex
-        Log.i(logTag(), "playlistSize: $playlistSize, currentTrackIndex: $currentTrackIndex, isValid = $isValid")
+        Log.d(logTag(), "isValidSavedState() playlistSize: $playlistSize, currentTrackIndex: $currentTrackIndex, isValid = $isValid")
         return isValid
     }
 
     private suspend fun setDefaultPlaylist() {
-        Log.i(logTag(), "Setting default playlist")
-        val defaultPlaylist = contentManager.getChildren(MediaItemType.SONGS)
+        Log.v(logTag(), "setDefaultPlaylist() invoked")
+        val contentManagerResult = contentManager.getChildren(MediaItemType.SONGS)
+        val defaultPlaylist = contentManagerResult.children
         if (isNotEmpty(defaultPlaylist)) {
-            Log.i(logTag(), "adding to queue default playlist: ${defaultPlaylist.size}")
+            Log.d(logTag(), "setDefaultPlaylist() adding to queue default playlist: ${defaultPlaylist.size}")
             player.addMediaItems(defaultPlaylist)
             player.seekTo(0, 0)
-            Log.i(logTag(), "calling prepare")
+            Log.v(logTag(), "setDefaultPlaylist() calling Player.prepare()")
             player.prepare()
         } else {
-            Log.i(logTag(), "default playlist is empty")
+            Log.d(logTag(), "setDefaultPlaylist() default playlist is empty")
         }
     }
 

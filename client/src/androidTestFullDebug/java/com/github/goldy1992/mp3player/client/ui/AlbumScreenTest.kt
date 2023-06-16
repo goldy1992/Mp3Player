@@ -6,7 +6,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.lifecycle.SavedStateHandle
 import androidx.media3.common.MediaItem
-import androidx.navigation.NavController
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.album.AlbumScreen
@@ -16,8 +15,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.spy
 
 /**
  * Test class for [AlbumScreen].
@@ -25,7 +22,6 @@ import org.mockito.kotlin.spy
 class AlbumScreenTest {
 
     private lateinit var context : Context
-    private val mockNavController = mock<NavController>()
     private lateinit var albumScreenViewModel: AlbumScreenViewModel
 
     private val testMediaRepository = TestMediaRepository()
@@ -69,16 +65,14 @@ class AlbumScreenTest {
         expectedAlbumSongs.add(song2)
         testMediaRepository.getChildrenState = expectedAlbumSongs
 
-        this.albumScreenViewModel = spy(
+        this.albumScreenViewModel =
             AlbumScreenViewModel(
                 mediaRepository = testMediaRepository,
                 savedStateHandle = savedStateHandle
             )
-        )
 
         composeTestRule.setContent {
             AlbumScreen(
-                navController = mockNavController,
                 viewModel = albumScreenViewModel
             )
         }

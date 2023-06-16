@@ -30,13 +30,13 @@ open class FolderSearcher constructor(contentResolver: ContentResolver,
                 ids.add(folder.id)
                 likeList.add(LIKE_STATEMENT)
             }
-            val WHERE = StringUtils.join(likeList, " OR ") + " COLLATE NOCASE"
+            val where = StringUtils.join(likeList, " OR ") + " COLLATE NOCASE"
             for (i in results.indices) {
                 whereArgs.add(likeParam(ids[i]))
             }
-            val WHERE_ARGS = whereArgs.toTypedArray()
+            val whereArgsTypedArray = whereArgs.toTypedArray()
             return contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
-                    WHERE, WHERE_ARGS, null)
+                    where, whereArgsTypedArray, null)
         }
         return null
     }
@@ -45,7 +45,7 @@ open class FolderSearcher constructor(contentResolver: ContentResolver,
         get() = MediaItemType.FOLDERS
 
     override val idPrefix: String
-        get() = mediaItemTypeIds.getId(MediaItemType.FOLDER)!!
+        get() = mediaItemTypeIds.getId(MediaItemType.FOLDER)
 
     override val projection: Array<String?>
         get() = Projections.FOLDER_PROJECTION.toTypedArray()

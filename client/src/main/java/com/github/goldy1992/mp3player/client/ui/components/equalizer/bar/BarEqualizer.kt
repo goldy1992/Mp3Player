@@ -8,7 +8,6 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -19,11 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.utils.calculateBarSpacingPixels
-import kotlinx.coroutines.CoroutineScope
-import java.lang.Integer.max
 
 private const val MAX_AMPLITUDE = 400f
-private const val logTag = "BarEqualizer"
+private const val LOG_TAG = "BarEqualizer"
 
 
 @Preview
@@ -33,10 +30,9 @@ fun BarEqualizer(modifier: Modifier = Modifier,
                  canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
                  barWidthPx : Float = 20f,
                  barColor : Color = MaterialTheme.colorScheme.secondary,
-                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
-                 scope: CoroutineScope = rememberCoroutineScope()
+                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
                        ) {
-  //  Log.i(logTag, "recomposing")
+    Log.v(LOG_TAG, "BarEqualizer() recomposing")
     val frequencyPhases = frequencyValues()
     val numberOfBars = frequencyPhases.size
     val spaceBetweenBarsPx = remember(numberOfBars, barWidthPx, canvasSize.widthPx){
@@ -90,8 +86,8 @@ private fun BarEqualizerCanvas(
     surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
     barColor: Color = MaterialTheme.colorScheme.secondary,
 ) {
-   // Log.i(logTag, "redraw: ${if (bars.isNotEmpty())  bars[0] else 0f}")
-    Log.i(logTag, "redraw: ")
+    Log.i(LOG_TAG, "BarEqualizerCanvas() redraw: ${if (bars.isNotEmpty())  bars[0] else 0f}")
+
     Canvas(
         modifier = modifier.fillMaxSize()
 

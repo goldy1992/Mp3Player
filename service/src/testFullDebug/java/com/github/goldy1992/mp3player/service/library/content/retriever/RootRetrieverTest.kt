@@ -1,21 +1,26 @@
 package com.github.goldy1992.mp3player.service.library.content.retriever
 
+import android.content.Context
 import androidx.media3.common.MediaItem
+import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getMediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getRootMediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
+import com.github.goldy1992.mp3player.service.library.content.retrievers.RootRetriever
 import org.junit.Assert
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class RootRetrieverTest {
     private var rootRetriever: RootRetriever? = null
+
+    private val context : Context = InstrumentationRegistry.getInstrumentation().context
+
     @Before
     fun setup() {
         rootRetriever = RootRetriever(MediaItemTypeIds())

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 
-private const val logTag = "AlbumPlayPauseButton"
+private const val LOG_TAG = "AlbumPlayPauseButton"
 
 /**
  * This button will display the [PlayButton] by default if no implementation of isPlaying is
@@ -37,7 +37,7 @@ fun AlbumPlayPauseButton(
                     onClickPause: () -> Unit = {}
 ) {
     val isPlayingValue = isPlaying()
-    Log.i(logTag, "new isPlayingValue: $isPlayingValue")
+    Log.d(LOG_TAG, "AlbumPlayPauseButton() isPlayingValue: $isPlayingValue")
     val tweenTime = 500
     val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 

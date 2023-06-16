@@ -19,11 +19,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.ui.lists.songs.AlbumArt
+import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
-@OptIn(ExperimentalCoilApi::class, ExperimentalFoundationApi::class)
+
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun AlbumListItem(modifier: Modifier = Modifier,
@@ -39,7 +39,7 @@ fun AlbumListItem(modifier: Modifier = Modifier,
         .onSizeChanged { width = (it.width.toFloat() / localDensity.density).dp },
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {
-            AlbumArt(album.albumArt, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
+            AlbumArtAsync(album.albumArt, contentDescription = album.albumTitle, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
             Column(Modifier.padding(start = 16.dp)) {
                 Text(text = album.albumTitle,
                     style = MaterialTheme.typography.bodyMedium,

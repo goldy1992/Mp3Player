@@ -14,8 +14,8 @@ import androidx.media3.common.Player.RepeatMode
 import com.github.goldy1992.mp3player.client.R
 
 @Composable
-fun RepeatButton(repeatModeProvider : () -> @RepeatMode Int,
-                 onClick : (currentRepeatMode : @RepeatMode Int) -> Unit) {
+fun RepeatButton(repeatModeProvider : () -> @RepeatMode Int = {  Player.REPEAT_MODE_OFF },
+                 onClick : (currentRepeatMode : @RepeatMode Int) -> Unit = {}) {
 
     val currentRepeatMode = repeatModeProvider()
     when (repeatModeProvider()) {

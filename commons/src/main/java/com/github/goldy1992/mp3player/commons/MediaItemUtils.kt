@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.Constants.EMPTY_MEDIA_ITEM_ID
+import com.github.goldy1992.mp3player.commons.VersionUtils.isTiramisuOrHigher
 import java.io.File
+import java.io.Serializable
 
 object MediaItemUtils : LogTagger {
     private fun hasExtras(item: MediaItem?): Boolean {
@@ -29,17 +31,38 @@ object MediaItemUtils : LogTagger {
         } else item.mediaMetadata.extras
     }
 
-    fun getExtra(key: String?, item: MediaItem?): Any? {
+    @Suppress("DEPRECATION")
+    private fun <T : Serializable> getSerializableExtra(key: String?, clazz: Class<T>, item: MediaItem?): Any? {
         if (item == null) {
             return null
         }
         val extras = item.mediaMetadata.extras
-        return extras?.get(key)
+        return if (isTiramisuOrHigher()) {
+            extras?.getSerializable(key, clazz)
+        } else {
+            extras?.getSerializable(key)
+        }
+    }
+
+    fun getIntExtra(key: String?, item: MediaItem?): Int? {
+        if (item == null) {
+            return null
+        }
+        val extras = item.mediaMetadata.extras
+        return extras?.getInt(key)
+    }
+
+    fun getStringExtra(key: String?, item: MediaItem?): String? {
+        if (item == null) {
+            return null
+        }
+        val extras = item.mediaMetadata.extras
+        return extras?.getString(key)
     }
 
     @JvmStatic
-    fun getMediaId(item: MediaItem?): String? {
-        return item?.mediaId
+    fun getMediaId(item: MediaItem): String {
+        return item.mediaId
     }
 
     @JvmStatic
@@ -64,12 +87,6 @@ object MediaItemUtils : LogTagger {
         return mediaItem.mediaMetadata.artist != null
     }
 
-    private fun hasDuration(mediaItem : MediaItem) : Boolean {
-        return false
-      //  mediaItem.mediaMetadata.
-       // return hasExtras(mediaItem) && hasExtra(MediaMetadataCompat.METADATA_KEY_DURATION, mediaItem)
-    }
-
     private fun hasFileCount(mediaItem : MediaItem?) : Boolean {
         return hasExtras(mediaItem) && hasExtra(Constants.FILE_COUNT, mediaItem)
     }
@@ -90,7 +107,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryName(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return directory.name
             }
@@ -101,7 +118,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryPath(item: MediaItem?): String {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return directory.absolutePath
             }
@@ -112,7 +129,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDirectoryUri(item: MediaItem?): Uri? {
         if (hasExtra(MetaDataKeys.META_DATA_DIRECTORY, item)) {
-            val directory = getExtra(MetaDataKeys.META_DATA_DIRECTORY, item) as File?
+            val directory = getSerializableExtra(MetaDataKeys.META_DATA_DIRECTORY, File::class.java, item) as File?
             if (null != directory) {
                 return Uri.fromFile(directory)
             }
@@ -127,19 +144,11 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
-        Log.i(logTag(), "item: $item")
-        Log.i(logTag(), "metadata: ${item.mediaMetadata}")
-        Log.i(logTag(), "extras: ${item.mediaMetadata.extras}")
-        Log.i(logTag(), "duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}")
+        Log.v(logTag(), "getDuration() item: $item, duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}, metadata: ${item.mediaMetadata}, extras: ${item.mediaMetadata.extras}")
         return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
     }
 
-    @JvmStatic
-    fun getFileCount(item : MediaItem?) : Int {
-        return if (hasFileCount(item)) getExtra(Constants.FILE_COUNT, item) as Int else -1
-    }
-
-    @SuppressWarnings("deprecation")
+    @Suppress("DEPRECATION")
     @JvmStatic
     fun getMediaItemType(item: MediaItem): MediaItemType {
         val mediaItemType : MediaItemType? = if (Build.VERSION.SDK_INT >= TIRAMISU) {
@@ -159,7 +168,7 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getRootMediaItemType(item: MediaItem?): MediaItemType? {
-        return getExtra(Constants.ROOT_ITEM_TYPE, item) as MediaItemType?
+        return getSerializableExtra(Constants.ROOT_ITEM_TYPE, MediaItemType::class.java, item) as MediaItemType?
     }
 
     fun getAlbumArtUri(song: MediaItem): Uri? {
@@ -171,27 +180,12 @@ object MediaItemUtils : LogTagger {
         return song.mediaMetadata.artworkData
     }
 
-    @JvmStatic
-    fun getRootTitle(song: MediaItem): String? {
-        val extras = song.mediaMetadata.extras
-        if (null != extras) {
-            val mediaItemType : MediaItemType? = extras.getSerializable(Constants.ROOT_ITEM_TYPE) as MediaItemType
-            return mediaItemType?.title
-        }
-        return null
-    }
-
-    @JvmStatic
-    fun getEmptyMediaItem() : MediaItem {
-        return MediaItemBuilder(EMPTY_MEDIA_ITEM_ID).build()
-    }
-
     fun isEmptyMediaItem(mediaItem: MediaItem?) : Boolean {
         return mediaItem?.mediaId == EMPTY_MEDIA_ITEM_ID
     }
 
     fun noResultsFound(mediaItems : List<MediaItem>) : Boolean {
-        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems.get(0))
+        return mediaItems.size == 1 && isEmptyMediaItem(mediaItems[0])
     }
 
     fun getAlbumTitle(mediaItem: MediaItem) : String {

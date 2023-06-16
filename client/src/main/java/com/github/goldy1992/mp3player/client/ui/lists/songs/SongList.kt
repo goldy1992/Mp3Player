@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,16 +19,15 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
-import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
+import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
-private const val logTag = "SongList"
+private const val LOG_TAG = "SongList"
 
 @ExperimentalCoilApi
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
@@ -36,8 +35,7 @@ fun SongList(
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
     onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
-
-    Log.i(logTag, "song list size: ${songs.songs.size}")
+    Log.v(LOG_TAG, "SongList() invoked with ${songs.songs.size} songs")
     val currentMediaItem = currentSongProvider()
 
     when (songs.state) {
@@ -54,7 +52,13 @@ fun SongList(
         State.LOADING -> {
             LoadingSongsList()
         }
-        else -> EmptySongsList()
+        State.NO_PERMISSIONS -> {
+            NoPermissions()
+        }
+        State.NOT_LOADED -> {
+
+        }
+        //else -> EmptySongsList()
     }
 }
 
@@ -93,14 +97,22 @@ private fun LoadedSongsList(
 @Preview
 @Composable
 fun EmptySongsList() {
-
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(DEFAULT_PADDING)) {
-        Text(text = stringResource(id = R.string.no_songs_on_device),
-        textAlign = TextAlign.Center,
-        modifier = Modifier.fillMaxWidth())
-
+        LazyColumn {
+            item {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(id = R.string.no_songs_on_device),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -111,7 +123,17 @@ fun LoadingSongsList() {
         modifier = Modifier.padding(10.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally)    {
-        Text("Loading Songs")
-        LoadingIndicator()
+
+        ListItem(
+            colors = ListItemDefaults.colors(MaterialTheme.colorScheme.surface),
+            trailingContent = {
+                 CircularProgressIndicator()
+            },
+            headlineContent = {
+                Text(
+                    text = stringResource(id = R.string.loading),
+                )
+            },
+        )
     }
 }

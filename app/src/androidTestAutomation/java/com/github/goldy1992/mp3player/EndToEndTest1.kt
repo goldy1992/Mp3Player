@@ -16,6 +16,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.*
+import androidx.test.uiautomator.UiDevice
 import com.github.goldy1992.mp3player.client.NotificationBarUtils.closeNotifications
 import com.github.goldy1992.mp3player.client.NotificationBarUtils.playFromNotificationBar
 import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.assertIsPlaying
@@ -23,6 +24,7 @@ import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.assertNotP
 import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.clickPause
 import com.github.goldy1992.mp3player.client.PlayPauseButtonTestUtils.waitForPlaying
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.R as AppR
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.testdata.Song
 import com.github.goldy1992.mp3player.testdata.Songs.SONGS
@@ -69,7 +71,6 @@ class EndToEndTest1 {
         // Initialize UiDevice instance
         mDevice = UiDevice.getInstance(getInstrumentation())
         startApp()
-        assertSplashScreenActivity()
         waitForMainActivityToLoad(composeTestRule)
     }
     /**
@@ -104,7 +105,7 @@ class EndToEndTest1 {
             mDevice.waitForIdle()
         }
 
-        val expectedAppName = context.getString(R.string.app_name)
+        val expectedAppName = context.getString(AppR.string.app_name)
         mDevice.hasObject(By.text(expectedAppName))
         val selector : UiSelector = UiSelector()
                 .resourceId("android:id/title")
@@ -182,20 +183,7 @@ class EndToEndTest1 {
     }
 
 
-    private fun assertSplashScreenActivity() {
-        val splashIconContentDescription = context.getString(R.string.splash_screen_icon)
-        val appTitle = context.getString(R.string.app_title)
-        mDevice.wait(
-                Until.hasObject(By.descContains(splashIconContentDescription)),
-                LAUNCH_TIMEOUT
-        )
-        runBlocking {
-            composeTestRule.awaitIdle()
-            composeTestRule.onNodeWithContentDescription(splashIconContentDescription)
-                .assertExists().assertIsDisplayed()
-            composeTestRule.onNodeWithText(appTitle).assertExists().assertIsDisplayed()
-        }
-    }
+
 
     private fun getUiObjectFromId(id : String) : UiObject {
         return mDevice.findObject(UiSelector().resourceId(id))

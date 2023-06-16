@@ -1,19 +1,26 @@
-@file:OptIn(ExperimentalAnimationApi::class)
-
+@file:OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalMaterial3Api::class
+)
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
+import android.annotation.TargetApi
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION_CODES.S
+import android.os.Build.VERSION_CODES.TIRAMISU
+import android.os.Bundle
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.Help
-import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,23 +46,28 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
+private const val logTag = "SettingsScreen"
+
 
 /**
- *
+ * The Settings Screen
  */
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
-    navController : NavController,
+    navController : NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     windowSize: WindowSize = WindowSize.Compact
 ) {
 
     val settings by viewModel.settings.collectAsState()
+    val permissions by viewModel.permissionState.collectAsState()
+
     val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
     settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
     settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
+    settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -64,12 +76,14 @@ fun SettingsScreen(
             navController = navController,
             scope = scope,
             settingsProvider = { settings},
+            permissionsProvider = {permissions},
             settingsOnClickMap = settingsOnClickMap)
     } else {
         SmallSettingsScreen(
             navController = navController,
             scope = scope,
             settingsProvider = { settings},
+            permissionsProvider = {permissions},
             settingsOnClickMap = settingsOnClickMap)
     }
 }
@@ -80,6 +94,7 @@ private fun LargeSettingsScreen(
     navController: NavController,
     scope: CoroutineScope,
     settingsProvider: () -> Settings,
+    permissionsProvider: () -> Map<String, Boolean>,
     settingsOnClickMap: EnumMap<Settings.Type, Any>
 ) {
     PermanentNavigationDrawer(drawerContent = {
@@ -103,9 +118,9 @@ private fun LargeSettingsScreen(
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
+                        permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it),
-                        navController = navController,
+                        modifier = Modifier.padding(it)
                     )
                 }
             })
@@ -116,6 +131,7 @@ private fun LargeSettingsScreen(
 @Composable
 private fun SmallSettingsScreen(
     settingsProvider: () -> Settings,
+    permissionsProvider: () -> Map<String, Boolean>,
     settingsOnClickMap: EnumMap<Settings.Type, Any>,
     navController: NavController,
     scope: CoroutineScope,
@@ -131,7 +147,7 @@ private fun SmallSettingsScreen(
     }) {
 
         Scaffold(topBar = {
-            SmallTopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
+            TopAppBar(title = { Text(text = stringResource(id = R.string.settings)) },
                 navigationIcon = {
                     NavUpButton(
                         navController = navController,
@@ -144,79 +160,155 @@ private fun SmallSettingsScreen(
                 Surface(Modifier.width(500.dp)) {
                     SettingsScreenContent(
                         settingsProvider = settingsProvider,
+                        permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it),
-                        navController = navController
+                        modifier = Modifier.padding(it)
                     )
                 }
             })
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
+@Suppress("UNCHECKED_CAST")
 @Composable
 fun SettingsScreenContent(
     settingsOnClickMap : EnumMap<Settings.Type, Any>,
     modifier: Modifier = Modifier,
     settingsProvider: () -> Settings = {Settings()},
-    navController: NavController = rememberAnimatedNavController(),
+    permissionsProvider: () -> Map<String, Boolean>,
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
-
+    val context = LocalContext.current
     val settings = settingsProvider()
-    Column(modifier = modifier) {
-        DisplaySubheader()
-        SystemDarkModeMenuItem(
-            useSystemDarkMode = settings.useSystemDarkMode,
-            onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
-        )
-        DarkModeMenuItem(
-            useSystemDarkMode = settings.useSystemDarkMode,
-            isDarkMode = settings.darkMode,
-            onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
-        )
-        // TODO: Add Dynamic color option for android 12
-        Divider()
-        HelpSubHeader()
-        SupportAndFeedbackMenuItem(navController)
-        VersionMenuItem(versionUtils = versionUtils)
+    LazyColumn(modifier = modifier) {
+        item {
+            SubHeader(title = stringResource(id = R.string.display))
+        }
+        item {
+            SystemDarkModeMenuItem(
+                useSystemDarkMode = settings.useSystemDarkMode,
+                onUpdate = settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] as (Boolean) -> Unit
+            )
+        }
+        item {
+            DarkModeMenuItem(
+                useSystemDarkMode = settings.useSystemDarkMode,
+                isDarkMode = settings.darkMode,
+                onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
+            )
+        }
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            item {
+                DynamicColorMenuItem(
+                    useDynamicColor = settings.dynamicColor,
+                    onUpdate = settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] as (Boolean) -> Unit
+                )
+            }
+        }
+
+        item {
+            Divider()
+        }
+        item {
+            SubHeader(title = stringResource(id = R.string.permissions))
+        }
+        if (Build.VERSION.SDK_INT >= TIRAMISU) {
+            permissionsMenuItemsTiramisu(
+                lazyListScope = this,
+                permissionsProvider = permissionsProvider,
+            )
+        } else {
+            permissionsMenuItemsPreTiramisu(
+                lazyListScope = this,
+                permissionsProvider = permissionsProvider,
+            )
+
+        }
+        item {
+            ListItem(
+                leadingContent = {
+                    Icon(
+                        Icons.Default.Security,
+                        contentDescription = ""
+                    )
+                },
+                headlineContent = { Text(stringResource(id = R.string.update_permissions)) },
+                supportingContent = { Text("Opens System Settings in order to select and refine the App Permissions.") },
+                modifier = Modifier.clickable(enabled = true) {
+                    val intent =
+                        Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri: Uri = Uri.fromParts("package", context.packageName, null)
+                    intent.addCategory(Intent.CATEGORY_DEFAULT)
+                    intent.data = uri
+                    context.startActivity(intent, Bundle())
+                }
+            )
+        }
+        item {
+            Divider()
+        }
+        item {
+            SubHeader(title = stringResource(id = R.string.help))
+        }
+        item {
+            SupportAndFeedbackMenuItem(onClick = {  })
+        }
+        item {
+            Divider()
+        }
+        item {
+            VersionMenuItem(versionUtils = versionUtils)
+        }
     }
 
 }
 
 
-@OptIn(ExperimentalMaterialApi::class)
-@ExperimentalMaterialApi
+@Preview
 @Composable
-private fun DisplaySubheader() {
+private fun SubHeader(title : String = "Permissions",
+                      subtitle : String? = null) {
+
+    val subtitleComposable : (@Composable () -> Unit)? = if (subtitle == null) null else { { Text(subtitle)} }
     ListItem(
-        text = { Text(stringResource(id = R.string.display), style = MaterialTheme.typography.titleSmall) },
+        headlineContent = { Text(title, style = MaterialTheme.typography.titleSmall) },
+        supportingContent = subtitleComposable,
         modifier = Modifier
             .fillMaxWidth()
     )
 }
 
 
-@ExperimentalMaterialApi
+
+@RequiresApi(S)
+@TargetApi(S)
 @Composable
-private fun ThemeMenuItem(navController: NavController) {
-    val theme = stringResource(id = R.string.theme)
+fun DynamicColorMenuItem(useDynamicColor : Boolean = true,
+                        onUpdate : (newValue : Boolean) -> Unit = {}) {
+    val dynamicColorDescr = stringResource(id = R.string.dynamic_color)
     ListItem(
-        icon = { Icon(Icons.Filled.Palette, contentDescription = theme) },
-        text = { Text(theme, style = MaterialTheme.typography.titleMedium) },
-        modifier = Modifier.clickable { navController.navigate(Screen.THEME_SELECT.name)}
+        leadingContent = {  Icon(Icons.Filled.Palette, contentDescription = dynamicColorDescr) },
+        headlineContent = { Text(dynamicColorDescr)},
+        trailingContent = {
+            Switch(
+                checked = useDynamicColor,
+                onCheckedChange = { isChecked -> onUpdate(isChecked) },
+                colors = SwitchDefaults.colors(),
+                modifier = Modifier.semantics { contentDescription =  dynamicColorDescr }
+            )
+        }
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
                                    onUpdate : (newValue : Boolean) -> Unit = {_ ->}) {
     val switchDescription = stringResource(id = R.string.system_dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
-        trailing = {
+        leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.system_dark_mode_icon)) },
+        headlineContent = { Text(text = stringResource(id = R.string.use_system_dark_mode))},
+        trailingContent = {
             Switch(
                 checked = useSystemDarkMode,
                 onCheckedChange = { isChecked -> onUpdate(isChecked) },
@@ -227,16 +319,15 @@ private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun DarkModeMenuItem(isDarkMode : Boolean,
                             useSystemDarkMode: Boolean,
                             onUpdate: (newValue: Boolean) -> Unit) {
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
-        icon = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
-        text = { Text(text = stringResource(id = R.string.dark_mode)) },
-        trailing = {
+        leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
+        headlineContent = { Text(text = stringResource(id = R.string.dark_mode)) },
+        trailingContent = {
             Switch(
                 checked = isDarkMode,
                 enabled = !useSystemDarkMode,
@@ -246,55 +337,41 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 
 }
 
-@ExperimentalMaterialApi
-@Preview
 @Composable
-private fun HelpSubHeader() {
-    ListItem(
-        text = { Text(stringResource(id = R.string.help), style = MaterialTheme.typography.titleSmall) },
-        modifier = Modifier
-            .fillMaxWidth()
-    )
-}
-
-@ExperimentalMaterialApi
-@Composable
-private fun SupportAndFeedbackMenuItem(navController: NavController) {
+private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
     val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
     ListItem(
-        icon = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
-        text = {
-            Column() {
+        modifier = Modifier.clickable {
+            onClick()
+        },
+        leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
+        headlineContent = {
+            Column {
                 Text(supportAndFeedback)
             }
         },
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
-        icon={},
-        text = {
-            Column() {
-                Text(stringResource(id = R.string.version))
-
-                Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall)
-            }
-        },
+        leadingContent = {},
+        headlineContent = {Text(stringResource(id = R.string.version)) },
+        supportingContent = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
     )
 }
 
-@ExperimentalMaterialApi
 @Composable
-private fun AboutMenuItem(navController: NavController) {
+private fun AboutMenuItem(onClick: () -> Unit) {
     ListItem(
-        icon={ },
-        text = {
-            Column() {
+        modifier = Modifier.clickable {
+            onClick()
+        },
+        leadingContent = { },
+        headlineContent = {
                 Text("About") // TODO: Translate and link to about page!
-            }
         },
     )
 }
+

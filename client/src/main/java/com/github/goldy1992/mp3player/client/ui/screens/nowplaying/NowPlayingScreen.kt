@@ -1,9 +1,13 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,21 +33,22 @@ import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.apache.commons.lang3.ObjectUtils.isEmpty
 
-@OptIn(ExperimentalMaterial3Api::class)
+const val LOG_TAG = "NowPlayingScreen"
+@OptIn(
+    ExperimentalAnimationApi::class,
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class,
+)
 @InternalCoroutinesApi
-@ExperimentalPagerApi
 @Composable
 fun NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
-    navController: NavController,
+    navController: NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
@@ -154,16 +159,19 @@ fun NowPlayingScreen(
     )
 }
 
-@ExperimentalPagerApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ViewPager(metadata : () -> MediaMetadata,
               queueProvider: () -> QueueState,
               skipToNext : () -> Unit,
               skipToPrevious : () -> Unit,
               modifier: Modifier = Modifier,
-              pagerState:PagerState = rememberPagerState(initialPage = queueProvider().currentIndex),
+              pagerState: PagerState = androidx.compose.foundation.pager.rememberPagerState(
+                  initialPage = queueProvider().currentIndex
+              ),
            ) {
     val queueState = queueProvider()
+    val numberOfPages = queueState.items.size
     val currentQueuePosition = queueState.currentIndex
 
     if (isEmpty(queueState.items)) {
@@ -174,13 +182,13 @@ fun ViewPager(metadata : () -> MediaMetadata,
         }
     } else {
         LaunchedEffect(metadata()){
-            if (currentQueuePosition < pagerState.pageCount) {
+            if (currentQueuePosition < numberOfPages) {
                 pagerState.scrollToPage(currentQueuePosition)
             }
         }
 
         LaunchedEffect(pagerState.currentPage) {
-            Log.i("NOW_PLAYING", "current page changed: ${pagerState.currentPage}")
+            Log.v(LOG_TAG, "ViewPager() LaunchedEffect: current page changed: ${pagerState.currentPage}")
             val newPosition = pagerState.currentPage
             val atBeginning = currentQueuePosition <= 0
             val atEnd = (currentQueuePosition + 1) >= queueState.items.size
@@ -190,13 +198,11 @@ fun ViewPager(metadata : () -> MediaMetadata,
                 if (!atEnd && isSkipToNext(newPosition, currentQueuePosition)) {
                     skipToNext()
                 } else if (!atBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
-//                    mediaController.seekTo(0)
-//                    mediaController.skipToPrevious()
                     skipToPrevious()
                 }
             }
         }
-        Log.i("NOW_PLAYING_SCRN", "queue size: ${queueState.items.size}")
+        Log.v(LOG_TAG, "ViewPager() queue size: $numberOfPages")
 
         HorizontalPager(
                 state = pagerState,
@@ -205,7 +211,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
-                count = queueState.items.size  ,
+                pageCount = numberOfPages,
                 key = { page : Int -> queueState.items[page].mediaId }
 
             ) { pageIndex ->

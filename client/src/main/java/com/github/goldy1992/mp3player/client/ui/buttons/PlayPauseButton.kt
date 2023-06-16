@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 
-private const val logTag = "PlayPauseButton"
+private const val LOG_TAG = "PlayPauseButton"
 
 /**
  * This button will display the [PlayButton] by default if no implementation of isPlaying is
@@ -35,7 +35,7 @@ fun PlayPauseButton(
                     onClickPause: () -> Unit = {}
 ) {
     val isPlayingValue = isPlaying()
-    Log.i(logTag, "new isPlayingValue: ${isPlayingValue}")
+    Log.d(LOG_TAG, "PlayPauseButton() isPlayingValue: $isPlayingValue")
     val tweenTime = 500
     val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
 
@@ -75,7 +75,6 @@ fun PlayButton(modifier : Modifier = Modifier,
             imageVector = Icons.Filled.PlayArrow,
             contentDescription = stringResource(id = R.string.play),
             tint = MaterialTheme.colorScheme.primary,
-    //        modifier = modifier
         )
     }
 }
@@ -93,7 +92,6 @@ fun PauseButton(modifier: Modifier = Modifier,
             imageVector = Icons.Filled.Pause,
             contentDescription = stringResource(id = R.string.pause),
             tint = MaterialTheme.colorScheme.primary,
-      //      modifier = modifier
         )
     }
 }

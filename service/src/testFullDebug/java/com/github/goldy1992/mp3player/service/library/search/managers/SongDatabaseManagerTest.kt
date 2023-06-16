@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.service.library.search.managers
 
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
+import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
 import com.github.goldy1992.mp3player.service.library.data.search.Song
 import com.github.goldy1992.mp3player.service.library.data.search.SongDao
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SongDatabaseManager
@@ -14,16 +14,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.LooperMode
 import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@LooperMode(LooperMode.Mode.PAUSED)
 @RunWith(RobolectricTestRunner::class)
 class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     private lateinit var songDatabaseManager: SongDatabaseManager
 
     private val songDao: SongDao = mock<SongDao>()
+    private val testRootItemId = "sgjksdf"
 
     @Before
     override fun setup() {
@@ -32,7 +31,7 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         mediaItemTypeIds = MediaItemTypeIds()
         songDatabaseManager = SongDatabaseManager(
                 contentManager,
-                mediaItemTypeIds,
+                testRootItemId,
                 searchDatabase)
     }
 
@@ -60,8 +59,9 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
-                .thenReturn(listOf(toReturn))
+        val cmr = ContentManagerResult(listOf(toReturn), 1, true)
+        whenever(contentManager.getChildren(testRootItemId))
+                .thenReturn(cmr)
 
         argumentCaptor<List<String>>().apply {
             songDatabaseManager.reindex()
@@ -79,14 +79,15 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val toReturn = MediaItemBuilder(expectedId)
                 .setTitle(title)
                 .build()
-        whenever(contentManager.getChildren(mediaItemTypeIds.getId(MediaItemType.SONGS)))
-                .thenReturn(listOf(toReturn))
+        val cmr = ContentManagerResult(listOf(toReturn), 1, true)
+        whenever(contentManager.getChildren(testRootItemId))
+                .thenReturn(cmr)
         argumentCaptor<List<Song>>().apply {
-        songDatabaseManager.reindex()
-        verify(songDao, times(1)).insertAll(capture())
-        val insertedFolder = firstValue[0]
-        Assert.assertEquals(expectedId, insertedFolder.id)
-        Assert.assertEquals(expectedTitle, insertedFolder.value)
+            songDatabaseManager.reindex()
+            verify(songDao, times(1)).insertAll(capture())
+            val insertedFolder = firstValue[0]
+            Assert.assertEquals(expectedId, insertedFolder.id)
+            Assert.assertEquals(expectedTitle, insertedFolder.value)
         }
     }
 }
