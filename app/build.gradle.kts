@@ -95,6 +95,55 @@ dependencies {
     implementation(libs.hilt.android.core)
     kapt(libs.hilt.compiler)
 
+    val composeBom = platform(libs.androidx.compose.bom)
+
+    "androidTestAutomationImplementation"(composeBom)
+
+    "androidTestAutomationImplementation"(libs.hilt.android.core)
+    "kaptAndroidTestAutomation"(libs.hilt.compiler)
+    "androidTestAutomationImplementation"(libs.hilt.android.testing)
+
+    "androidTestAutomationImplementation"(libs.androidx.test.core)
+    "androidTestAutomationImplementation"(libs.androidx.test.ext.junit)
+    "androidTestAutomationImplementation"(libs.androidx.uiautomator)
+    "androidTestAutomationImplementation"(libs.androidx.test.rules)
+    "androidTestAutomationImplementation"(libs.androidx.compose.ui.test)
+    "androidTestAutomationImplementation"(libs.androidx.compose.ui.test.junit4)
+
+
+
+//    implementation group: 'androidx.activity', name: 'activity-ktx', version: activity_ktx_version
+//    debugImplementation group: 'androidx.core', name: 'core-ktx', version: androidx_core_ktx_version
+   //  implementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+
+//    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-android-compiler', version: hilt_version
+//    //   androidTestImplementation group: 'androidx.hilt', name: 'hilt-lifecycle-viewmodel', version: HILT_JETPACK_VERSION
+//
+//    kaptAndroidTest group: 'com.google.dagger', name: 'hilt-compiler', version: hilt_version
+//
+//
+//    androidTestImplementation junitUnitTests
+//
+//            androidTestImplementation group: 'androidx.test', name: 'core', version: test_core_version
+//    androidTestImplementation group: 'androidx.annotation', name: 'annotation', version: annotation_version
+//    androidTestImplementation group: 'androidx.test.ext', name: 'junit', version: junit_ext_version
+//    androidTestImplementation group: 'androidx.test', name: 'rules', version: test_rules_version
+//    androidTestImplementation group: 'androidx.test', name: 'runner', version: test_runner_version
+//    androidTestImplementation group: 'androidx.test', name: 'monitor', version: monitor_version
+//    androidTestImplementation group: 'androidx.test.espresso', name: 'espresso-contrib', version: espresso_core_version
+//
+//
+//    androidTestImplementation(group: 'androidx.test.espresso', name: 'espresso-core', version: espresso_core_version) {
+//    exclude module: "support-annotations"
+//}
+//    androidTestImplementation group: 'androidx.test.uiautomator', name: 'uiautomator', version: ui_automator_version
+//
+
+
+
+
+
+
 }
 
 sonarqube {

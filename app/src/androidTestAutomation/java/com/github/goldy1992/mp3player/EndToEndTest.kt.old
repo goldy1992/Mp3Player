@@ -7,8 +7,8 @@ package com.github.goldy1992.mp3player
 //import com.github.goldy1992.mp3player.client.activities.MainActivityUtils.unregisterIdlingResource
 import android.content.Context
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
+//import androidx.compose.ui.test.junit4.ComposeTestRule
+//import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.GrantPermissionRule

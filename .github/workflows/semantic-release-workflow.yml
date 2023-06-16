@@ -27,18 +27,18 @@ jobs:
       performed_release: ${{ steps.release.outputs.performed_release }}
       release_commit_ref: ${{ steps.release.outputs.release_commit_ref }}
     steps:
-      - uses: actions/checkout@v3.1.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3.5.1
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.12.1
+          node-version: 18
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v4.3.0
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9
 
@@ -47,9 +47,6 @@ jobs:
 
       - name: Install Python dependencies - pyjavaproperties
         run: pip install pyjavaproperties
-
-      - name: Make bump_versions.py executable
-        run: chmod +x ./.github/ci-scripts/release/bump_versions.py
 
       - name: Install Node.js dependencies
         run: npm ci
