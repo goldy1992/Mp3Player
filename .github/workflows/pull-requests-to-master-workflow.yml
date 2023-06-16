@@ -26,7 +26,6 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -44,22 +43,15 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
-#      - name: Setup Android SDK
-#        uses: android-actions/setup-android@v2.0.10
-
-#      - name: Make gradlew executable
-#        run: chmod +x ./gradlew
-#      - name: Gradle Clean
-#        run: ./gradlew clean
-
       - name: Build all Debug flavors
         run: ./gradlew assembleDebug
 
       - name: Gradle and create coverage report
-        run: ./gradlew jacocoTestReport --no-build-cache --no-configuration-cache
+        run: ./gradlew jacocoTestReport
 
       - name: Run Lint
         run: ./gradlew lint
+        
       - name: Run Sonar
         run: ./gradlew sonar --info --stacktrace
         env:

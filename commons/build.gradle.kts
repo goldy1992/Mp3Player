@@ -71,5 +71,6 @@ sonarqube {
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/debugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/debugUnitTest")
         property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml")
         property("sonar.junit.reportPaths", "${project.buildDir}/test-results/testDebugUnitTest/TEST-*.xml")
+        property("sonar.androidLint.reportPaths", "${buildDir}/reports/lint-results-debug.xml")
     }
 }
