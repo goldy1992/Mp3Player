@@ -54,8 +54,3 @@ jobs:
       - name: Release
         id: "release"
         run: npx semantic-release --ci
-
-      - name: Get Latest Git commit hash
-        run: |
-          LATEST_COMMIT_REF=$(git rev-parse --verify HEAD)
-          echo "release_commit_ref=${LATEST_COMMIT_REF}" >> $GITHUB_OUTPUT
