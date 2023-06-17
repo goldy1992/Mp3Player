@@ -5,18 +5,23 @@
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import android.annotation.TargetApi
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.S
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -43,6 +48,8 @@ import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.Language
+import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -69,10 +76,17 @@ fun SettingsScreen(
     val permissions by viewModel.permissionState.collectAsState()
 
     val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
-    settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
+    settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean ->
+        viewModel.setDarkMode(newDarkMode)
+    }
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
     settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
     settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
+    settingsOnClickMap[Settings.Type.LANGUAGE] = { language : String -> {
+//        Log.d(logTag, "settingsOnClickMap() setting language to $language")
+        viewModel.setLanguage(language)
+    }
+}
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -251,6 +265,12 @@ fun SettingsScreenContent(
             )
         }
         item {
+            LanguageMenuItem(
+                currentLanguage = settings.language,
+                updateNewLanguage = settingsOnClickMap[Settings.Type.LANGUAGE] as (String) -> Unit
+            )
+        }
+        item {
             Divider()
         }
         item {
@@ -365,7 +385,7 @@ private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
 @Composable
 private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
-        leadingContent = {},
+        leadingContent = { Spacer(modifier = Modifier.size(24.dp))},
         headlineContent = {Text(stringResource(id = R.string.version)) },
         supportingContent = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
     )
@@ -385,11 +405,60 @@ private fun AboutMenuItem(
         modifier = Modifier.clickable {
             openDialog = true
         },
-        leadingContent = { },
+        leadingContent = { Spacer(modifier = Modifier.size(24.dp))},
         headlineContent = {
             val about = stringResource(id = R.string.about)
-                Text(about) // TODO: Translate and link to about page!
+            Text(about) 
         },
+    )
+}
+
+@Composable
+private fun LanguageMenuItem(currentLanguage: String = "en", updateNewLanguage : (newLanguage : String) -> Unit) {
+    Log.d(logTag, "LanguageMenuItem() invoked with currentLanguage: $currentLanguage")
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        val context = LocalContext.current
+        LanguageSelectionDialog(
+            currentLanguage = currentLanguage,
+            onConfirm = { language : String ->
+                val selectedLanguage = language.uppercase()
+                updateLocale(context, selectedLanguage)
+                Log.d(logTag, "Locale Updated")
+                updateNewLanguage(selectedLanguage)
+                Log.d(logTag, "Updated language settings")
+                openDialog = false
+
+            },
+            onDismiss =  {
+                openDialog = false
+            }
+        )
+    }
+    val languageText = stringResource(id = R.string.language)
+    ListItem(
+        modifier = Modifier.clickable {
+            openDialog = true
+        },
+        leadingContent = { Icon(Icons.Default.Language, contentDescription = languageText)},
+        headlineContent = {
+            Text(text = languageText)
+        },
+        supportingContent = {
+            Text(text = Language.valueOf(currentLanguage.uppercase()).writtenName)
+        }
+    )
+}
+
+private fun updateLocale(context : Context, languageCode : String) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    val config: Configuration = context.resources.configuration
+    config.setLocale(locale)
+//    context.createConfigurationContext(config)
+    context.resources.updateConfiguration(
+        config,
+        context.resources.displayMetrics
     )
 }
 

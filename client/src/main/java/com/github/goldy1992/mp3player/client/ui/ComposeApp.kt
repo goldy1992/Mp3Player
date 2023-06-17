@@ -8,7 +8,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
+import androidx.compose.runtime.CompositionLocalContext
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.intl.Locale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavType
@@ -57,6 +61,8 @@ fun ComposeApp(
     windowSize: WindowSize,
     startScreen : Screen
 ) {
+//    val locale = Locale.
+    val x : CompositionLocalContext
     val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
         AnimatedNavHost(

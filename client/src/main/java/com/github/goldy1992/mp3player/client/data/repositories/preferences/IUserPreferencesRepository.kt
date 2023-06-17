@@ -8,15 +8,13 @@ interface IUserPreferencesRepository {
     fun userPreferencesFlow() : Flow<UserPreferences>
 
     suspend fun updateTheme(newTheme : Theme)
-    fun getTheme() : Flow<Theme>
 
     suspend fun updateDarkMode(useDarkMode : Boolean)
-    fun getDarkMode() : Flow<Boolean>
 
     suspend fun updateSystemDarkMode(useSystemDarkMode : Boolean)
-    fun getSystemDarkMode() : Flow<Boolean>
 
     suspend fun updateUseDynamicColor(useDynamicColor : Boolean)
-    fun getUseDynamicColor() : Flow<Boolean>
+
+    suspend fun updateLanguage(language : String)
 
 }
