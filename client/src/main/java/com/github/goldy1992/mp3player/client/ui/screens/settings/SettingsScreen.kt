@@ -25,7 +25,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,6 +42,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -52,6 +56,7 @@ private const val logTag = "SettingsScreen"
 /**
  * The Settings Screen
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
@@ -258,8 +263,12 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
+            AboutMenuItem(darkMode = settings.darkMode)
+        }
+        item {
             VersionMenuItem(versionUtils = versionUtils)
         }
+
     }
 
 }
@@ -362,15 +371,24 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
     )
 }
 
+@Preview
 @Composable
-private fun AboutMenuItem(onClick: () -> Unit) {
+private fun AboutMenuItem(
+    darkMode : Boolean = false) {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        AboutDialog(darkMode = darkMode) {
+            openDialog = false
+        }
+    }
     ListItem(
         modifier = Modifier.clickable {
-            onClick()
+            openDialog = true
         },
         leadingContent = { },
         headlineContent = {
-                Text("About") // TODO: Translate and link to about page!
+            val about = stringResource(id = R.string.about)
+                Text(about) // TODO: Translate and link to about page!
         },
     )
 }
