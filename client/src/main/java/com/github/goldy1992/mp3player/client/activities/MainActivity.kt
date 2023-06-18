@@ -4,10 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
@@ -23,7 +23,7 @@ import javax.inject.Inject
 /**
  * The Main Activity
  */
-@AndroidEntryPoint(ComponentActivity::class)
+@AndroidEntryPoint(AppCompatActivity::class)
 open class MainActivity : Hilt_MainActivity(), LogTagger {
 
     @Inject

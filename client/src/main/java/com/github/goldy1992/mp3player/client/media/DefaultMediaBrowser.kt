@@ -49,6 +49,9 @@ class DefaultMediaBrowser
         .Builder(context, sessionToken)
         .setListener(this)
         .buildAsync()
+        .also {
+            Log.d(logTag(), "building async Media Browser")
+        }
 
     private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow {
         val messageListener = object : MediaBrowser.Listener {

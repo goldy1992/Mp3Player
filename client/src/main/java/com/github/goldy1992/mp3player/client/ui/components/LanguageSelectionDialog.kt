@@ -1,10 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
-import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -21,13 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import com.github.goldy1992.mp3player.client.R
-import java.util.Locale
 
 private const val LOG_TAG = "LANGUAGE_SELECTION_DIALOG"
 enum class Language(
@@ -45,19 +40,24 @@ enum class Language(
 @Composable
 fun LanguageSelectionDialog(
     currentLanguage: String = "en",
-    onConfirm: (language : String) -> Unit,
     onDismiss : () -> Unit = {}
 ) {
     val selectLanguageTitle = stringResource(id = R.string.select_language)
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(getInitialLanguage(currentLanguage)) }
-
+    Log.d(LOG_TAG, "initial selected option: $selectedOption")
     AlertDialog(
         title = { Text(selectLanguageTitle) },
         confirmButton = {
             val selectedLanguage = selectedOption.code.lowercase()
-            TextButton(onClick = {
+            TextButton(onClick =
+            {
+                AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(
+                        selectedLanguage
+                    )
+                )
+                onDismiss()
                 Log.d(LOG_TAG, "dialog select pressed selected_language: $selectedLanguage")
-                onConfirm(selectedLanguage)
             }) {
                 Text(text = "Select")
             }
@@ -68,7 +68,6 @@ fun LanguageSelectionDialog(
             }
         },
         text = {
-
             Column(Modifier.selectableGroup()) {
                 Language.values().forEach { text ->
                     Row(
@@ -77,7 +76,9 @@ fun LanguageSelectionDialog(
                             .height(56.dp)
                             .selectable(
                                 selected = (text == selectedOption),
-                                onClick = { onOptionSelected(text) },
+                                onClick = {
+                                    Log.d(LOG_TAG, "$text was selected")
+                                    onOptionSelected(text) },
                                 role = Role.RadioButton
                             )
                             .padding(horizontal = 16.dp),
@@ -85,7 +86,8 @@ fun LanguageSelectionDialog(
                     ) {
                         RadioButton(
                             selected = (text == selectedOption),
-                            onClick = null // null recommended for accessibility with screenreaders
+                            onClick = null, // null recommended for accessibility with screenreaders
+                            enabled = text.code != "th"
                         )
                         Text(
                             text = text.writtenName,
@@ -98,7 +100,7 @@ fun LanguageSelectionDialog(
             }
         },
         textContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        onDismissRequest = { onDismiss }
+        onDismissRequest = { onDismiss() }
     )
 
 

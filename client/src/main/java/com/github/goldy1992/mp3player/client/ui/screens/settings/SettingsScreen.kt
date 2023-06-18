@@ -5,9 +5,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
 import android.annotation.TargetApi
-import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.S
@@ -15,6 +13,7 @@ import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -82,11 +81,11 @@ fun SettingsScreen(
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
     settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
     settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
-    settingsOnClickMap[Settings.Type.LANGUAGE] = { language : String -> {
-//        Log.d(logTag, "settingsOnClickMap() setting language to $language")
+    settingsOnClickMap[Settings.Type.LANGUAGE] = { language : String ->
+        Log.d(logTag, "settingsOnClickMap() setting language to $language")
         viewModel.setLanguage(language)
     }
-}
+
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -266,8 +265,7 @@ fun SettingsScreenContent(
         }
         item {
             LanguageMenuItem(
-                currentLanguage = settings.language,
-                updateNewLanguage = settingsOnClickMap[Settings.Type.LANGUAGE] as (String) -> Unit
+                currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en",
             )
         }
         item {
@@ -414,22 +412,12 @@ private fun AboutMenuItem(
 }
 
 @Composable
-private fun LanguageMenuItem(currentLanguage: String = "en", updateNewLanguage : (newLanguage : String) -> Unit) {
+private fun LanguageMenuItem(currentLanguage: String = "en") {
     Log.d(logTag, "LanguageMenuItem() invoked with currentLanguage: $currentLanguage")
     var openDialog by remember { mutableStateOf(false) }
     if (openDialog) {
-        val context = LocalContext.current
         LanguageSelectionDialog(
             currentLanguage = currentLanguage,
-            onConfirm = { language : String ->
-                val selectedLanguage = language.uppercase()
-                updateLocale(context, selectedLanguage)
-                Log.d(logTag, "Locale Updated")
-                updateNewLanguage(selectedLanguage)
-                Log.d(logTag, "Updated language settings")
-                openDialog = false
-
-            },
             onDismiss =  {
                 openDialog = false
             }
@@ -450,15 +438,4 @@ private fun LanguageMenuItem(currentLanguage: String = "en", updateNewLanguage :
     )
 }
 
-private fun updateLocale(context : Context, languageCode : String) {
-    val locale = Locale(languageCode)
-    Locale.setDefault(locale)
-    val config: Configuration = context.resources.configuration
-    config.setLocale(locale)
-//    context.createConfigurationContext(config)
-    context.resources.updateConfiguration(
-        config,
-        context.resources.displayMetrics
-    )
-}
 
