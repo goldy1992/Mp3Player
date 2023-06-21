@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,8 +44,9 @@ fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
                 onClickPause = onClickPause)
             SkipToNextButton(onClick = onClickSkipNext)
         }
-        Row(modifier = Modifier.weight(0.2f)
-            .padding(top=12.dp, bottom = 12.dp, end=16.dp, start = 16.dp),
+        Row(modifier = Modifier
+            .weight(0.2f)
+            .padding(top = 12.dp, bottom = 12.dp, end = 16.dp, start = 16.dp),
             horizontalArrangement = Arrangement.End) {
 
             val currentSong = currentSongProvider()

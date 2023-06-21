@@ -35,6 +35,7 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     private var mediaSession: MediaLibrarySession? = null
 
+    @ServiceCoroutineScope
     @Inject
     lateinit var scope: CoroutineScope
 

@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
@@ -23,8 +24,8 @@ import javax.inject.Inject
 /**
  * The Main Activity
  */
-@AndroidEntryPoint(AppCompatActivity::class)
-open class MainActivity : Hilt_MainActivity(), LogTagger {
+@AndroidEntryPoint
+open class MainActivity : AppCompatActivity(), LogTagger {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -32,9 +33,13 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
     @Inject
     lateinit var permissionsRepository: IPermissionsRepository
 
+    @Inject
+    lateinit var sessionToken: SessionToken
+
     /**
      *
      */
+    @ActivityCoroutineScope
     @Inject
     lateinit var scope: CoroutineScope
 
@@ -69,6 +74,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
         super.onCreate(savedInstanceState)
         Log.v(logTag(), "onCreate() call to super.onCreate() complete")
 
+        this.mediaBrowser.init(sessionToken, scope)
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null

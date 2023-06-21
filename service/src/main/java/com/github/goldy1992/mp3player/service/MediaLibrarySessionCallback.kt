@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
@@ -34,7 +35,7 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
-                private val scope : CoroutineScope,
+                @ServiceCoroutineScope private val scope : CoroutineScope,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
@@ -111,6 +112,7 @@ class MediaLibrarySessionCallback
                 .build()
             Log.d(logTag(), "onSubscribe() notifying children changed for browser $browser")
             session.notifyChildrenChanged(browser, parentId, numberOfResults, returnParams)
+            Log.d(logTag(), "session notified")
         }
         return Futures.immediateFuture(LibraryResult.ofVoid())
     }

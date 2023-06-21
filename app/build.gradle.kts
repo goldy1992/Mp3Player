@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kapt)
     id("mp3player.android.application.variant_filter")
 }
 
@@ -110,6 +110,10 @@ dependencies {
     "androidTestAutomationImplementation"(libs.androidx.compose.ui.test)
     "androidTestAutomationImplementation"(libs.androidx.compose.ui.test.junit4)
 
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 sonarqube {

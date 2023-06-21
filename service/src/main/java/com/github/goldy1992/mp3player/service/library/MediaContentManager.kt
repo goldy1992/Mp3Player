@@ -7,6 +7,7 @@ import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
@@ -28,7 +29,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                                               private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               rootAuthenticator: RootAuthenticator,
-                                              scope : CoroutineScope,
+                                              @ServiceCoroutineScope scope : CoroutineScope,
 ) : ContentManager {
 
     private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())

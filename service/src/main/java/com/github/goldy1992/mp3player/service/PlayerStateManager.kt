@@ -28,6 +28,8 @@ class PlayerStateManager
     constructor(
         private val contentManager: ContentManager,
         private val savedStateRepository: ISavedStateRepository,
+
+        @ServiceCoroutineScope
         private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
         @IoDispatcher private val ioDispatcher: CoroutineDispatcher,

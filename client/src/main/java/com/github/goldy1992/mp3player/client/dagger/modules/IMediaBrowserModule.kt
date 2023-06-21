@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
-import com.github.goldy1992.mp3player.client.media.DefaultMediaBrowser
+import com.github.goldy1992.mp3player.client.media.DefaultMediaBrowser2
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import dagger.Binds
 import dagger.Module
@@ -14,5 +14,5 @@ abstract class IMediaBrowserModule {
 
     @ActivityRetainedScoped
     @Binds
-    abstract fun providesIMediaBrowser(defaultMediaBrowser: DefaultMediaBrowser) : IMediaBrowser
+    abstract fun providesIMediaBrowser(defaultMediaBrowser: DefaultMediaBrowser2) : IMediaBrowser
 }

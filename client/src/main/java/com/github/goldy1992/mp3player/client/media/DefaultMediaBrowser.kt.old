@@ -41,12 +41,13 @@ class DefaultMediaBrowser
 
     constructor(
         @ApplicationContext private val context: Context,
-        sessionToken: SessionToken,
-        private val scope : CoroutineScope,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
+
+    lateinit var scope : CoroutineScope
+
     private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = MediaBrowser
-        .Builder(context, sessionToken)
+        .Builder(context, null)
         .setListener(this)
         .buildAsync()
         .also {
@@ -114,6 +115,10 @@ class DefaultMediaBrowser
             started = SharingStarted.WhileSubscribed(),
             replay = 1
         )
+
+    override fun init(sessionToken: SessionToken, scope: CoroutineScope) {
+        this.scope = scope
+    }
 
     override fun audioData(): Flow<AudioSample> {
         return audioDataFlow

@@ -1,21 +1,22 @@
-package com.github.goldy1992.mp3player.service.dagger.modules.service
+package com.github.goldy1992.mp3player.client.dagger.modules
 
+import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.DefaultDispatcher
-import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ServiceComponent
-import dagger.hilt.android.scopes.ServiceScoped
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
-@InstallIn(ServiceComponent::class)
+@InstallIn(ActivityComponent::class)
 @Module
-object CoroutineScopeModule {
-    @ServiceCoroutineScope
-    @ServiceScoped
+object ActivityScopedCoroutineScopeModule {
+
+    @ActivityCoroutineScope
+    @ActivityScoped
     @Provides
     fun providesCoroutineScope(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher

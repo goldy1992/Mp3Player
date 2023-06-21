@@ -13,7 +13,7 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="androidx.media3.session.MediaLibraryService"/>
+                <action android:name="androidx.media3.session.MediaSessionService"/>
             </intent-filter>
         </service>
 
