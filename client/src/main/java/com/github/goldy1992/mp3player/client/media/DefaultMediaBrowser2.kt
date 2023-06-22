@@ -108,9 +108,7 @@ class DefaultMediaBrowser2
                 val onChildrenChangedFlow = onChildrenChangedFlow(addListener, removeListener)
                 scope.launch {
                     Log.d(logTag(), "I'm working in thread ${Thread.currentThread().name}")
-                    onChildrenChangedFlow.collect { v ->
-                        _onChildrenChangedMutableStateFlow.value = v
-                    }
+                    onChildrenChangedFlow.collect { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
                 }
 
                 val onCustomCommandFlow = onCustomCommandFlow(addListener, removeListener)
@@ -189,9 +187,9 @@ class DefaultMediaBrowser2
     override fun metadata(): Flow<MediaMetadata> {
         return _metadataDataStateFlow
     }
-
-    private val _onChildrenChangedMutableStateFlow = MutableStateFlow(OnChildrenChangedEventHolder.DEFAULT)
-    private val _onChildrenChangedStateFlow : StateFlow<OnChildrenChangedEventHolder> = _onChildrenChangedMutableStateFlow
+    // use a SharedFlow for onChildrenChanged
+    private val _onChildrenChangedMutableSharedFlow = MutableSharedFlow<OnChildrenChangedEventHolder>(replay = 1)
+    private val _onChildrenChangedStateFlow : SharedFlow<OnChildrenChangedEventHolder> = _onChildrenChangedMutableSharedFlow
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return _onChildrenChangedStateFlow
     }
