@@ -263,7 +263,7 @@ private fun LibraryTabs(
                     val context = LocalContext.current
                     Tab(
                         selected = isSelected,
-                        modifier = Modifier.height(48.dp),
+                        modifier = Modifier.height(48.dp).padding(start = 10.dp, end = 10.dp),
                         content = {
                             Text(
                                 text = MediaItemNameUtils.getMediaItemTypeName(context, item.type).uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,

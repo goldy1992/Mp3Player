@@ -9,9 +9,7 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.MediaReposi
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,18 +46,16 @@ constructor(
 
     init {
         viewModelScope.launch {
-            mediaRepository.audioData()
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            )
-            .collect { audioData ->
-                if (isPlaying.value) {
-                    Log.i(logTag(), "collecting audio data")
-                    _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
-                    Log.i(logTag(), "finished collecting audio data")
-                }
+            mediaRepository
+                .audioData()
+                .collect { audioData ->
+                    Log.d(logTag(), "collecting audio data")
+                    if (isPlaying.value) {
+                        _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
+                        Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
+                    } else {
+                        Log.v(logTag(), "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
+                    }
             }
         }
 

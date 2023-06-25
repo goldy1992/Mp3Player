@@ -14,13 +14,13 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
-import com.github.goldy1992.mp3player.client.media.flows.audioDataFlow
+import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
+import com.github.goldy1992.mp3player.client.media.flows.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
 import com.github.goldy1992.mp3player.client.media.flows.currentMediaItemFlow
 import com.github.goldy1992.mp3player.client.media.flows.currentPlaylistMetadataFlow
-import com.github.goldy1992.mp3player.client.media.flows.isPlayingCallbackFlow
-import com.github.goldy1992.mp3player.client.media.flows.metadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.onChildrenChangedFlow
-import com.github.goldy1992.mp3player.client.media.flows.onCustomCommandFlow
 import com.github.goldy1992.mp3player.client.media.flows.onSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackParametersFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackPositionFlow
@@ -40,6 +40,7 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import androidx.annotation.OptIn as AndroidXOptIn
@@ -51,7 +52,8 @@ class DefaultMediaBrowser2
 
     constructor(
         @ApplicationContext private val context: Context,
-        @MainDispatcher private val mainDispatcher : CoroutineDispatcher ) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher
+    ) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
     private lateinit var scope : CoroutineScope
     private val _mediaBrowserLFMutableStateFlow: MutableStateFlow<ListenableFuture<MediaBrowser>?> =
@@ -60,29 +62,30 @@ class DefaultMediaBrowser2
     override fun init(sessionToken: SessionToken, scope : CoroutineScope) {
         Log.v(logTag(), "init() invoked")
         this.scope = scope
-        Log.d(logTag(), "setting session token")
         _mediaBrowserLFMutableStateFlow.value = MediaBrowser
             .Builder(context, sessionToken)
             .setListener(this)
             .buildAsync()
-            .also {
-                Log.d(logTag(), "building async Media Browser")
-            }
 
         scope.launch {
             Log.d(logTag(), "scope.launch")
             _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
                 Log.d(logTag(), "collecting from mediaBrowserLFSF")
 
+                AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
 
-                val audioDataFlow = audioDataFlow(_customCommandStateFlow)
+                val playerEventsFLow = playerEventFlow(it)
                 scope.launch {
-                    audioDataFlow.collect { v -> _audioDataMutableStateFlow.value = v }
+                    playerEventsFLow.collect { pEvts ->
+                        _playerEventMSF.emit(pEvts)
+                    }
                 }
 
-                val currentMediaItemFlow = currentMediaItemFlow(_metadataDataStateFlow, it, mainDispatcher)
+                val currentMediaItemFlow = currentMediaItemFlow(_metadataMutableStateFlow, it, mainDispatcher)
                 scope.launch {
-                    currentMediaItemFlow.collect { v -> _currentMediaItemFlowMutableStateFlow.value = v }
+                    currentMediaItemFlow.collect { v ->
+                        Log.d(logTag(), "received currentMediaItem, $v")
+                        _currentMediaItemFlowMutableStateFlow.value = v }
                 }
 
                 val currentPlaylistMetadataFlow = currentPlaylistMetadataFlow(it, mainDispatcher, scope)
@@ -92,18 +95,9 @@ class DefaultMediaBrowser2
                     }
                 }
 
-                val isPlayingCallbackFlow = isPlayingCallbackFlow(it, scope, mainDispatcher)
-                scope.launch {
-                    Log.d(logTag(), "I'm working in thread ${Thread.currentThread().name}")
-                    Log.d(logTag(), "scope.launch for isPlayingCallbackFlow.collect")
-                    isPlayingCallbackFlow.collect {v -> _isPlayingMutableStateFlow.value = v }
-                    Log.d(logTag(), "finished  isPlayingCallbackFlow.collect")
-                }
 
-                val metadataFlow = metadataFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    metadataFlow.collect { v -> _metadataMutableStateFlow.value = v}
-                }
+                IsPlayingFlow.create(scope, it, mainDispatcher) { v -> _isPlayingMutableStateFlow.value = v }
+                MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }
 
                 val onChildrenChangedFlow = onChildrenChangedFlow(addListener, removeListener)
                 scope.launch {
@@ -111,9 +105,8 @@ class DefaultMediaBrowser2
                     onChildrenChangedFlow.collect { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
                 }
 
-                val onCustomCommandFlow = onCustomCommandFlow(addListener, removeListener)
-                scope.launch {
-                    onCustomCommandFlow.collect { v-> _customCommandMutableStateFlow.value = v}
+                OnCustomCommandFlow.create(scope, addListener, removeListener) {
+                    c -> _customCommandMutableStateFlow.emit(c)
                 }
 
                 val onSearchResultFlow = onSearchResultsChangedFlow(addListener, removeListener)
@@ -153,15 +146,16 @@ class DefaultMediaBrowser2
     }
 
     private val _audioDataMutableStateFlow = MutableStateFlow(AudioSample.NONE)
-    private val _audioDataStateFlow : StateFlow<AudioSample> = _audioDataMutableStateFlow
+
+
     override fun audioData(): Flow<AudioSample> {
-        return _audioDataStateFlow
+        return _audioDataMutableStateFlow.asStateFlow()
     }
 
     private val _currentMediaItemFlowMutableStateFlow = MutableStateFlow(MediaItem.EMPTY)
-    private val _currentMediaItemFlowStateFlow : StateFlow<MediaItem> = _currentMediaItemFlowMutableStateFlow
+
     override fun currentMediaItem(): Flow<MediaItem> {
-        return _currentMediaItemFlowStateFlow
+        return _currentMediaItemFlowMutableStateFlow.asStateFlow()
     }
 
     private val _currentPlaylistMetadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
@@ -171,9 +165,8 @@ class DefaultMediaBrowser2
     }
 
     private val _isPlayingMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _isPlayingStateFlow: StateFlow<Boolean> = _isPlayingMutableStateFlow
     override fun isPlaying(): Flow<Boolean> {
-        return _isPlayingStateFlow
+        return _isPlayingMutableStateFlow.asStateFlow()
     }
 
     private val _shuffleModeMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -183,10 +176,10 @@ class DefaultMediaBrowser2
     }
 
     private val _metadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
-    private val _metadataDataStateFlow : StateFlow<MediaMetadata> = _metadataMutableStateFlow
     override fun metadata(): Flow<MediaMetadata> {
-        return _metadataDataStateFlow
+        return _metadataMutableStateFlow.asStateFlow()
     }
+
     // use a SharedFlow for onChildrenChanged
     private val _onChildrenChangedMutableSharedFlow = MutableSharedFlow<OnChildrenChangedEventHolder>(replay = 1)
     private val _onChildrenChangedStateFlow : SharedFlow<OnChildrenChangedEventHolder> = _onChildrenChangedMutableSharedFlow
@@ -194,11 +187,32 @@ class DefaultMediaBrowser2
         return _onChildrenChangedStateFlow
     }
 
-    private val _customCommandMutableStateFlow = MutableStateFlow(SessionCommandEventHolder.DEFAULT)
-    private val _customCommandStateFlow : StateFlow<SessionCommandEventHolder> = _customCommandMutableStateFlow
+    private val _customCommandMutableStateFlow = MutableSharedFlow<SessionCommandEventHolder>()
+
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
-        return _customCommandStateFlow
+        return _customCommandMutableStateFlow.asSharedFlow()
     }
+
+    private fun playerEventFlow(mblf : ListenableFuture<MediaBrowser>) = callbackFlow {
+        val browser = mblf.await()
+        val messageListener = object : Player.Listener {
+            override fun onEvents(player: Player, events: Player.Events) {
+                Log.i(logTag(), "newEvent(s): ${LoggingUtils.getPlayerEventsLogMessage(events)}")
+                super.onEvents(player, events)
+                trySend(events)
+            }
+        }
+        browser.addListener(messageListener)
+        awaitClose {
+            scope.launch(mainDispatcher) {
+                browser.removeListener(messageListener)
+            }
+        }
+    }
+    private val _playerEventMSF = MutableSharedFlow<Player.Events>()
+    private val _playerEventSF : SharedFlow<Player.Events> = _playerEventMSF
+
+
 
     private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
     private val _onSearchResultsChangedStateFlow : StateFlow<OnSearchResultsChangedEventHolder> = _onSearchResultsChangedMutableStateFlow
@@ -306,7 +320,7 @@ class DefaultMediaBrowser2
     override suspend fun play() {
         Log.v(logTag(), "play() invoked, awaiting mediaBrowser")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
-        Log.v(logTag(), "play() mediaBrowser retrieved")
+        Log.v(logTag(), "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}")
         //LoggingUtils.logPlaybackState(mediaBrowser?.playbackState, logTag())
         mediaBrowser?.play()
         Log.i(logTag(), "play() invocation complete")
@@ -376,6 +390,7 @@ class DefaultMediaBrowser2
     }
 
     override suspend fun stop() {
+        Log.d(logTag(), "stop inoked")
         _mediaBrowserLFMutableStateFlow.value?.await()?.stop()
     }
 
@@ -418,6 +433,7 @@ class DefaultMediaBrowser2
     }
 
     override fun onDisconnected(controller: MediaController) {
+        Log.d(logTag(), "OnDisconnected invoked")
         listeners.forEach { listener -> listener.onDisconnected(controller) }
     }
 

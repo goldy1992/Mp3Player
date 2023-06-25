@@ -42,7 +42,7 @@ class MediaLibrarySessionCallback
         session: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ConnectionResult {
-        Log.v(logTag(), "onConnect() invoked")
+        Log.v(logTag(), "onConnect() invoked with mediaSession ${session.player} and controller ${controller.uid}")
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
@@ -63,10 +63,21 @@ class MediaLibrarySessionCallback
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
-        Log.v(logTag(), "onPostConnect() invoked")
-        super.onPostConnect(session, controller)
         Log.v(logTag(), "onPostConnect() calling Player.prepare() for MediaSession Player: ${session.player}")
+    }
+
+    override fun onPlayerCommandRequest(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        playerCommand: Int
+    ): Int {
+        Log.d(logTag(), "player command requested: $playerCommand")
+        /* TODO: bug on Android when notification is removed when playback is paused! This causes
+             stop() to be called in some unwanted instances, meaning it should be ensured that
+             [Player#prepare()] is called beforehand
+         */
         session.player.prepare()
+        return super.onPlayerCommandRequest(session, controller, playerCommand)
     }
 
     override fun onGetItem(
@@ -217,6 +228,11 @@ class MediaLibrarySessionCallback
             searchJob.join()
         }
         return Futures.immediateFuture(LibraryResult.ofItemList(searchResults, params))
+    }
+
+    override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {
+        Log.v(logTag(), "onDisconnected invoked with session: $session")
+        super.onDisconnected(session, controller)
     }
 
     override fun logTag(): String {
