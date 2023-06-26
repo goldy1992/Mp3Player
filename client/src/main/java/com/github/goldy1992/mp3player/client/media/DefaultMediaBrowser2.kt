@@ -15,12 +15,13 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
+import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
+import com.github.goldy1992.mp3player.client.media.flows.CurrentPlaylistMetadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
-import com.github.goldy1992.mp3player.client.media.flows.currentMediaItemFlow
-import com.github.goldy1992.mp3player.client.media.flows.currentPlaylistMetadataFlow
-import com.github.goldy1992.mp3player.client.media.flows.onChildrenChangedFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.onSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackParametersFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackPositionFlow
@@ -40,7 +41,6 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import androidx.annotation.OptIn as AndroidXOptIn
@@ -71,43 +71,14 @@ class DefaultMediaBrowser2
             Log.d(logTag(), "scope.launch")
             _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
                 Log.d(logTag(), "collecting from mediaBrowserLFSF")
-
                 AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
-
-                val playerEventsFLow = playerEventFlow(it)
-                scope.launch {
-                    playerEventsFLow.collect { pEvts ->
-                        _playerEventMSF.emit(pEvts)
-                    }
-                }
-
-                val currentMediaItemFlow = currentMediaItemFlow(_metadataMutableStateFlow, it, mainDispatcher)
-                scope.launch {
-                    currentMediaItemFlow.collect { v ->
-                        Log.d(logTag(), "received currentMediaItem, $v")
-                        _currentMediaItemFlowMutableStateFlow.value = v }
-                }
-
-                val currentPlaylistMetadataFlow = currentPlaylistMetadataFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    currentPlaylistMetadataFlow.collect {v ->
-                        _currentPlaylistMetadataMutableStateFlow.value = v
-                    }
-                }
-
-
+                PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }
+                CurrentMediaItemFlow.create(scope, _metadataMutableStateFlow, it, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
+                CurrentPlaylistMetadataFlow.create(scope, it, mainDispatcher) { v -> _currentPlaylistMetadataMutableStateFlow.value = v }
                 IsPlayingFlow.create(scope, it, mainDispatcher) { v -> _isPlayingMutableStateFlow.value = v }
                 MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }
-
-                val onChildrenChangedFlow = onChildrenChangedFlow(addListener, removeListener)
-                scope.launch {
-                    Log.d(logTag(), "I'm working in thread ${Thread.currentThread().name}")
-                    onChildrenChangedFlow.collect { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
-                }
-
-                OnCustomCommandFlow.create(scope, addListener, removeListener) {
-                    c -> _customCommandMutableStateFlow.emit(c)
-                }
+                OnChildrenChangedFlow.create(scope, addListener, removeListener ) { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
+                OnCustomCommandFlow.create(scope, addListener, removeListener) { c -> _customCommandMutableStateFlow.emit(c) }
 
                 val onSearchResultFlow = onSearchResultsChangedFlow(addListener, removeListener)
                 scope.launch {
@@ -182,9 +153,8 @@ class DefaultMediaBrowser2
 
     // use a SharedFlow for onChildrenChanged
     private val _onChildrenChangedMutableSharedFlow = MutableSharedFlow<OnChildrenChangedEventHolder>(replay = 1)
-    private val _onChildrenChangedStateFlow : SharedFlow<OnChildrenChangedEventHolder> = _onChildrenChangedMutableSharedFlow
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        return _onChildrenChangedStateFlow
+        return _onChildrenChangedMutableSharedFlow.asSharedFlow()
     }
 
     private val _customCommandMutableStateFlow = MutableSharedFlow<SessionCommandEventHolder>()
@@ -193,26 +163,8 @@ class DefaultMediaBrowser2
         return _customCommandMutableStateFlow.asSharedFlow()
     }
 
-    private fun playerEventFlow(mblf : ListenableFuture<MediaBrowser>) = callbackFlow {
-        val browser = mblf.await()
-        val messageListener = object : Player.Listener {
-            override fun onEvents(player: Player, events: Player.Events) {
-                Log.i(logTag(), "newEvent(s): ${LoggingUtils.getPlayerEventsLogMessage(events)}")
-                super.onEvents(player, events)
-                trySend(events)
-            }
-        }
-        browser.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                browser.removeListener(messageListener)
-            }
-        }
-    }
+
     private val _playerEventMSF = MutableSharedFlow<Player.Events>()
-    private val _playerEventSF : SharedFlow<Player.Events> = _playerEventMSF
-
-
 
     private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
     private val _onSearchResultsChangedStateFlow : StateFlow<OnSearchResultsChangedEventHolder> = _onSearchResultsChangedMutableStateFlow

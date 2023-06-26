@@ -11,21 +11,21 @@ import org.mockito.kotlin.mock
 
 class MockUserPreferencesRepository : UserPreferencesRepository(mock<DataStore<Preferences>>()) {
 
-        override fun getTheme(): Flow<Theme> {
-            return flow {
-                emit(Theme.BLUE)
-            }
-        }
-
-        override fun getDarkMode(): Flow<Boolean> {
-                return flow {
-                        emit(true)
-                }
-        }
-
-        override fun getSystemDarkMode(): Flow<Boolean> {
-                return flow {
-                        emit(true)
-                }
-        }
+//        override fun getTheme(): Flow<Theme> {
+//            return flow {
+//                emit(Theme.BLUE)
+//            }
+//        }
+//
+//        override fun getDarkMode(): Flow<Boolean> {
+//                return flow {
+//                        emit(true)
+//                }
+//        }
+//
+//        override fun getSystemDarkMode(): Flow<Boolean> {
+//                return flow {
+//                        emit(true)
+//                }
+//        }
 }

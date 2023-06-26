@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 
-class AudioDataFlow internal constructor(
+class AudioDataFlow private constructor(
     scope : CoroutineScope,
     private val onCustomCommandFlow : Flow<SessionCommandEventHolder>,
     onCollect : (AudioSample) -> Unit

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class OnCustomCommandFlow
 
-internal constructor(scope: CoroutineScope,
+private constructor(scope: CoroutineScope,
             private val addListener: (MediaBrowser.Listener) -> Boolean,
             private val removeListener: (MediaBrowser.Listener) -> Boolean,
             onCollect : suspend (SessionCommandEventHolder) -> Unit)
@@ -57,7 +57,4 @@ internal constructor(scope: CoroutineScope,
         return "OnCustomFlow"
     }
 
-    init {
-        initFlow(getFlow())
-    }
 }
