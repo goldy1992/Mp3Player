@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
 import androidx.media3.session.MediaBrowser
-import androidx.media3.session.MediaController
 import org.mockito.kotlin.mock
 
 abstract class MediaBrowserListenerFlowTestBase<T> : MediaFlowTestBase<T>() {

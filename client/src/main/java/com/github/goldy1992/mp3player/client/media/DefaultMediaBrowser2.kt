@@ -21,8 +21,8 @@ import com.github.goldy1992.mp3player.client.media.flows.IsPlayingFlow
 import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
-import com.github.goldy1992.mp3player.client.media.flows.onSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackParametersFlow
 import com.github.goldy1992.mp3player.client.media.flows.playbackPositionFlow
 import com.github.goldy1992.mp3player.client.media.flows.queueFlow
@@ -80,11 +80,8 @@ class DefaultMediaBrowser2
                 MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }
                 OnChildrenChangedFlow.create(scope, addListener, removeListener ) { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
                 OnCustomCommandFlow.create(scope, addListener, removeListener) { c -> _customCommandMutableStateFlow.emit(c) }
+                OnSearchResultsChangedFlow.create(scope, addListener, removeListener) { v -> _onSearchResultsChangedMutableStateFlow.value = v }
 
-                val onSearchResultFlow = onSearchResultsChangedFlow(addListener, removeListener)
-                scope.launch {
-                    onSearchResultFlow.collect { v -> _onSearchResultsChangedMutableStateFlow.value = v}
-                }
 
                 val playbackParametersFlow = playbackParametersFlow(it, mainDispatcher, scope)
                 scope.launch {
@@ -168,9 +165,9 @@ class DefaultMediaBrowser2
     private val _playerEventMSF = MutableSharedFlow<Player.Events>()
 
     private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
-    private val _onSearchResultsChangedStateFlow : StateFlow<OnSearchResultsChangedEventHolder> = _onSearchResultsChangedMutableStateFlow
+
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
-        return _onSearchResultsChangedStateFlow
+        return _onSearchResultsChangedMutableStateFlow.asStateFlow()
     }
 
     private val _playbackParametersMutableStateFlow = MutableStateFlow(PlaybackParameters.DEFAULT)
