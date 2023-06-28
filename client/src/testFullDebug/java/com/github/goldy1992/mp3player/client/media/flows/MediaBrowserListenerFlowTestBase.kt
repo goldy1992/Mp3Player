@@ -7,7 +7,7 @@ import org.mockito.kotlin.mock
 abstract class MediaBrowserListenerFlowTestBase<T> : MediaFlowTestBase<T>() {
 
     protected val listeners = mutableSetOf<MediaBrowser.Listener>()
-    protected val controller = mock<MediaController>()
+    protected val controller = mock<MediaBrowser>()
     protected val addListener = { listener : MediaBrowser.Listener ->
         listeners.add(listener)
         true

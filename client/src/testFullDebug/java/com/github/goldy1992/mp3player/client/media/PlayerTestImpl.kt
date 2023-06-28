@@ -21,6 +21,12 @@ import androidx.media3.common.util.Size
 
 class PlayerTestImpl() : Player {
     private val listeners = mutableSetOf<Player.Listener>()
+
+    private fun updateListeners(updateLambda : (Player.Listener) -> Unit) {
+        for (listener in listeners) {
+            updateLambda(listener)
+        }
+    }
     override fun getApplicationLooper(): Looper {
         TODO("Not yet implemented")
     }
@@ -121,8 +127,13 @@ class PlayerTestImpl() : Player {
         TODO("Not yet implemented")
     }
 
+    var isPlayingTestValue = false
+    fun setIsPlaying(isPlaying : Boolean) {
+        this.isPlayingTestValue = isPlaying
+        updateListeners { l -> l.onIsPlayingChanged(isPlaying) }
+    }
     override fun isPlaying(): Boolean {
-        TODO("Not yet implemented")
+        return isPlayingTestValue
     }
 
     override fun getPlayerError(): PlaybackException? {
@@ -300,17 +311,17 @@ class PlayerTestImpl() : Player {
 
     fun setMediaMetadata(mediaMetadata: MediaMetadata) {
         this.mediaMetadata = mediaMetadata
-        for (listener in listeners) {
-            listener.onMediaMetadataChanged(mediaMetadata)
-        }
+        updateListeners { l -> l.onMediaMetadataChanged(mediaMetadata) }
     }
 
+    private var testPlaylistMetadata : MediaMetadata? = null
     override fun getPlaylistMetadata(): MediaMetadata {
-        TODO("Not yet implemented")
+        return testPlaylistMetadata ?: MediaMetadata.EMPTY
     }
 
     override fun setPlaylistMetadata(mediaMetadata: MediaMetadata) {
-        TODO("Not yet implemented")
+        this.testPlaylistMetadata = mediaMetadata
+        updateListeners { l -> l.onPlaylistMetadataChanged(mediaMetadata) }
     }
 
     override fun getCurrentManifest(): Any? {

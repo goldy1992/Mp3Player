@@ -2,9 +2,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 
 import android.util.Log
 import androidx.concurrent.futures.await
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
@@ -20,7 +18,7 @@ class IsPlayingFlow
 
 internal constructor(
     @ActivityCoroutineScope scope : CoroutineScope,
-    private val controllerFuture : ListenableFuture<MediaBrowser>,
+    private val controllerFuture : ListenableFuture<Player>,
     @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
     onCollect : (Boolean) -> Unit
             )  : FlowBase<Boolean>(scope, onCollect)
@@ -29,7 +27,7 @@ internal constructor(
     companion object {
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
-            controllerFuture : ListenableFuture<MediaBrowser>,
+            controllerFuture : ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
             onCollect : (Boolean) -> Unit) : IsPlayingFlow {
             val isPlayingFlow = IsPlayingFlow(scope, controllerFuture, mainDispatcher, onCollect)

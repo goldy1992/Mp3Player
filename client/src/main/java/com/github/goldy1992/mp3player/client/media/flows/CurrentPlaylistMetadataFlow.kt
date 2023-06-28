@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MainDispatcher
@@ -21,7 +20,7 @@ class CurrentPlaylistMetadataFlow
 
 private constructor(
     @ActivityCoroutineScope scope : CoroutineScope,
-    private val controllerFuture : ListenableFuture<MediaBrowser>,
+    private val controllerFuture : ListenableFuture<Player>,
     @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
     onCollect : (MediaMetadata) -> Unit
 ) : FlowBase<MediaMetadata>(scope, onCollect) {
@@ -29,7 +28,7 @@ private constructor(
     companion object {
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
-            controllerFuture : ListenableFuture<MediaBrowser>,
+            controllerFuture : ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
         onCollect : (MediaMetadata) -> Unit) : CurrentPlaylistMetadataFlow {
             val toCreate = CurrentPlaylistMetadataFlow(scope, controllerFuture, mainDispatcher, onCollect)
@@ -41,7 +40,7 @@ private constructor(
     override fun getFlow(): Flow<MediaMetadata> = callbackFlow {
         val controller =  controllerFuture.await()
         runBlocking(mainDispatcher) {
-            trySend(controller.playlistMetadata ?: MediaMetadata.EMPTY)
+            trySend(controller.playlistMetadata)
         }
         val messageListener = object : Player.Listener {
             override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {

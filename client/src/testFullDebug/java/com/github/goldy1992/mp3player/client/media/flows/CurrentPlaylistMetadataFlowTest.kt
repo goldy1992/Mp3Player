@@ -5,21 +5,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Assert.*
 import org.junit.Test
-
 @ExperimentalCoroutinesApi
-class MetadataFlowTest : PlayerMediaFlowTestBase<MediaMetadata>() {
+class CurrentPlaylistMetadataFlowTest : PlayerMediaFlowTestBase<MediaMetadata>() {
 
     @Test
-    fun testMetadataIsCollected() {
+    fun testPlaylistMetadataIsCollected() {
         val resultState = initTestFlow(MediaMetadata.EMPTY)
         val expectedTitle = "expectedTitle"
-        MetadataFlow.create(testScope, controllerFuture, dispatcher, collectLambda)
+        CurrentPlaylistMetadataFlow.create(testScope, controllerFuture, dispatcher, collectLambda)
         val testData = MediaMetadata.Builder().setTitle(expectedTitle).build()
-        testPlayer.mediaMetadata = testData
+        testPlayer.setPlaylistMetadata(testData)
         testScope.advanceUntilIdle()
 
         val result = resultState.value
         assertEquals(expectedTitle, result.title)
     }
-
 }
