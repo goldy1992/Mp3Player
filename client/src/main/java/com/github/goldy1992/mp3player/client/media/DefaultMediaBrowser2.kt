@@ -74,7 +74,7 @@ class DefaultMediaBrowser2
                 Log.d(logTag(), "collecting from mediaBrowserLFSF")
                 AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
                 PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }
-                CurrentMediaItemFlow.create(scope, _metadataMutableStateFlow, it, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
+                CurrentMediaItemFlow.create(scope, _metadataMutableStateFlow, playerf, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
                 CurrentPlaylistMetadataFlow.create(scope, it, mainDispatcher) { v -> _currentPlaylistMetadataMutableStateFlow.value = v }
                 IsPlayingFlow.create(scope, it, mainDispatcher) { v -> _isPlayingMutableStateFlow.value = v }
                 MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }

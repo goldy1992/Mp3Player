@@ -349,8 +349,12 @@ class PlayerTestImpl() : Player {
         TODO("Not yet implemented")
     }
 
+    var currentTestMediaItem: MediaItem? =null
+    fun setCurrentMediaItem(mediaItem: MediaItem) {
+        this.currentTestMediaItem = mediaItem
+    }
     override fun getCurrentMediaItem(): MediaItem? {
-        TODO("Not yet implemented")
+        return currentTestMediaItem
     }
 
     override fun getMediaItemCount(): Int {

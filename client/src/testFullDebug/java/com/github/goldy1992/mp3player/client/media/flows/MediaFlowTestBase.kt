@@ -21,6 +21,7 @@ abstract class MediaFlowTestBase<T> {
     protected val testScope : TestScope = TestScope(dispatcher)
     private var resultState : MutableStateFlow<T>? = null
 
+    protected val collectLambda : (T) -> Unit = { v : T -> resultState?.value = v }
 
     fun setup() {
 

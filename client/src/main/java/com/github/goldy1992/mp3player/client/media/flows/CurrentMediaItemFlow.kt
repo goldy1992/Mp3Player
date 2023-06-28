@@ -28,7 +28,7 @@ class CurrentMediaItemFlow
         fun create(
             scope: CoroutineScope,
             mediaMetadataStateFlow : Flow<MediaMetadata>,
-            controllerLf: ListenableFuture<out MediaBrowser>,
+            controllerLf: ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
             onCollect: (MediaItem) -> Unit
         ): CurrentMediaItemFlow {
