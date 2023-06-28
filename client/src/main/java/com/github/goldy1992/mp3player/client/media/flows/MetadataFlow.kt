@@ -20,9 +20,9 @@ import kotlinx.coroutines.withContext
 
 class MetadataFlow
 
-internal constructor(
+private constructor(
     @ActivityCoroutineScope scope : CoroutineScope,
-    private val controllerFuture : ListenableFuture<MediaBrowser>,
+    private val controllerFuture : ListenableFuture<Player>,
     @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
     onCollect : (MediaMetadata) -> Unit
 ) : FlowBase<MediaMetadata>(scope, onCollect) {
@@ -30,7 +30,7 @@ internal constructor(
     companion object {
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
-            controllerFuture : ListenableFuture<MediaBrowser>,
+            controllerFuture : ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
         onCollect : (MediaMetadata) -> Unit) : MetadataFlow {
             val metadataFlow = MetadataFlow(scope, controllerFuture, mainDispatcher, onCollect)
@@ -42,7 +42,7 @@ internal constructor(
     
     override fun getFlow(): Flow<MediaMetadata> = callbackFlow {
         Log.v(logTag(), "metadataFlow invoked, awaiting MediaController")
-        val controller = controllerFuture.await()
+        val controller : Player = controllerFuture.await()
         Log.v(logTag(), "metadataFlow got MediaController")
         var currentMediaMetadata: MediaMetadata
         withContext(mainDispatcher) {

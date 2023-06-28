@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class PlayerEventsFlow
 
 internal constructor(scope: CoroutineScope,
-                     private val controllerFuture : ListenableFuture<MediaBrowser>,
+                     private val controllerFuture : ListenableFuture<out Player>,
                      @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
                      onCollect : suspend (Player.Events) -> Unit)
     : FlowBase<Player.Events>(scope, onCollect) {
@@ -27,7 +27,7 @@ internal constructor(scope: CoroutineScope,
     companion object {
         fun create(
             scope: CoroutineScope,
-            controllerFuture : ListenableFuture<MediaBrowser>,
+            controllerFuture : ListenableFuture<out Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
             onCollect : suspend (Player.Events) -> Unit) : PlayerEventsFlow {
             val playerEventsFlow = PlayerEventsFlow(scope, controllerFuture, mainDispatcher,  onCollect)

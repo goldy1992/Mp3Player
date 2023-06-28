@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
-import com.github.goldy1992.mp3player.client.media.MediaBrowserTestImpl
+import com.github.goldy1992.mp3player.client.media.IMediaBrowserTestImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.android.components.ActivityRetainedComponent
@@ -17,5 +17,5 @@ abstract class MockIMediaBrowserModule {
 
     @ActivityRetainedScoped
     @Binds
-    abstract fun providesIMediaBrowser(mediaBrowser: MediaBrowserTestImpl) : IMediaBrowser
+    abstract fun providesIMediaBrowser(mediaBrowser: IMediaBrowserTestImpl) : IMediaBrowser
 }

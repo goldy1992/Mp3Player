@@ -23,10 +23,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class AudioDataFlowTest {
 
-//    protected val dispatcher  = Unc(testScheduler)
     private val testScope = TestScope()
-
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -64,6 +61,7 @@ class AudioDataFlowTest {
         val testData = AudioSample(waveformData = listOf(1f, 2f, 3f).toFloatArray())
         val sessionCommand = createSessionCommand(testData, "NOT_AUDIO_DATA")
         customCommandFlow.value = sessionCommand
+
         testScope.advanceUntilIdle()
 
         assertNotEquals(testData.waveformData.contentHashCode(), result.waveformData.contentHashCode())

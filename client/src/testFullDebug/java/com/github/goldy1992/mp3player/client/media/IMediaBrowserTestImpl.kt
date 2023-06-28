@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class MediaBrowserTestImpl() : IMediaBrowser {
+class IMediaBrowserTestImpl() : IMediaBrowser {
     override fun init(sessionToken: SessionToken, scope: CoroutineScope) {
 
     }

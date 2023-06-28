@@ -70,6 +70,7 @@ class DefaultMediaBrowser2
         scope.launch {
             Log.d(logTag(), "scope.launch")
             _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
+                val playerf = it as ListenableFuture<Player>
                 Log.d(logTag(), "collecting from mediaBrowserLFSF")
                 AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
                 PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }

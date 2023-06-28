@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
 import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
@@ -18,7 +19,7 @@ class CurrentMediaItemFlow
     private constructor(
         scope: CoroutineScope,
         private val mediaMetadataStateFlow : Flow<MediaMetadata>,
-        private val controllerLf: ListenableFuture<MediaBrowser>,
+        private val controllerLf: ListenableFuture<out Player>,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
         onCollect: (MediaItem) -> Unit
     ) : FlowBase<MediaItem>(scope, onCollect) {
@@ -27,7 +28,7 @@ class CurrentMediaItemFlow
         fun create(
             scope: CoroutineScope,
             mediaMetadataStateFlow : Flow<MediaMetadata>,
-            controllerLf: ListenableFuture<MediaBrowser>,
+            controllerLf: ListenableFuture<out MediaBrowser>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
             onCollect: (MediaItem) -> Unit
         ): CurrentMediaItemFlow {
@@ -40,7 +41,7 @@ class CurrentMediaItemFlow
 
     override fun getFlow(): Flow<MediaItem> = mediaMetadataStateFlow.map {
         Log.v(logTag(), "currentMediaItemFlow map invoked")
-        val mediaBrowser: MediaBrowser = controllerLf.await()
+        val mediaBrowser: Player = controllerLf.await()
         var mediaItem: MediaItem?
 
         runBlocking(mainDispatcher) {
