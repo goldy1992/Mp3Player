@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
-import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.LoggingUtils

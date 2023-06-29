@@ -23,11 +23,11 @@ import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnSearchResultsChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
-import com.github.goldy1992.mp3player.client.media.flows.playbackParametersFlow
-import com.github.goldy1992.mp3player.client.media.flows.playbackPositionFlow
-import com.github.goldy1992.mp3player.client.media.flows.queueFlow
-import com.github.goldy1992.mp3player.client.media.flows.repeatModeFlow
-import com.github.goldy1992.mp3player.client.media.flows.shuffleModeFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlaybackParametersFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlaybackPositionFlow
+import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
+import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
+import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
@@ -81,56 +81,29 @@ class DefaultMediaBrowser2
                 OnChildrenChangedFlow.create(scope, addListener, removeListener ) { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
                 OnCustomCommandFlow.create(scope, addListener, removeListener) { c -> _customCommandMutableStateFlow.emit(c) }
                 OnSearchResultsChangedFlow.create(scope, addListener, removeListener) { v -> _onSearchResultsChangedMutableStateFlow.value = v }
-
-
-                val playbackParametersFlow = playbackParametersFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    playbackParametersFlow.collect { v -> _playbackParametersMutableStateFlow.value = v}
-                }
-
-                val playbackPositionFlow = playbackPositionFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    playbackPositionFlow.collect { v -> _playbackPositionMutableStateFlow.value = v}
-                }
-
-                val queueFlow = queueFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    queueFlow.collect { v -> _queueMutableStateFlow.value = v}
-                }
-
-                val repeatModeFlow = repeatModeFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    repeatModeFlow.collect { v -> _repeatModeMutableStateFlow.value = v}
-                }
-
-                val shuffleModeFlow = shuffleModeFlow(it, mainDispatcher, scope)
-                scope.launch {
-                    shuffleModeFlow.collect { v -> _shuffleModeMutableStateFlow.value = v}
-                }
-
+                PlaybackParametersFlow.create(scope, it, mainDispatcher){v-> _playbackParametersMutableStateFlow.value = v}
+                PlaybackPositionFlow.create(scope, it, mainDispatcher) { v-> _playbackPositionMutableStateFlow.value = v }
+                QueueFlow.create(it, mainDispatcher, scope) { v -> _queueMutableStateFlow.value = v}
+                RepeatModeFlow.create(scope, it, mainDispatcher) { v -> _repeatModeMutableStateFlow.value = v}
+                ShuffleModeFlow.create(scope, it, mainDispatcher) { v -> _shuffleModeMutableStateFlow.value = v}
                 Log.d(logTag(), "finished mediaBrowserLFSF.collect")
             }
-
         }
     }
 
     private val _audioDataMutableStateFlow = MutableStateFlow(AudioSample.NONE)
-
-
     override fun audioData(): Flow<AudioSample> {
         return _audioDataMutableStateFlow.asStateFlow()
     }
 
     private val _currentMediaItemFlowMutableStateFlow = MutableStateFlow(MediaItem.EMPTY)
-
     override fun currentMediaItem(): Flow<MediaItem> {
         return _currentMediaItemFlowMutableStateFlow.asStateFlow()
     }
 
     private val _currentPlaylistMetadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
-    private val _currentPlaylistMetadataStateFlow : StateFlow<MediaMetadata> = _currentPlaylistMetadataMutableStateFlow
     override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
-        return _currentPlaylistMetadataStateFlow
+        return _currentPlaylistMetadataMutableStateFlow.asStateFlow()
     }
 
     private val _isPlayingMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -139,9 +112,8 @@ class DefaultMediaBrowser2
     }
 
     private val _shuffleModeMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    private val _shuffleModeStateFlow: StateFlow<Boolean> = _shuffleModeMutableStateFlow
     override fun isShuffleModeEnabled(): Flow<Boolean> {
-        return _shuffleModeStateFlow
+        return _shuffleModeMutableStateFlow.asStateFlow()
     }
 
     private val _metadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
@@ -156,14 +128,12 @@ class DefaultMediaBrowser2
     }
 
     private val _customCommandMutableStateFlow = MutableSharedFlow<SessionCommandEventHolder>()
-
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
         return _customCommandMutableStateFlow.asSharedFlow()
     }
 
 
     private val _playerEventMSF = MutableSharedFlow<Player.Events>()
-
     private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
 
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
@@ -171,35 +141,32 @@ class DefaultMediaBrowser2
     }
 
     private val _playbackParametersMutableStateFlow = MutableStateFlow(PlaybackParameters.DEFAULT)
-    private val _playbackParametersStateFlow : StateFlow<PlaybackParameters> = _playbackParametersMutableStateFlow
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        return _playbackParametersStateFlow
+        return _playbackParametersMutableStateFlow.asStateFlow()
     }
 
     private val _playbackPositionMutableStateFlow = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
-    private val _playbackPositionStateFlow : StateFlow<PlaybackPositionEvent> = _playbackPositionMutableStateFlow
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        return _playbackPositionStateFlow
+        return _playbackPositionMutableStateFlow.asStateFlow()
     }
 
-    private val _playbackSpeedFlow : Flow<Float> = _playbackParametersStateFlow
+    private val _playbackSpeedFlow : Flow<Float> = _playbackParametersMutableStateFlow
         .map {
             it.speed
         }
+
     override fun playbackSpeed(): Flow<Float> {
         return _playbackSpeedFlow
     }
 
     private val _queueMutableStateFlow = MutableStateFlow(QueueState.EMPTY)
-    private val _queueStateFlow : StateFlow<QueueState> = _queueMutableStateFlow
     override fun queue(): Flow<QueueState> {
-        return _queueStateFlow
+        return _queueMutableStateFlow.asStateFlow()
     }
 
     private val _repeatModeMutableStateFlow: MutableStateFlow<@Player.RepeatMode Int> = MutableStateFlow(Player.REPEAT_MODE_OFF)
-    private val _repeatModeStateFlow: StateFlow<@Player.RepeatMode Int> = _repeatModeMutableStateFlow
     override fun repeatMode(): Flow<@Player.RepeatMode Int> {
-        return _repeatModeStateFlow
+        return _repeatModeMutableStateFlow.asStateFlow()
     }
 
     override suspend fun changePlaybackSpeed(speed: Float) {

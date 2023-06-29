@@ -12,12 +12,14 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
+import androidx.media3.common.Player.Events
 import androidx.media3.common.Timeline
 import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.Size
+import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 
 class PlayerTestImpl() : Player {
     private val listeners = mutableSetOf<Player.Listener>()
@@ -268,8 +270,10 @@ class PlayerTestImpl() : Player {
         TODO("Not yet implemented")
     }
 
+    private var testPlaybackParameters = PlaybackParameters.DEFAULT
     override fun setPlaybackParameters(playbackParameters: PlaybackParameters) {
-        TODO("Not yet implemented")
+        this.testPlaybackParameters = playbackParameters
+        updateListeners { it.onPlaybackParametersChanged(testPlaybackParameters) }
     }
 
     override fun setPlaybackSpeed(speed: Float) {
@@ -277,7 +281,7 @@ class PlayerTestImpl() : Player {
     }
 
     override fun getPlaybackParameters(): PlaybackParameters {
-        TODO("Not yet implemented")
+        return testPlaybackParameters
     }
 
     override fun stop() {
@@ -380,8 +384,9 @@ class PlayerTestImpl() : Player {
         TODO("Not yet implemented")
     }
 
+    var testCurrentPosition = 0L
     override fun getCurrentPosition(): Long {
-        TODO("Not yet implemented")
+        return testCurrentPosition
     }
 
     override fun getBufferedPosition(): Long {
@@ -534,5 +539,13 @@ class PlayerTestImpl() : Player {
 
     override fun setDeviceMuted(muted: Boolean) {
         TODO("Not yet implemented")
+    }
+
+
+    fun setPlayerEvents(playbackPositionEvent: PlaybackPositionEvent, playerEvents: Events) {
+        this.testCurrentPosition = playbackPositionEvent.currentPosition
+        this.isPlayingTestValue = playbackPositionEvent.isPlaying
+
+        updateListeners { it.onEvents(this, playerEvents) }
     }
 }
