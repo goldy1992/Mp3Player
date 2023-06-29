@@ -1,10 +1,8 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
-
 import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.Player
-import androidx.media3.session.MediaBrowser
 import com.github.goldy1992.mp3player.commons.LoggingUtils
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
@@ -18,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class PlayerEventsFlow
 
-internal constructor(scope: CoroutineScope,
+private constructor(scope: CoroutineScope,
                      private val controllerFuture : ListenableFuture<out Player>,
                      @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
                      onCollect : suspend (Player.Events) -> Unit)

@@ -23,7 +23,7 @@ class PlaybackPositionFlowTest : PlayerMediaFlowTestBase<PlaybackPositionEvent>(
         PlaybackPositionFlow.create(testScope, controllerFuture, dispatcher, collectLambda)
         val events = Player.Events(FlagSet.Builder().add(Player.EVENT_PLAYBACK_PARAMETERS_CHANGED).build())
         val testData = PlaybackPositionEvent(expectedIsPlaying, expectedCurrentPosition, 0L)
-        testPlayer.setPlayerEvents(testData, events)
+        testPlayer.setPlaybackPositionEvent(testData, events)
         testScope.advanceUntilIdle()
         val result = resultState.value
         assertEquals(expectedCurrentPosition, result.currentPosition)

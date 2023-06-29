@@ -372,12 +372,13 @@ class PlayerTestImpl() : Player {
         return currentTestMediaItem
     }
 
+    var testQueue = mutableListOf<MediaItem>()
     override fun getMediaItemCount(): Int {
-        TODO("Not yet implemented")
+        return testQueue.size
     }
 
     override fun getMediaItemAt(index: Int): MediaItem {
-        TODO("Not yet implemented")
+        return testQueue[index]
     }
 
     override fun getDuration(): Long {
@@ -542,10 +543,14 @@ class PlayerTestImpl() : Player {
     }
 
 
-    fun setPlayerEvents(playbackPositionEvent: PlaybackPositionEvent, playerEvents: Events) {
+    fun setPlaybackPositionEvent(playbackPositionEvent: PlaybackPositionEvent, playerEvents: Events) {
         this.testCurrentPosition = playbackPositionEvent.currentPosition
         this.isPlayingTestValue = playbackPositionEvent.isPlaying
 
         updateListeners { it.onEvents(this, playerEvents) }
+    }
+
+    fun setPlayerEvents(events: Events) {
+        updateListeners { it.onEvents(this, events) }
     }
 }
