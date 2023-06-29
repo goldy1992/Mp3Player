@@ -158,20 +158,24 @@ class PlayerTestImpl() : Player {
         TODO("Not yet implemented")
     }
 
+    var testRepeatMode = Player.REPEAT_MODE_OFF
     override fun setRepeatMode(repeatMode: Int) {
-        TODO("Not yet implemented")
+        this.testRepeatMode = repeatMode
+        updateListeners { it.onRepeatModeChanged(testRepeatMode) }
     }
 
     override fun getRepeatMode(): Int {
-        TODO("Not yet implemented")
+        return testRepeatMode
     }
 
+    var testShuffleEnabled = false
     override fun setShuffleModeEnabled(shuffleModeEnabled: Boolean) {
-        TODO("Not yet implemented")
+        this.testShuffleEnabled = shuffleModeEnabled
+        updateListeners { it.onShuffleModeEnabledChanged(testShuffleEnabled) }
     }
 
     override fun getShuffleModeEnabled(): Boolean {
-        TODO("Not yet implemented")
+        return testShuffleEnabled
     }
 
     override fun isLoading(): Boolean {
@@ -345,7 +349,7 @@ class PlayerTestImpl() : Player {
     }
 
     override fun getCurrentMediaItemIndex(): Int {
-        TODO("Not yet implemented")
+        return 0
     }
 
     override fun getNextWindowIndex(): Int {
