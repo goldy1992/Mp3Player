@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
-import androidx.media3.session.MediaBrowser
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
-import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineDispatcher

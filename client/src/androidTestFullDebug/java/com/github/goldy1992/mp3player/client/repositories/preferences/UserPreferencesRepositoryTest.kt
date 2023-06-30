@@ -36,8 +36,8 @@ class UserPreferencesRepositoryTest {
     fun testDarkMode() = testScope.runTest {
         var result = false
         val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            repository.getDarkMode().collect {
-                result = it
+            repository.userPreferencesFlow() .collect {
+                result = it.darkMode
             }
         }
         runBlocking {
@@ -54,8 +54,8 @@ class UserPreferencesRepositoryTest {
     fun testSystemDarkMode() = testScope.runTest {
         var result = false
         val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            repository.getSystemDarkMode().collect {
-                result = it
+            repository.userPreferencesFlow().collect {
+                result = it.systemDarkMode
             }
         }
         runBlocking {
@@ -71,8 +71,8 @@ class UserPreferencesRepositoryTest {
     fun testTheme() = testScope.runTest {
         var result: Theme? = null
         val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            repository.getTheme().collect {
-                result = it
+            repository.userPreferencesFlow().collect {
+                result = Theme.valueOf(it.theme)
             }
         }
         runBlocking {

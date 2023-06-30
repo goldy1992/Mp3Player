@@ -1,25 +1,20 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertAny
-import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildAt
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.printToLog
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.Folders
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
 /**
  * Test for the [FolderList]

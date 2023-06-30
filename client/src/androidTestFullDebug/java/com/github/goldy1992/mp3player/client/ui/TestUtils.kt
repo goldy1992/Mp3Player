@@ -1,6 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.percentOffset
+import androidx.compose.ui.test.performGesture
+import androidx.compose.ui.test.swipe
+import androidx.compose.ui.test.swipeWithVelocity
 import kotlin.math.absoluteValue
 import kotlin.math.hypot
 import kotlin.math.roundToLong

@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule

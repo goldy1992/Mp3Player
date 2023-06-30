@@ -58,6 +58,7 @@ class SearchScreenTest {
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
 
         composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("ab")
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithContentDescription(searchTextFieldName).assert(hasText("ab"))
     }
 
