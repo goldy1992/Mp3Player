@@ -72,22 +72,23 @@ fun LanguageSelectionDialog(
                 Language.values().forEach { text ->
                     Row(
                         Modifier
-                            // .fillMaxWidth()
                             .height(56.dp)
                             .selectable(
-                                selected = (text == selectedOption),
+                                selected = (text != Language.TH) && (text == selectedOption),
                                 onClick = {
-                                    Log.d(LOG_TAG, "$text was selected")
-                                    onOptionSelected(text) },
+                                    if (text != Language.TH) {
+                                        Log.d(LOG_TAG, "$text was selected")
+                                        onOptionSelected(text)
+                                    }},
                                 role = Role.RadioButton
                             )
                             .padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = (text == selectedOption),
+                            selected = (text != Language.TH) && text == selectedOption,
                             onClick = null, // null recommended for accessibility with screenreaders
-                            enabled = text.code != "th"
+                            enabled = text != Language.TH
                         )
                         Text(
                             text = text.writtenName,
