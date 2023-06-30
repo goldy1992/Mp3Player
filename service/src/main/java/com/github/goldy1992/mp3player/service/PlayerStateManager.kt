@@ -6,7 +6,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import com.github.goldy1992.mp3player.commons.*
-import com.github.goldy1992.mp3player.commons.Constants.playbackStateDebugMap
 import com.github.goldy1992.mp3player.service.data.ISavedStateRepository
 import com.github.goldy1992.mp3player.service.data.SavedState
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -136,8 +135,7 @@ class PlayerStateManager
         if (isInitialised) {
             val savedState: SavedState?
             val playbackState = player.playbackState
-            val playbackStateStr: String = playbackStateDebugMap[playbackState] ?: "UNKNOWN_STATE"
-            Log.d(logTag(), "saveState() currentPlaybackState: $playbackStateStr")
+            Log.d(logTag(), "saveState() currentPlaybackState: ${LoggingUtils.logPlaybackState(playbackState, logTag())}")
             val currentPlaylist = getPlaylist(player)
             val currentPlaylistIdList = currentPlaylist.map { m -> m.mediaId }
             Log.d(logTag(), "saveState() got current playlist list: ${currentPlaylistIdList.joinToString(",")}")

@@ -3,6 +3,10 @@ package com.github.goldy1992.mp3player.commons
 import android.util.Log
 import java.io.Serializable
 
+/**
+ * Represents an Audio Sample that will be sent from the Audio Processor within the Media Playback
+ * Service.
+ */
 data class AudioSample
     constructor(
         val phase : Array<Double> = emptyArray(),
