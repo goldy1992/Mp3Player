@@ -13,7 +13,6 @@ import com.github.goldy1992.mp3player.client.data.Folders
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbums
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolders
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createRootItems
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.RootItem
 import com.github.goldy1992.mp3player.client.data.RootItems
@@ -143,18 +142,6 @@ class LibraryScreenViewModel
 
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
-    // metadata
-    private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)
-    val metadata : StateFlow<MediaMetadata> = _metadataState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.metadata()
-            .collect {
-                _metadataState.value = it
-            }
-        }
-    }
 
     // currentMediaItem
     private val _currentMediaItemState = MutableStateFlow(Song())
@@ -162,10 +149,10 @@ class LibraryScreenViewModel
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentMediaItem()
+            mediaRepository.currentSong()
             .collect {
-                Log.v(logTag(), "mediaRepository.currentMediaItem() collect: new current media item - id : ${it.mediaId}, title: ${it.mediaMetadata.title}")
-                _currentMediaItemState.value = createSong(it)
+                Log.v(logTag(), "mediaRepository.currentMediaItem() collect: new current media item - id : ${it.id}, title: ${it.title}")
+                _currentMediaItemState.value = it
             }
         }
     }

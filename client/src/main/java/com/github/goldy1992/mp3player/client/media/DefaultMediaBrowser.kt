@@ -197,7 +197,7 @@ class DefaultMediaBrowser
         } else {
             val children: LibraryResult<ImmutableList<MediaItem>> =
                 _mediaBrowserLFMutableStateFlow.value?.await()?.getChildren(parentId, page, pageSize, params)?.await()?: LibraryResult.ofItemList(
-                    ImmutableList.of(), LibraryParams.Builder().build()
+                    listOf(), LibraryParams.Builder().build()
                 )
             return children.value?.toList() ?: emptyList()
         }
@@ -207,7 +207,7 @@ class DefaultMediaBrowser
     override suspend fun getLibraryRoot(): MediaItem {
         val args = Bundle()
         args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
-        val params = MediaLibraryService.LibraryParams.Builder()
+        val params = LibraryParams.Builder()
             .setExtras(args).build()
         val result = _mediaBrowserLFMutableStateFlow.value?.await()?.getLibraryRoot(params)?.await()
         return result?.value ?: MediaItem.EMPTY
@@ -221,13 +221,13 @@ class DefaultMediaBrowser
         Log.v(logTag(), "getSearchResults() invoked with query: $query, page: $page, pageSize: $pageSize")
         if (isEmpty(query)) {
             Log.w(logTag(), "getSearchResults() called with empty query")
-            return ImmutableList.of()
+            return listOf()
         }
         val result : LibraryResult<ImmutableList<MediaItem>> =
             _mediaBrowserLFMutableStateFlow.value?.await()?.getSearchResult(query, page, pageSize, getDefaultLibraryParams())?.await()?: LibraryResult.ofItemList(
-                ImmutableList.of(), LibraryParams.Builder().build()
+                listOf(), LibraryParams.Builder().build()
             )
-        return result.value ?: ImmutableList.of()
+        return result.value ?: listOf()
     }
 
     override suspend fun pause() {

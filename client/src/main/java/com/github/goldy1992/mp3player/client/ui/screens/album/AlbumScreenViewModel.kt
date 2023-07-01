@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
@@ -100,9 +99,9 @@ constructor(savedStateHandle: SavedStateHandle,
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentMediaItem()
+            mediaRepository.currentSong()
                 .collect {
-                    _currentMediaItemState.value = MediaEntityUtils.createSong(it)
+                    _currentMediaItemState.value = it
                 }
         }
     }

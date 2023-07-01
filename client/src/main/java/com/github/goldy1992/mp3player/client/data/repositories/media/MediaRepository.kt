@@ -7,6 +7,7 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
@@ -19,7 +20,7 @@ interface MediaRepository {
 
     fun audioData() : Flow<AudioSample>
 
-    fun currentMediaItem() : Flow<MediaItem>
+    fun currentSong() : Flow<Song>
 
     fun currentPlaylistMetadata() : Flow<MediaMetadata>
 

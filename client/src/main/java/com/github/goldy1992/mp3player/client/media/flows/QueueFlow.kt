@@ -51,18 +51,17 @@ class QueueFlow
         Log.v(logTag(), "QueueFlow callbackFlow invoked, awaiting MediaController")
         val controller = controllerFuture.await()
         Log.v(logTag(), "QueueFlow callbackFlow finished awaiting MediaController")
-        var queue: QueueState = QueueState.EMPTY
+        var queue: QueueState
         withContext(mainDispatcher) {
             queue = QueueUtils.getQueue(controller)
         }
         Log.d(logTag(), "QueueFlow finished initialising with queue ")
         trySend(queue)
         val messageListener = object : Player.Listener {
-            override fun onEvents(player: Player, event: Player.Events) {
-                Log.d(logTag(), "QueueFlow.onEvents() invoked")
-                val e = LoggingUtils.getPlayerEventsLogMessage(event)
-                if (event.containsAny(*QueueFlow.events)) {
-                    Log.d(logTag(), "QueueFlow.onEvents() sending queue envents ${QueueFlow.events}")
+            override fun onEvents(player: Player, events: Player.Events) {
+                Log.d(logTag(), "QueueFlow.onEvents() invoked ${LoggingUtils.getPlayerEventsLogMessage(events)}")
+                if (events.containsAny(*QueueFlow.events)) {
+                    Log.d(logTag(), "QueueFlow.onEvents() sending queue events ${QueueFlow.events}")
                     trySend(QueueUtils.getQueue(player))
                 }
             }

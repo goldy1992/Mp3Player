@@ -64,7 +64,7 @@ class DefaultMediaRepositoryTest {
             .build()
         var result : MediaItem? = null
         val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            defaultMediaRepository.currentMediaItem().collect {
+            defaultMediaRepository.currentSong().collect {
                 result = it
             }
         }

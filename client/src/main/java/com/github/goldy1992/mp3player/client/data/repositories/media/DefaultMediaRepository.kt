@@ -5,7 +5,10 @@ import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
@@ -16,6 +19,8 @@ import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 @ActivityRetainedScoped
@@ -29,8 +34,15 @@ class DefaultMediaRepository
         return mediaDataSource.audioData()
     }
 
-    override fun currentMediaItem(): Flow<MediaItem> {
+    @UnstableApi
+    override fun currentSong(): Flow<Song> {
         return mediaDataSource.currentMediaItem()
+            .filter {
+                val metadata = it.mediaMetadata
+                !(metadata.isBrowsable ?: false) && (metadata.isPlayable ?: false)
+            }.map {
+            createSong(it)
+        }
     }
 
     override fun currentPlaylistMetadata(): Flow<MediaMetadata> {

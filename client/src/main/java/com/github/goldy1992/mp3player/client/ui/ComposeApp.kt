@@ -8,7 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalContext
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
@@ -38,28 +37,29 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlin.OptIn
-import androidx.annotation.OptIn as AndroidXOptIn
 
 
 private const val LOG_TAG = "ComposeApp"
 private const val transitionTime = 2000
-@OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterialApi::class,
-    InternalCoroutinesApi::class,
-)
-@AndroidXOptIn(markerClass = [UnstableApi::class])
+
+/**
+ * Entry point to the Compose UI.
+ * @param userPreferencesRepository The [IUserPreferencesRepository].
+ * @param windowSize The [WindowSize].
+ * @param startScreen The [Screen] to begin with.
+ */
+@ExperimentalAnimationApi
+@ExperimentalComposeUiApi
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@InternalCoroutinesApi
+@UnstableApi
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
     windowSize: WindowSize,
     startScreen : Screen
 ) {
-//    val locale = Locale.
-    val x : CompositionLocalContext
     val navController = rememberAnimatedNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
         AnimatedNavHost(

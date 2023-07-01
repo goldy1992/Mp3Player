@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
@@ -79,9 +78,9 @@ constructor(
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentMediaItem()
+            mediaRepository.currentSong()
                 .collect {
-                    _currentMediaItemState.value = MediaEntityUtils.createSong(it)
+                    _currentMediaItemState.value = it
                 }
         }
     }

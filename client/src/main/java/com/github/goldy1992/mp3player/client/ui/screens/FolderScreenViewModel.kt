@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
@@ -66,9 +65,9 @@ class FolderScreenViewModel
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentMediaItem()
+            mediaRepository.currentSong()
             .collect {
-                _currentMediaItemState.value = createSong(it)
+                _currentMediaItemState.value = it
             }
         }
     }

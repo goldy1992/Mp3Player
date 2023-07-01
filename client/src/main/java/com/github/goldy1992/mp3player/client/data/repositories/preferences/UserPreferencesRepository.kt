@@ -108,37 +108,6 @@ open class UserPreferencesRepository
         }
     }
 
-//    override fun getTheme() : Flow<Theme> {
-//        return userPreferencesFlow.map { preferences ->
-//            val currentTheme = preferences.theme
-//            Theme.valueOf(currentTheme)
-//        }
-//    }
-//
-//    override fun getDarkMode() : Flow<Boolean> {
-//       return userPreferencesFlow.map { preferences ->
-//           preferences.darkMode
-//        }
-//    }
-//
-//    override fun getSystemDarkMode() : Flow<Boolean> {
-//        return userPreferencesFlow.map {
-//            preferences -> preferences.systemDarkMode
-//        }
-//    }
-//
-//    override fun getUseDynamicColor(): Flow<Boolean> {
-//        return userPreferencesFlow.map {
-//                preferences -> preferences.useDynamicColor
-//        }
-//    }
-//
-//    override fun getLanguage(): Flow<String> {
-//        return userPreferencesFlow.map {
-//                preferences -> preferences.language
-//        }
-//    }
-
     /**
      * @return the name of the log tag given to the class
      */

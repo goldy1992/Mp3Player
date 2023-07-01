@@ -92,9 +92,9 @@ class SearchScreenViewModel
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentMediaItem()
+            mediaRepository.currentSong()
                 .collect {
-                    _currentMediaItemState.value = createSong(it)
+                    _currentMediaItemState.value = it
                 }
         }
     }
@@ -122,7 +122,7 @@ class SearchScreenViewModel
     }
 
     fun pause() {
-        viewModelScope.launch { mediaRepository.play() }
+        viewModelScope.launch { mediaRepository.pause() }
     }
 
     fun skipToNext() {

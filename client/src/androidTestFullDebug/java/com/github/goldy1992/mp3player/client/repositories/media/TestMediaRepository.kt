@@ -30,7 +30,7 @@ class TestMediaRepository
     }
 
     val currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
-    override fun currentMediaItem(): Flow<MediaItem> {
+    override fun currentSong(): Flow<MediaItem> {
         return currentMediaItemState
     }
 
