@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -22,9 +23,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import org.apache.commons.lang3.StringUtils.isEmpty
 import org.apache.commons.lang3.StringUtils.isNotEmpty
@@ -85,22 +84,7 @@ class SearchScreenViewModel
     }
 
 
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.isPlaying().
-            shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            ).collect {
-                _isPlayingState.value = it
-            }
-        }
-    }
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // currentMediaItem
     private val _currentMediaItemState = MutableStateFlow(Song())

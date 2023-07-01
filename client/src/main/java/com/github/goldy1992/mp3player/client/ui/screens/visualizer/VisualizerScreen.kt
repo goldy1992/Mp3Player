@@ -47,7 +47,7 @@ fun VisualizerScreen(
     scope : CoroutineScope = rememberCoroutineScope()) {
 
     val audioMagnitudes by viewModel.audioData.collectAsState()
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
 
     Scaffold(
         topBar = {

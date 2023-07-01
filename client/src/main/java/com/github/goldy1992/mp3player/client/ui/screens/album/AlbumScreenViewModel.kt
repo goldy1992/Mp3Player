@@ -15,6 +15,7 @@ import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -78,18 +79,7 @@ constructor(savedStateHandle: SavedStateHandle,
         }
     }
 
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.isPlaying()
-                .collect {
-                    _isPlayingState.value = it
-                }
-        }
-    }
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // shuffle mode
     private val _shuffleModeState = MutableStateFlow(false)

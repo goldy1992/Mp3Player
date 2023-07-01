@@ -22,9 +22,9 @@ import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnSearchResultsChangedFlow
-import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.PlaybackParametersFlow
 import com.github.goldy1992.mp3player.client.media.flows.PlaybackPositionFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
 import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
 import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow

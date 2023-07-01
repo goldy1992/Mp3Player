@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.service.dagger.modules.service
 import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.util.Log
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.Player
@@ -17,6 +16,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
+import androidx.annotation.OptIn as AndroidXOptIn
 
 @AndroidXOptIn(UnstableApi::class)
 @InstallIn(ServiceComponent::class)

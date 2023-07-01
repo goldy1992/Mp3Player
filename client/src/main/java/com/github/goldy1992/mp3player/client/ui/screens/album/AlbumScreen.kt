@@ -67,7 +67,7 @@ fun AlbumScreen(
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
 
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
     val isShuffleModeEnabled by viewModel.shuffleModeEnabled.collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
@@ -203,7 +203,8 @@ private fun AlbumHeaderItem(
                 verticalAlignment = Alignment.CenterVertically) {
                 shuffleButton()
                 Spacer(modifier = Modifier.width(12.dp))
-                Divider(modifier = Modifier.fillMaxHeight()
+                Divider(modifier = Modifier
+                    .fillMaxHeight()
                     .width(1.dp),
                     thickness = 1.dp)
                 Spacer(modifier = Modifier.width(12.dp))

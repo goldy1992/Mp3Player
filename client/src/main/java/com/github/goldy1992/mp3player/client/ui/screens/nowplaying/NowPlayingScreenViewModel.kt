@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,19 +43,7 @@ constructor(
         }
     }
 
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.isPlaying()
-            .collect {
-                Log.i(logTag(), "mediaRepository.isPlaying() collect: new isPlayingState: $it")
-                _isPlayingState.value = it
-            }
-        }
-    }
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // metadata
     private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)

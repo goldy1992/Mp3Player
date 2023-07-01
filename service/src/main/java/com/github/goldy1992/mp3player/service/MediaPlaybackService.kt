@@ -1,21 +1,11 @@
 package com.github.goldy1992.mp3player.service
 
-import android.annotation.SuppressLint
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.common.util.Util
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
-import androidx.media3.session.R
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.service.library.data.search.managers.SearchDatabaseManagersFullImpl
 import dagger.hilt.android.AndroidEntryPoint

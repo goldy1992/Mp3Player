@@ -14,11 +14,19 @@ import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUser
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
-import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.DefaultDispatcher
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
+import com.github.goldy1992.mp3player.commons.Screen
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**

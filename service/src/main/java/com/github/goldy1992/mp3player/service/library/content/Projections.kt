@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.library.content
 
 import android.provider.MediaStore
-import java.util.*
+import java.util.Collections
 
 object Projections {
     @JvmField

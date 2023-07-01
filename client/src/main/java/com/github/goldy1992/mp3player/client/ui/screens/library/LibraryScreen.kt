@@ -64,7 +64,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
 
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentMediaItem by viewModel.currentMediaItem.collectAsState()
 
     val onSongSelected : (Int, Songs) -> Unit =  {
@@ -263,7 +263,9 @@ private fun LibraryTabs(
                     val context = LocalContext.current
                     Tab(
                         selected = isSelected,
-                        modifier = Modifier.height(48.dp).padding(start = 10.dp, end = 10.dp),
+                        modifier = Modifier
+                            .height(48.dp)
+                            .padding(start = 10.dp, end = 10.dp),
                         content = {
                             Text(
                                 text = MediaItemNameUtils.getMediaItemTypeName(context, item.type).uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,

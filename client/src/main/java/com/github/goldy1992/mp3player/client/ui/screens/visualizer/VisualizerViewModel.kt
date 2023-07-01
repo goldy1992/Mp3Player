@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,19 +25,7 @@ constructor(
     private val mediaRepository: MediaRepository,
 ) : LogTagger, ViewModel() {
 
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository
-                .isPlaying()
-                .collect {
-                    _isPlayingState.value = it
-                }
-        }
-    }
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // Backing property to avoid state updates from other classes
     private val _audioData = MutableStateFlow(emptyList<Float>())
@@ -50,7 +39,7 @@ constructor(
                 .audioData()
                 .collect { audioData ->
                     Log.d(logTag(), "collecting audio data")
-                    if (isPlaying.value) {
+                    if (isPlaying.state().value) {
                         _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
                         Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
                     } else {

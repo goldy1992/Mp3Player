@@ -72,7 +72,7 @@ class MediaLibrarySessionCallback
         playerCommand: Int
     ): Int {
         Log.d(logTag(), "player command requested: $playerCommand")
-        /* TODO: bug on Android when notification is removed when playback is paused! This causes
+        /* Bug on some Android devices when notification is removed when playback is paused! This causes
              stop() to be called in some unwanted instances, meaning it should be ensured that
              [Player#prepare()] is called beforehand
          */

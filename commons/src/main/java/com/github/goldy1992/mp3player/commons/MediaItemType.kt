@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.commons
 
-import java.util.*
+import java.util.EnumSet
 
 enum class MediaItemType(
         val rank: Int) {

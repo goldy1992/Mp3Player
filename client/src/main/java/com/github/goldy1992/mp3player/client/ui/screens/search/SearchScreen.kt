@@ -63,7 +63,7 @@ fun SearchScreen(
     Log.i(logTag,"composing search screen")
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
 
     Log.i(logTag,"state_collected")

@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.service.library.content.searcher
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.scopes.ServiceScoped
-import java.util.*
+import java.util.EnumMap
 import javax.inject.Inject
 
 @ServiceScoped

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.commons
 
 import org.apache.commons.lang3.StringUtils
-import java.util.*
+import java.util.Locale
 
 object Normaliser {
     @JvmStatic

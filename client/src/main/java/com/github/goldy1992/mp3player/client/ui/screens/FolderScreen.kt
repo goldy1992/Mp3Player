@@ -47,7 +47,7 @@ fun FolderScreen(
     viewModel: FolderScreenViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentSong by viewModel.currentMediaItem.collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
 

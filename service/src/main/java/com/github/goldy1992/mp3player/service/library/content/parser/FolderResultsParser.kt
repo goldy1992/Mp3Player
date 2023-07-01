@@ -10,7 +10,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import java.io.File
-import java.util.*
+import java.util.TreeSet
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules.service
 
-import com.github.goldy1992.mp3player.service.library.MediaContentManager
 import com.github.goldy1992.mp3player.service.library.ContentManager
+import com.github.goldy1992.mp3player.service.library.MediaContentManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

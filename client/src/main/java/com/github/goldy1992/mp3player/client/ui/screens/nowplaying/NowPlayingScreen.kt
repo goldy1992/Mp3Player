@@ -55,7 +55,7 @@ fun NowPlayingScreen(
     val metadata by viewModel.metadata.collectAsState()
     val playbackPosition by viewModel.playbackPosition.collectAsState()
     val playbackSpeed by viewModel.playbackSpeed.collectAsState()
-    val isPlaying by viewModel.isPlaying.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
     val queue by viewModel.queue.collectAsState()
     val shuffleEnabled by viewModel.shuffleMode.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()

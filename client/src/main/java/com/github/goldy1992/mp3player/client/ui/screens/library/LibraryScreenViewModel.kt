@@ -21,6 +21,7 @@ import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Songs
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -140,21 +141,7 @@ class LibraryScreenViewModel
         }
     }
 
-
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        Log.v(logTag(), "init isPlaying")
-        viewModelScope.launch {
-            mediaRepository.isPlaying()
-            .collect {
-                Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
-                _isPlayingState.value = it
-            }
-        }
-    }
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // metadata
     private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)

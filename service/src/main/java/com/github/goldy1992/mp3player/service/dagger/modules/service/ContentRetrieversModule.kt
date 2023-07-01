@@ -1,13 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules.service
 
-import android.content.ContentResolver
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
-import com.github.goldy1992.mp3player.service.library.content.filter.SongsFromFolderResultsFilter
-import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
-import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
-import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.retrievers.AlbumsRetriever
-import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrievers
 import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrieversDefaultImpl
 import com.github.goldy1992.mp3player.service.library.content.retrievers.FoldersRetriever
 import com.github.goldy1992.mp3player.service.library.content.retrievers.RootRetriever
