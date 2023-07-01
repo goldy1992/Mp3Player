@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.dagger.modules
 
 import android.content.Context
-import com.github.goldy1992.mp3player.client.media.DefaultMediaBrowser2
+import com.github.goldy1992.mp3player.client.media.DefaultMediaBrowser
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import dagger.Module
 import dagger.Provides
@@ -20,8 +20,8 @@ object MediaBrowserModule {
     fun providesDefaultMediaBrowser2Module(
         @ApplicationContext context: Context,
         @MainDispatcher mainDispatcher: CoroutineDispatcher,
-    ): DefaultMediaBrowser2 {
-        return DefaultMediaBrowser2(context, mainDispatcher)
+    ): DefaultMediaBrowser {
+        return DefaultMediaBrowser(context, mainDispatcher)
     }
 
 }

@@ -47,6 +47,7 @@ class SearchScreenTest {
     /**
      * Tests that the query is updated correctly when we perform text input.
      */
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun testSearchBarOnValueChange() {
         composeTestRule.setContent {
@@ -58,7 +59,7 @@ class SearchScreenTest {
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
 
         composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("ab")
-        composeTestRule.waitForIdle()
+        composeTestRule.waitUntilExactlyOneExists(hasText("ab"))
         composeTestRule.onNodeWithContentDescription(searchTextFieldName).assert(hasText("ab"))
     }
 

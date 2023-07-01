@@ -64,6 +64,8 @@ fun SearchScreen(
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
+    val currentSong by viewModel.currentMediaItem.collectAsState()
+
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
@@ -106,7 +108,8 @@ fun SearchScreen(
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickPause = { viewModel.pause() },
             onClickPlay = { viewModel.play() },
-            onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)}
+            onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)},
+            currentSongProvider = { currentSong }
            )
     }
 

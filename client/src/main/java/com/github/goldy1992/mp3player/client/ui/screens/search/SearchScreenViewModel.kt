@@ -102,6 +102,20 @@ class SearchScreenViewModel
         }
     }
 
+    // currentMediaItem
+    private val _currentMediaItemState = MutableStateFlow(Song())
+    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
+
+    init {
+        viewModelScope.launch {
+            mediaRepository.currentMediaItem()
+                .collect {
+                    _currentMediaItemState.value = createSong(it)
+                }
+        }
+    }
+
+
     fun play(song: Song) {
         viewModelScope.launch {
             mediaRepository.play(MediaItemBuilder(song.id).build())

@@ -48,7 +48,7 @@ import androidx.annotation.OptIn as AndroidXOptIn
 /**
  * Default implementation of the [IMediaBrowser].
  */
-class DefaultMediaBrowser2
+class DefaultMediaBrowser
 
     constructor(
         @ApplicationContext private val context: Context,
@@ -237,10 +237,9 @@ class DefaultMediaBrowser2
     override suspend fun play() {
         Log.v(logTag(), "play() invoked, awaiting mediaBrowser")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
-        Log.v(logTag(), "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}")
-        //LoggingUtils.logPlaybackState(mediaBrowser?.playbackState, logTag())
+        Log.d(logTag(), "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}, playbackState: ${LoggingUtils.logPlaybackState(mediaBrowser?.playbackState ?: 0, logTag())}")
         mediaBrowser?.play()
-        Log.i(logTag(), "play() invocation complete")
+        Log.v(logTag(), "play() invocation complete")
     }
 
     override suspend fun play(mediaItem: MediaItem) {

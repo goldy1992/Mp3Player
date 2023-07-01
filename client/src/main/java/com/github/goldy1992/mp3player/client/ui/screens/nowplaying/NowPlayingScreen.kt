@@ -59,6 +59,7 @@ fun NowPlayingScreen(
     val queue by viewModel.queue.collectAsState()
     val shuffleEnabled by viewModel.shuffleMode.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()
+    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
 
     Scaffold (
 
@@ -95,7 +96,8 @@ fun NowPlayingScreen(
                 onClickPlay = { viewModel.play() },
                 onClickPause = { viewModel.pause() },
                 onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() }
+                onClickSkipNext = { viewModel.skipToNext() },
+                currentSongProvider = { currentMediaItem }
             )
         },
 
@@ -129,6 +131,7 @@ fun NowPlayingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     ShuffleButton(
@@ -176,6 +179,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
 
     if (isEmpty(queueState.items)) {
         Column(modifier = modifier.width(700.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Empty Playlist", style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center)
@@ -218,7 +222,9 @@ fun ViewPager(metadata : () -> MediaMetadata,
             val item: MediaItem = queueState.items[pageIndex]
             Column(
                     modifier = Modifier
-                            .width(300.dp),
+                        .width(300.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(

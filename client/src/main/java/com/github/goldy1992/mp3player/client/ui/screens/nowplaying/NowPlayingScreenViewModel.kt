@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
@@ -16,6 +18,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * [ViewModel] for the [NowPlayingScreen]
+ */
 @HiltViewModel
 class NowPlayingScreenViewModel
     @Inject
@@ -77,6 +82,21 @@ constructor(
             }
         }
     }
+
+
+    // currentMediaItem
+    private val _currentMediaItemState = MutableStateFlow(Song())
+    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
+
+    init {
+        viewModelScope.launch {
+            mediaRepository.currentMediaItem()
+                .collect {
+                    _currentMediaItemState.value = MediaEntityUtils.createSong(it)
+                }
+        }
+    }
+
 
 
     // queue

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,14 +18,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 
+@Preview
 @Composable
 fun SpeedController(modifier : Modifier = Modifier,
-                    playbackSpeedProvider: () -> Float,
-                    changePlaybackSpeed : (speed : Float) -> Unit) {
+                    playbackSpeedProvider: () -> Float = {1f},
+                    changePlaybackSpeed : (speed : Float) -> Unit = {_->}){
 
     val sliderPosition = playbackSpeedProvider()
 
@@ -35,6 +38,7 @@ fun SpeedController(modifier : Modifier = Modifier,
     Column(modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally) {
         Slider(
+            modifier = Modifier.weight(1f),
             value = if (isTouchTracking) touchTrackingPosition else uiSliderPosition,
             valueRange = 0.5f..1.5f,
             onValueChange = {
@@ -48,7 +52,10 @@ fun SpeedController(modifier : Modifier = Modifier,
                 changePlaybackSpeed(uiSliderPosition)
             }
         )
-        Row(horizontalArrangement = Arrangement.Center) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.weight(1f)) {
             Text(
                 text = "${String.format("%.2f", sliderPosition)}x",
                 style = MaterialTheme.typography.titleMedium,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="about">Acerca de la App</string>
-    <string name="about_description">This app has been a personal project that started way back in October 2017. Used as an introduction to android development, it started out as a simple application to play a music file on your android device. It has evolved into a simple but fully functional local music player and library. The evolution of the app tries to align with the ever-changing Android Development best practices and is built on-top of a fully automated CI/CD Pipeline.</string>
+    <string name="about_description">Esta app ha sido un proyecto personal que comenzó en Octubre de 2017. El desarrollo empezó con el objectivo de poder poner un archivo de músico que hay en el dispositivo. Se ha convertido en un reproductor de música operativo por completo tanto como Bíblioteca de música local. El desarrollo actual se enfoca en alinear con las prácticas recomendadas del desarrollo Android lo cual está en cambio constante y además está desarrollado sobre un pipeline CI/CD completamente automático. </string>
     <string name="album">Álbum</string>
     <string name="albums">Albumes</string>
     <string name="allow_audio_playback">Permitir Reproducción de Audio</string>
