@@ -19,12 +19,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -52,22 +51,21 @@ fun NowPlayingScreen(
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
-    val metadata by viewModel.metadata.collectAsState()
-    val playbackPosition by viewModel.playbackPosition.collectAsState()
-    val playbackSpeed by viewModel.playbackSpeed.collectAsState()
+    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
+    val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
     val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val queue by viewModel.queue.collectAsState()
-    val shuffleEnabled by viewModel.shuffleMode.collectAsState()
-    val repeatMode by viewModel.repeatMode.collectAsState()
-    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
+    val queue by viewModel.queue.state().collectAsState()
+    val shuffleEnabled by viewModel.shuffleMode.state().collectAsState()
+    val repeatMode by viewModel.repeatMode.state().collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
 
     Scaffold (
 
         topBar = {
             TopAppBar (
                 title = {
-                    val title : String = metadata.title.toString()
-                    val artist : String = metadata.artist.toString()
+                    val title : String = currentSong.title
+                    val artist : String = currentSong.artist
                     Column {
                         Text(text = title,
                             style = MaterialTheme.typography.titleLarge,
@@ -97,7 +95,7 @@ fun NowPlayingScreen(
                 onClickPause = { viewModel.pause() },
                 onClickSkipPrevious = { viewModel.skipToPrevious() },
                 onClickSkipNext = { viewModel.skipToNext() },
-                currentSongProvider = { currentMediaItem }
+                currentSongProvider = { currentSong }
             )
         },
 
@@ -121,7 +119,7 @@ fun NowPlayingScreen(
                         .padding(start = 48.dp, end = 48.dp)
                 )
                 ViewPager(
-                    metadata = { metadata },
+                    currentSongProvider = { currentSong },
                     queueProvider =  {queue },
                     skipToNext = { viewModel.skipToNext()},
                     skipToPrevious = { viewModel.skipToPrevious() },
@@ -151,7 +149,7 @@ fun NowPlayingScreen(
                 ) {
                     SeekBar(
                         playbackSpeedProvider = { playbackSpeed },
-                        metadataProvider = {  metadata },
+                        currentSongProvider = {  currentSong },
                         isPlayingProvider = { isPlaying },
                         playbackPositionProvider = {  playbackPosition },
                         seekTo = { value -> viewModel.seekTo(value)})
@@ -164,7 +162,7 @@ fun NowPlayingScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ViewPager(metadata : () -> MediaMetadata,
+fun ViewPager(currentSongProvider : () -> Song,
               queueProvider: () -> QueueState,
               skipToNext : () -> Unit,
               skipToPrevious : () -> Unit,
@@ -185,7 +183,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
             textAlign = TextAlign.Center)
         }
     } else {
-        LaunchedEffect(metadata()){
+        LaunchedEffect(currentSongProvider()){
             if (currentQueuePosition < numberOfPages) {
                 pagerState.scrollToPage(currentQueuePosition)
             }
@@ -216,10 +214,10 @@ fun ViewPager(metadata : () -> MediaMetadata,
                         contentDescription = "viewPagerColumn"
                     },
                 pageCount = numberOfPages,
-                key = { page : Int -> queueState.items[page].mediaId }
+                key = { page : Int -> queueState.items[page].id }
 
             ) { pageIndex ->
-            val item: MediaItem = queueState.items[pageIndex]
+            val item: Song = queueState.items[pageIndex]
             Column(
                     modifier = Modifier
                         .width(300.dp)
@@ -229,7 +227,7 @@ fun ViewPager(metadata : () -> MediaMetadata,
             ) {
                 Image(
                         painter = rememberAsyncImagePainter(
-                            model = ImageRequest.Builder(LocalContext.current).data(item.mediaMetadata.artworkUri).build()
+                            model = ImageRequest.Builder(LocalContext.current).data(item.albumArt).build()
                         ),
                         contentDescription = "Album Art",
                         modifier = Modifier.size(300.dp, 300.dp)

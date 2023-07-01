@@ -46,7 +46,7 @@ class SeekBarTest {
         composeTestRule.setContent {
             SeekBar(
                 isPlayingProvider = {  false },
-                metadataProvider =  {metadata },
+                currentSongProvider =  {metadata },
                 playbackSpeedProvider = { 1.0f },
                 playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) },
             )

@@ -3,14 +3,16 @@ package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
-import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.ui.viewmodel.CurrentSongViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.PlaybackPositionViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.PlaybackSpeedViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.QueueViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.RepeatModeViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.ShuffleModeViewModelState
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,106 +30,13 @@ constructor(
         private val mediaRepository: MediaRepository,
 ) : ViewModel(), LogTagger {
 
-    // playbackPosition
-    private val _playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
-    val playbackPosition : StateFlow<PlaybackPositionEvent> = _playbackPositionState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.playbackPosition()
-            .collect {
-                _playbackPositionState.value = it
-                Log.d(logTag(), "mediaRepository.playbackPosition() collect: new  playbackPosition: $it")
-            }
-        }
-    }
-
+    val playbackPosition = PlaybackPositionViewModelState(mediaRepository, viewModelScope)
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-
-    // metadata
-    private val _metadataState = MutableStateFlow(MediaMetadata.EMPTY)
-    val metadata : StateFlow<MediaMetadata> = _metadataState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.metadata()
-            .collect {
-                _metadataState.value = it
-            }
-        }
-    }
-
-
-    // playback speed
-    private val _playbackSpeed = MutableStateFlow(1.0f)
-    val playbackSpeed : StateFlow<Float> = _playbackSpeed
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.playbackSpeed()
-            .collect {
-                _playbackSpeed.value = it
-            }
-        }
-    }
-
-
-    // currentMediaItem
-    private val _currentMediaItemState = MutableStateFlow(Song())
-    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.currentSong()
-                .collect {
-                    _currentMediaItemState.value = it
-                }
-        }
-    }
-
-
-
-    // queue
-    private val _queue = MutableStateFlow(QueueState.EMPTY)
-    val queue : StateFlow<QueueState> = _queue
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.queue()
-            .collect {
-                Log.d(logTag(), "mediaRepository.queue() collect: queue items size: ${it.items.size}")
-                _queue.value = it
-            }
-        }
-    }
-
-
-    // repeat mode
-    private val _repeatMode = MutableStateFlow(Player.REPEAT_MODE_OFF)
-    val repeatMode : StateFlow<@RepeatMode Int> = _repeatMode
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.repeatMode()
-            .collect {
-                _repeatMode.value = it
-            }
-        }
-    }
-
-
-    // shuffle mode
-    private val _shuffleMode = MutableStateFlow(false)
-    val shuffleMode : StateFlow<Boolean> = _shuffleMode
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.isShuffleModeEnabled()
-            .collect {
-                _shuffleMode.value = it
-            }
-        }
-    }
+    val playbackSpeed = PlaybackSpeedViewModelState(mediaRepository, viewModelScope)
+    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
+    val queue = QueueViewModelState(mediaRepository, viewModelScope)
+    val repeatMode = RepeatModeViewModelState(mediaRepository, viewModelScope)
+    val shuffleMode = ShuffleModeViewModelState(mediaRepository, viewModelScope)
 
     fun changePlaybackSpeed(speed : Float) {
         viewModelScope.launch { mediaRepository.changePlaybackSpeed(speed) }

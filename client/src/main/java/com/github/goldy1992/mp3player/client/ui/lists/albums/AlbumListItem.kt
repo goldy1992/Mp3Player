@@ -41,11 +41,14 @@ fun AlbumListItem(modifier: Modifier = Modifier,
         Column(Modifier.fillMaxSize()) {
             AlbumArtAsync(album.albumArt, contentDescription = album.albumTitle, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
             Column(Modifier.padding(start = 16.dp)) {
-                Text(text = album.albumTitle,
+                Text(album.albumTitle,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
-                Text(album.albumArtist, style = MaterialTheme.typography.bodySmall, maxLines=1)
+                Text(album.albumArtist,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines=1,
+                    overflow = TextOverflow.Ellipsis)
             }
         }
     }
