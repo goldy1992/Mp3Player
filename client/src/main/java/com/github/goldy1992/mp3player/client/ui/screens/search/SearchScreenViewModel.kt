@@ -12,10 +12,15 @@ import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolder
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.SearchResults
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -36,11 +41,12 @@ import javax.inject.Inject
 class SearchScreenViewModel
     @Inject
     constructor(
-        private val mediaRepository: MediaRepository
+        override val mediaRepository: MediaRepository
     )
 
-    : ViewModel(), LogTagger {
+    : Pause, Play, SkipToNext, SkipToPrevious, ViewModel(), LogTagger {
 
+    override val scope = viewModelScope
     private val _searchQuery = MutableStateFlow("")
     val searchQuery : StateFlow<String> = _searchQuery
 
@@ -83,22 +89,8 @@ class SearchScreenViewModel
         }
     }
 
-
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-
-    // currentMediaItem
-    private val _currentMediaItemState = MutableStateFlow(Song())
-    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.currentSong()
-                .collect {
-                    _currentMediaItemState.value = it
-                }
-        }
-    }
-
+    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
 
     fun play(song: Song) {
         viewModelScope.launch {
@@ -106,7 +98,7 @@ class SearchScreenViewModel
         }
     }
 
-    fun playFromList(itemIndex : Int, mediaItemList : Songs) {
+    fun playFromList(itemIndex : Int, mediaItemList : Playlist) {
         val extras = Bundle()
         extras.putString(Constants.PLAYLIST_ID, "SearchResults")
 
@@ -115,22 +107,6 @@ class SearchScreenViewModel
             .setExtras(extras)
             .build()
         viewModelScope.launch { mediaRepository.playFromPlaylist(itemIndex = itemIndex, items = mediaItemList.songs.map { MediaItemBuilder(it.id).build() }, playlistMetadata = mediaMetadata) }
-    }
-
-    fun play() {
-        viewModelScope.launch { mediaRepository.play() }
-    }
-
-    fun pause() {
-        viewModelScope.launch { mediaRepository.pause() }
-    }
-
-    fun skipToNext() {
-        viewModelScope.launch { mediaRepository.skipToNext() }
-    }
-
-    fun skipToPrevious() {
-        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     private fun mapResults(mediaItemList: List<MediaItem>) : SearchResults {

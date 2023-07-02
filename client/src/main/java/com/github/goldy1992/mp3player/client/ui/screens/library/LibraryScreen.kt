@@ -60,16 +60,15 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
     val rootItems by viewModel.rootItems.collectAsState()
-    val songs by viewModel.songs.collectAsState()
+    val songs by viewModel.playlist.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
-
     val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentMediaItem by viewModel.currentMediaItem.collectAsState()
+    val currentMediaItem by viewModel.currentSong.state().collectAsState()
 
-    val onSongSelected : (Int, Songs) -> Unit =  {
+    val onSongSelected : (Int, Playlist) -> Unit =  {
             itemIndex, mediaItemList ->
-        viewModel.playPlaylist(MediaItemType.SONGS.name, mediaItemList, itemIndex)
+        viewModel.playPlaylist(mediaItemList, itemIndex)
     }
     val onFolderSelected : (Folder) -> Unit = {
         val encodedFolderLibraryId = it.encodedLibraryId
@@ -115,7 +114,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             pagerState = pagerState,
             rootItemsProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
-            songs = { songs },
+            playlist = { songs },
             folders = { folders },
             albums = { albums },
             currentMediaItemProvider = { currentMediaItem },
@@ -299,7 +298,7 @@ fun LibraryScreenContent(
     pagerState: PagerState = rememberPagerState(initialPage = 0),
     rootItemsProvider: () -> RootItems,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    playlist : () -> Playlist = { Playlist(State.NOT_LOADED) },
     folders : () -> Folders = { Folders(State.NOT_LOADED) },
     albums : () -> Albums = { Albums(State.NOT_LOADED) },
     currentMediaItemProvider : () -> Song = {Song()},
@@ -317,7 +316,7 @@ fun LibraryScreenContent(
         Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
             TabBarPages(
                 pagerState = pagerState,
-                songs = songs,
+                playlist = playlist,
                 folders = folders,
                 albums = albums,
                 currentMediaItemProvider = currentMediaItemProvider,
@@ -341,7 +340,7 @@ fun TabBarPages(
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    songs : () -> Songs = { Songs(State.NOT_LOADED) },
+    playlist : () -> Playlist = { Playlist(State.NOT_LOADED) },
     folders : () -> Folders = { Folders(State.NOT_LOADED) },
     albums : () -> Albums = { Albums(State.NOT_LOADED) },
     currentMediaItemProvider : () -> Song = {Song()},
@@ -360,11 +359,11 @@ fun TabBarPages(
             when (tabPages[pageIndex]) {
                 MediaItemType.SONGS ->
                     SongList(
-                        songs = songs(),
+                        playlist = playlist(),
                         isPlayingProvider = isPlayingProvider,
                         currentSongProvider = { currentMediaItemProvider() }) {
-                            itemIndex : Int, mediaItemList : Songs ->
-                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Songs) -> Unit
+                            itemIndex : Int, mediaItemList : Playlist ->
+                            val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Playlist) -> Unit
                             if (callable != null) {
                                 callable(itemIndex, mediaItemList)
                             }

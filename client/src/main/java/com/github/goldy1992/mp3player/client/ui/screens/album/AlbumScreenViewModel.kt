@@ -10,11 +10,19 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSongs
+import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createPlaylist
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
-import com.github.goldy1992.mp3player.client.ui.viewmodel.IsPlayingViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SetShuffleEnabled
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.ShufflePlayPlaylist
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.ShuffleModeViewModelState
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
@@ -32,9 +40,10 @@ import javax.inject.Inject
 class AlbumScreenViewModel
 @Inject
 constructor(savedStateHandle: SavedStateHandle,
-            private val mediaRepository: MediaRepository,
-) : ViewModel(), LogTagger  {
+            override val mediaRepository: MediaRepository,
+) : Play, Pause, SetShuffleEnabled, ShufflePlayPlaylist, SkipToNext, SkipToPrevious, ViewModel(), LogTagger  {
 
+    override val scope = viewModelScope
     private val albumId : String = checkNotNull(savedStateHandle["albumId"])
     private val albumTitle : String = checkNotNull(savedStateHandle["albumTitle"])
     private val albumArtist : String = checkNotNull(savedStateHandle["albumArtist"])
@@ -79,32 +88,9 @@ constructor(savedStateHandle: SavedStateHandle,
     }
 
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
+    val shuffleEnabled = ShuffleModeViewModelState(mediaRepository, viewModelScope)
+    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
 
-    // shuffle mode
-    private val _shuffleModeState = MutableStateFlow(false)
-    val shuffleModeEnabled : StateFlow<Boolean> = _shuffleModeState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.isShuffleModeEnabled()
-                .collect {
-                    _shuffleModeState.value = it
-                }
-        }
-    }
-
-    // currentMediaItem
-    private val _currentMediaItemState = MutableStateFlow(Song())
-    val currentMediaItem : StateFlow<Song> = _currentMediaItemState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository.currentSong()
-                .collect {
-                    _currentMediaItemState.value = it
-                }
-        }
-    }
 
     // currentMediaItem
     private val _currentPlaylistIdState = MutableStateFlow("")
@@ -122,28 +108,9 @@ constructor(savedStateHandle: SavedStateHandle,
         }
     }
 
-    fun play() {
-        viewModelScope.launch { mediaRepository.play() }
-    }
-
-    fun pause() {
-        viewModelScope.launch { mediaRepository.pause() }
-    }
-
-    fun setShuffleMode(shuffleEnabled : Boolean) {
-        viewModelScope.launch { mediaRepository.setShuffleMode(shuffleEnabled) }
-    }
-
-    fun skipToNext() {
-        viewModelScope.launch { mediaRepository.skipToNext() }
-    }
-
-    fun skipToPrevious() {
-        viewModelScope.launch { mediaRepository.skipToPrevious() }
-    }
 
     fun playAlbum(index : Int, album: Album) {
-        val mediaItems = album.songs.songs.map { MediaItemBuilder(it.id).build() }
+        val mediaItems = album.playlist.songs.map { MediaItemBuilder(it.id).build() }
         val mediaMetadata = createAlbumPlaylistMetadata(album)
         viewModelScope.launch { mediaRepository.playFromPlaylist(mediaItems, index, mediaMetadata) }
     }
@@ -151,7 +118,7 @@ constructor(savedStateHandle: SavedStateHandle,
 
 
     fun shuffleAlbum(album: Album) {
-        val mediaItems = album.songs.songs.map { MediaItemBuilder(it.id).build() }
+        val mediaItems = album.playlist.songs.map { MediaItemBuilder(it.id).build() }
         viewModelScope.launch {
             mediaRepository.playFromPlaylist( mediaItems, 0, createAlbumPlaylistMetadata(album))
         }
@@ -159,14 +126,14 @@ constructor(savedStateHandle: SavedStateHandle,
 
 
     private fun mapSongsToAlbum(mediaItems : List<MediaItem>) : Album {
-        val songs = createSongs(state = State.LOADED, mediaItems)
+        val songs = createPlaylist(state = State.LOADED, mediaItems)
         val currentAlbum = album
         return Album(
             id = currentAlbum.id,
             albumTitle = currentAlbum.albumTitle,
             albumArtist = currentAlbum.albumArtist,
             albumArt = currentAlbum.albumArt,
-            songs = songs,
+            playlist = songs,
             totalDuration = songs.totalDuration,
             state = State.LOADED
         )

@@ -11,7 +11,7 @@ class Folder constructor(
     val path : String = Constants.UNKNOWN,
     val encodedPath : String = Constants.UNKNOWN,
     val uri: Uri = Uri.EMPTY,
-    val songs: Songs= Songs(),
+    val playlist: Playlist= Playlist(),
     val totalDuration : Long = 0L,
     val state: State = State.NOT_LOADED,
     val isRecursive : Boolean = false

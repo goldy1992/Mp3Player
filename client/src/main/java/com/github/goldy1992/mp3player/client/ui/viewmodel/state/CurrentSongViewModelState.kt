@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.viewmodel
+package com.github.goldy1992.mp3player.client.ui.viewmodel.state
 
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository

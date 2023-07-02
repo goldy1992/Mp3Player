@@ -1,18 +1,15 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import androidx.media3.common.Player.REPEAT_MODE_ALL
-import androidx.media3.common.Player.REPEAT_MODE_OFF
-import androidx.media3.common.Player.REPEAT_MODE_ONE
-import androidx.media3.common.Player.RepeatMode
+import com.github.goldy1992.mp3player.client.data.RepeatMode
+import com.github.goldy1992.mp3player.client.data.RepeatMode.*
 
 object RepeatModeUtils {
 
-    fun getNextRepeatMode(currentRepeatMode : @RepeatMode Int) : @RepeatMode Int {
+    fun getNextRepeatMode(currentRepeatMode : RepeatMode) : RepeatMode {
         return when (currentRepeatMode) {
-            REPEAT_MODE_ONE -> REPEAT_MODE_ALL
-            REPEAT_MODE_ALL -> REPEAT_MODE_OFF
-            REPEAT_MODE_OFF -> REPEAT_MODE_ONE
-            else -> REPEAT_MODE_ONE
+            ONE -> ALL
+            ALL -> OFF
+            OFF -> ONE
         }
     }
 }

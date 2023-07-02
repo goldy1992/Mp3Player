@@ -10,21 +10,21 @@ import androidx.compose.ui.semantics.semantics
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 
 @ExperimentalCoilApi
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 fun LoadedSongsListWithHeader(
-    songs: Songs,
+    playlist: Playlist,
     modifier: Modifier = Modifier,
     headerItem: @Composable (() -> Unit) = {},
     currentSong: Song,
     isPlayingProvider: () -> Boolean,
-    onSongSelected: (itemIndex: Int, songs: Songs) -> Unit
+    onSongSelected: (itemIndex: Int, playlist: Playlist) -> Unit
 ) {
-    val songList = songs.songs
+    val songList = playlist.songs
     val songsListDescr = stringResource(id = R.string.songs_list)
     val header: @Composable () -> Unit = headerItem
     val itemCount = songList.size + 1
@@ -49,7 +49,7 @@ fun LoadedSongsListWithHeader(
                     song = song,
                     isSelected = isItemSelected,
                     isPlayingProvider = isPlayingProvider,
-                    onClick = { onSongSelected(itemIndex, songs) })
+                    onClick = { onSongSelected(itemIndex, playlist) })
             } else {
                 header()
             }

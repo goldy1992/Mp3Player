@@ -137,7 +137,7 @@ fun NowPlayingScreen(
                 ) {
                     ShuffleButton(
                         shuffleEnabledProvider = { shuffleEnabled },
-                        onClick = { isEnabled -> viewModel.setShuffleMode(!isEnabled) }
+                        onClick = { isEnabled -> viewModel.setShuffleEnabled(isEnabled) }
                     )
                     RepeatButton(
                         repeatModeProvider = { repeatMode },

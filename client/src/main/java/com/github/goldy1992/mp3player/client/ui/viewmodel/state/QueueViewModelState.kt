@@ -1,37 +1,38 @@
-package com.github.goldy1992.mp3player.client.ui.viewmodel
+package com.github.goldy1992.mp3player.client.ui.viewmodel.state
 
 import android.util.Log
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PlaybackSpeedViewModelState (
+class QueueViewModelState (
     mediaRepository: MediaRepository,
     scope: CoroutineScope
-) : MediaViewModelState<Float>(mediaRepository, scope) {
+) : MediaViewModelState<QueueState>(mediaRepository, scope) {
 
-    private val _playbackSpeedState = MutableStateFlow(1f)
+    private val _queueState = MutableStateFlow(QueueState.EMPTY)
 
     init {
         Log.v(logTag(), "init isPlaying")
         scope.launch {
-            mediaRepository.playbackSpeed()
+            mediaRepository.queue()
                 .collect {
                     Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
-                    _playbackSpeedState.value = it
+                    _queueState.value = it
                 }
         }
     }
 
-    override fun state(): StateFlow<Float> {
-        return _playbackSpeedState.asStateFlow()
+    override fun state(): StateFlow<QueueState> {
+        return _queueState.asStateFlow()
     }
 
     override fun logTag(): String {
-        return "PlaybackSpeedViewModelState"
+        return "QueueViewModelState"
     }
 
 }

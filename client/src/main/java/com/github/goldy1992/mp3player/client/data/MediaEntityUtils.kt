@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.data
 import android.net.Uri
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 
 object MediaEntityUtils {
@@ -17,22 +18,24 @@ object MediaEntityUtils {
         )
     }
 
-    fun createSongs(
+    fun createPlaylist(
         state : State,
-        mediaItems: List<MediaItem>
-    ) : Songs {
+        mediaItems: List<MediaItem>,
+        id : String = Constants.UNKNOWN
+    ) : Playlist {
         val songs = mediaItems.map { createSong(it) }
         val duration = songs.sumOf { it.duration }
-        return Songs(
+        return Playlist(
             state = state,
             songs = songs,
-            totalDuration = duration
+            totalDuration = duration,
+            id = id
         )
     }
 
 
     fun createAlbum(mediaItem : MediaItem,
-                    songs: Songs = Songs()
+                    playlist: Playlist = Playlist()
     ) : Album {
         return Album(
             id = mediaItem.mediaId,
@@ -41,7 +44,7 @@ object MediaEntityUtils {
             recordingYear = MediaItemUtils.getAlbumRecordingYear(mediaItem),
             releaseYear = MediaItemUtils.getAlbumReleaseYear(mediaItem),
             albumArt = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY,
-            songs = songs
+            playlist = playlist
         )
     }
 
@@ -57,7 +60,7 @@ object MediaEntityUtils {
     }
 
     fun createFolder(mediaItem : MediaItem,
-                    songs: Songs = Songs()
+                     playlist: Playlist = Playlist()
     ) : Folder {
         return Folder(
             id = mediaItem.mediaId,
@@ -66,7 +69,7 @@ object MediaEntityUtils {
             path = MediaItemUtils.getDirectoryPath(mediaItem),
             encodedPath = Uri.encode(MediaItemUtils.getDirectoryPath(mediaItem)),
             uri = MediaItemUtils.getDirectoryUri(mediaItem) ?: Uri.EMPTY,
-            songs = songs
+            playlist = playlist
         )
     }
 

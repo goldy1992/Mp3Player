@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import java.util.EnumMap
@@ -33,7 +33,7 @@ fun onFolderSelected(navController : NavController) : (Folder) -> Unit {
 
 fun buildOnSelectedMap(
     onFolderSelected : (Folder) -> Unit,
-    onSongsSelected : (Int, Songs) -> Unit,
+    onSongsSelected : (Int, Playlist) -> Unit,
     onSongSelected : (Song) -> Unit
 
 ) : EnumMap<MediaItemType, Any> {

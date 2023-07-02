@@ -1,7 +1,8 @@
-package com.github.goldy1992.mp3player.client.ui.viewmodel
+package com.github.goldy1992.mp3player.client.ui.viewmodel.state
 
 import android.util.Log
 import androidx.media3.common.Player
+import com.github.goldy1992.mp3player.client.data.RepeatMode
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +14,9 @@ import kotlinx.coroutines.launch
 class RepeatModeViewModelState (
     mediaRepository: MediaRepository,
     scope: CoroutineScope
-) : MediaViewModelState<@Player.RepeatMode Int>(mediaRepository, scope) {
+) : MediaViewModelState<RepeatMode>(mediaRepository, scope) {
 
-    private val _repeatModeState = MutableStateFlow(Player.REPEAT_MODE_OFF)
+    private val _repeatModeState = MutableStateFlow(RepeatMode.OFF)
 
     init {
         Log.v(logTag(), "init")
@@ -23,12 +24,18 @@ class RepeatModeViewModelState (
             mediaRepository.repeatMode()
                 .collect {
                     Log.d(logTag(), "state collect: $it")
-                    _repeatModeState.value = it
+                    val repeatMode = when(it) {
+                        Player.REPEAT_MODE_OFF -> RepeatMode.OFF
+                        Player.REPEAT_MODE_ALL -> RepeatMode.ALL
+                        Player.REPEAT_MODE_ONE -> RepeatMode.ONE
+                        else -> RepeatMode.OFF
+                    }
+                    _repeatModeState.value = repeatMode
                 }
         }
     }
 
-    override fun state(): StateFlow<@Player.RepeatMode Int> {
+    override fun state(): StateFlow<RepeatMode> {
         return _repeatModeState.asStateFlow()
     }
 

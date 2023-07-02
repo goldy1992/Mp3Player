@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
@@ -31,18 +31,18 @@ private const val LOG_TAG = "SongList"
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
-    songs : Songs = Songs(State.NOT_LOADED),
+    playlist : Playlist = Playlist(State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
-    onSongSelected : (itemIndex: Int, songs : Songs) -> Unit = { _, _ -> }) {
-    Log.v(LOG_TAG, "SongList() invoked with ${songs.songs.size} songs")
+    onSongSelected : (itemIndex: Int, playlist : Playlist) -> Unit = { _, _ -> }) {
+    Log.v(LOG_TAG, "SongList() invoked with ${playlist.songs.size} songs")
     val currentMediaItem = currentSongProvider()
 
-    when (songs.state) {
+    when (playlist.state) {
         State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.SONGS)
         State.LOADED -> {
             LoadedSongsList(
-                songs,
+                playlist,
                 modifier,
                 currentMediaItem,
                 isPlayingProvider,
@@ -66,13 +66,13 @@ fun SongList(
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 private fun LoadedSongsList(
-    songs: Songs,
+    playlist: Playlist,
     modifier: Modifier,
     currentMediaItem: Song,
     isPlayingProvider: () -> Boolean,
-    onSongSelected: (itemIndex: Int, songs: Songs) -> Unit
+    onSongSelected: (itemIndex: Int, playlist: Playlist) -> Unit
 ) {
-    val songList = songs.songs
+    val songList = playlist.songs
     val songsListDescr = stringResource(id = R.string.songs_list)
     val itemCount = songList.size
     LazyColumn(
@@ -88,7 +88,7 @@ private fun LoadedSongsList(
             SongListItem(
                 song = song,
                 isSelected = isItemSelected,
-                onClick = { onSongSelected(itemIndex, songs) })
+                onClick = { onSongSelected(itemIndex, playlist) })
         }
 
     }

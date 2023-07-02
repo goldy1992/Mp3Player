@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.viewmodel
+package com.github.goldy1992.mp3player.client.ui.viewmodel.state
 
 import android.util.Log
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
@@ -8,30 +8,30 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ShuffleModeViewModelState (
+class IsPlayingViewModelState(
     mediaRepository: MediaRepository,
     scope: CoroutineScope
 ) : MediaViewModelState<Boolean>(mediaRepository, scope) {
 
-    private val _shuffleEnabledState = MutableStateFlow(false)
+    private val _isPlayingState = MutableStateFlow(false)
 
     init {
-        Log.v(logTag(), "init")
+        Log.v(logTag(), "init isPlaying")
         scope.launch {
-            mediaRepository.isShuffleModeEnabled()
+            mediaRepository.isPlaying()
                 .collect {
-                    Log.d(logTag(), "collect: $it")
-                    _shuffleEnabledState.value = it
+                    Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
+                    _isPlayingState.value = it
                 }
         }
     }
 
     override fun state(): StateFlow<Boolean> {
-        return _shuffleEnabledState.asStateFlow()
+        return _isPlayingState.asStateFlow()
     }
 
     override fun logTag(): String {
-        return "ShuffleModeViewModelState"
+        return "IsPlayingViewModelState"
     }
 
 }

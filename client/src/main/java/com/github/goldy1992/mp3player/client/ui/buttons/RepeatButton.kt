@@ -9,18 +9,17 @@ import androidx.compose.material.icons.filled.RepeatOneOn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.media3.common.Player
-import androidx.media3.common.Player.RepeatMode
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.RepeatMode
 
 @Composable
-fun RepeatButton(repeatModeProvider : () -> @RepeatMode Int = {  Player.REPEAT_MODE_OFF },
-                 onClick : (currentRepeatMode : @RepeatMode Int) -> Unit = {}) {
+fun RepeatButton(repeatModeProvider : () -> RepeatMode = {  RepeatMode.OFF },
+                 onClick : (currentRepeatMode : RepeatMode) -> Unit = {}) {
 
     val currentRepeatMode = repeatModeProvider()
     when (repeatModeProvider()) {
-        Player.REPEAT_MODE_ONE -> RepeatOneButton(onClick = { onClick(currentRepeatMode) })
-        Player.REPEAT_MODE_ALL -> RepeatAllButton(onClick = { onClick(currentRepeatMode) })
+        RepeatMode.ONE -> RepeatOneButton(onClick = { onClick(currentRepeatMode) })
+        RepeatMode.ALL -> RepeatAllButton(onClick = { onClick(currentRepeatMode) })
         else -> RepeatOffButton(onClick = { onClick(currentRepeatMode) })
     }
 }

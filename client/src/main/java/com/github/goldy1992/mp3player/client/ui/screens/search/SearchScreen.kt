@@ -64,14 +64,14 @@ fun SearchScreen(
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
 
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
             onFolderSelected = onFolderSelected(navController),
             onSongsSelected = {
-                itemIndex : Int, mediaItemList : Songs ->
+                itemIndex : Int, mediaItemList : Playlist ->
                     viewModel.playFromList(itemIndex, mediaItemList)
             },
             onSongSelected = {

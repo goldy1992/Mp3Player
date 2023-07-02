@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
@@ -48,12 +48,12 @@ fun FolderScreen(
 ) {
     val scope = rememberCoroutineScope()
     val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, songs -> viewModel.playPlaylist(folder.songs, itemIndex) }
+    val onSongSelected : (Int, Playlist) -> Unit = { itemIndex, songs -> viewModel.playPlaylist(folder.playlist, itemIndex) }
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -156,10 +156,10 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                                 folderProvider : () -> Folder = { Folder()},
                                 isPlayingProvider : () -> Boolean = { false},
                                 currentSong : () -> Song = {Song()},
-                                onSongSelected : (Int, Songs) -> Unit = {_,_->}) {
+                                onSongSelected : (Int, Playlist) -> Unit = { _, _->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
-        val folderSongs = folder.songs
+        val folderSongs = folder.playlist
         when (folderSongs.state) {
             State.LOADING -> {
                 Surface(
@@ -172,7 +172,7 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
             State.LOADED -> {
                 Log.d(LOG_TAG, "FolderScreenContent() folder songs state LOADED, size: ${folderSongs.songs.size}")
                 LoadedSongsListWithHeader(
-                    songs = folderSongs,
+                    playlist = folderSongs,
                     isPlayingProvider = isPlayingProvider,
                     currentSong = currentSong(),
                     onSongSelected = onSongSelected,

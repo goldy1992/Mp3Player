@@ -68,8 +68,8 @@ fun AlbumScreen(
 ) {
 
     val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val isShuffleModeEnabled by viewModel.shuffleModeEnabled.collectAsState()
-    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val isShuffleModeEnabled by viewModel.shuffleEnabled.state().collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
     val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
 
@@ -89,7 +89,7 @@ fun AlbumScreen(
         ShuffleButton(
             modifier = Modifier.size(40.dp),
             shuffleEnabledProvider = { isShuffleModeEnabled },
-            onClick = { viewModel.setShuffleMode(!isShuffleModeEnabled)}
+            onClick = { viewModel.setShuffleEnabled(isShuffleModeEnabled)}
         )
     }
     val onAlbumSongSelected : (Int) -> Unit = { itemIndex ->
@@ -108,7 +108,7 @@ fun AlbumScreen(
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val albumSongs = album.songs.songs
+    val albumSongs = album.playlist.songs
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = bottomBar,
@@ -188,7 +188,7 @@ private fun AlbumHeaderItem(
             )
             val singularSong = "song"
             val pluralSongs = "songs"
-            val numOfSongs = album.songs.songs.size
+            val numOfSongs = album.playlist.songs.size
             val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
             val duration = TimerUtils.formatTime(album.totalDuration)
             val summary = "$numOfSongs $songDescr | $duration"
