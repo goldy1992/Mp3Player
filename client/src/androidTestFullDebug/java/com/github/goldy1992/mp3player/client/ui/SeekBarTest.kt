@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.commons.MetaDataKeys
@@ -24,10 +25,6 @@ class SeekBarTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-
-    @Before
-    fun setup() { }
-
     @Test
     fun testSeekBarDisplaysCorrectly() {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -37,16 +34,12 @@ class SeekBarTest {
         val currentPosition = 10000L
         val currentPositionDescription = context.resources.getString(R.string.current_position)
         val expectedCurrentPosition = "00:10"
-        val extras = Bundle()
-        extras.putLong(MetaDataKeys.DURATION, duration)
-        val metadata = MediaMetadata.Builder()
-            .setExtras(extras)
-            .build()
+        val song = Song(duration = duration)
 
         composeTestRule.setContent {
             SeekBar(
                 isPlayingProvider = {  false },
-                currentSongProvider =  {metadata },
+                currentSongProvider =  { song },
                 playbackSpeedProvider = { 1.0f },
                 playbackPositionProvider ={ PlaybackPositionEvent(false, currentPosition, 0L) },
             )

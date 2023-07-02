@@ -10,9 +10,9 @@ import com.github.goldy1992.mp3player.client.SearchResult
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbum
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolder
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.data.SearchResults
 import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause

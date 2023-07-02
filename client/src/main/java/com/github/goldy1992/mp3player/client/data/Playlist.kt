@@ -3,6 +3,9 @@ package com.github.goldy1992.mp3player.client.data
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.Constants
 
+/**
+ * UI representation of a list of playable songs.
+ */
 data class Playlist
     constructor(
         val state : State = State.NOT_LOADED,

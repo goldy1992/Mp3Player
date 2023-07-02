@@ -11,7 +11,6 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

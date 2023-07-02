@@ -37,8 +37,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlin.OptIn
-import androidx.annotation.OptIn as AndroidXOptIn
 
 
 private const val LOG_TAG = "ComposeApp"

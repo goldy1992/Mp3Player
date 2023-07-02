@@ -1,10 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
-import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Folder
 import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createPlaylist
 import com.github.goldy1992.mp3player.client.data.Playlist
@@ -18,8 +16,6 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Subscribe
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
-import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

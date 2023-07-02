@@ -4,8 +4,8 @@ import android.net.Uri
 import android.util.Log
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.Playlist
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import java.util.EnumMap
