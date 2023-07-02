@@ -9,6 +9,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ALL
 import androidx.media3.common.Player.RepeatMode
 import androidx.media3.session.SessionCommand
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.sources.FakeMediaDataSource
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
@@ -25,12 +26,16 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito.*
+import org.robolectric.RobolectricTestRunner
 
 /**
  * Test class for [DefaultMediaRepository].
  */
 @OptIn(ExperimentalCoroutinesApi::class)
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
+@RunWith(RobolectricTestRunner::class)
 class DefaultMediaRepositoryTest {
 
     private val fakeMediaDataSource : FakeMediaDataSource = spy(FakeMediaDataSource())
@@ -61,15 +66,16 @@ class DefaultMediaRepositoryTest {
         val testMediaId = "testMediaId"
         val testMediaItem = MediaItem.Builder()
             .setMediaId(testMediaId)
+            .setMediaMetadata(MediaMetadata.Builder().setIsPlayable(true).setIsBrowsable(false).build())
             .build()
-        var result : MediaItem? = null
+        var result : Song? = null
         val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
             defaultMediaRepository.currentSong().collect {
                 result = it
             }
         }
         fakeMediaDataSource.currentMediaItemState.value = testMediaItem
-        assertEquals(testMediaId, result?.mediaId)
+        assertEquals(testMediaId, result?.id)
         collectJob.cancel()
     }
 
@@ -246,11 +252,11 @@ class DefaultMediaRepositoryTest {
     @Test
     fun testQueue()  = runTest {
         val mediaItem1Id = "id1"
-        val mediaItem1 = MediaItem.Builder().setMediaId(mediaItem1Id).build()
+        val song1 = Song(id=mediaItem1Id)
         val mediaItem2Id = "id2"
-        val mediaItem2 = MediaItem.Builder().setMediaId(mediaItem2Id).build()
+        val song2 = Song(id=mediaItem2Id)
         val expectedCurrentIndex = 1
-        val expectedQueueState = QueueState(items = listOf(mediaItem1, mediaItem2), currentIndex = expectedCurrentIndex)
+        val expectedQueueState = QueueState(items = listOf(song1, song2), currentIndex = expectedCurrentIndex)
 
         var result : QueueState? = null
         val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
@@ -261,8 +267,8 @@ class DefaultMediaRepositoryTest {
         fakeMediaDataSource.queueState.value = expectedQueueState
 
         assertEquals(expectedCurrentIndex, result?.currentIndex)
-        assertEquals(mediaItem1Id, result?.items?.get(0)?.mediaId)
-        assertEquals(mediaItem2Id, result?.items?.get(1)?.mediaId)
+        assertEquals(mediaItem1Id, result?.items?.get(0)?.id)
+        assertEquals(mediaItem2Id, result?.items?.get(1)?.id)
         collectJob.cancel()
     }
     @Test

@@ -8,6 +8,7 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.Player.RepeatMode
 import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
@@ -30,9 +31,9 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    val currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
-    override fun currentSong(): Flow<MediaItem> {
-        return currentMediaItemState
+    val currentSongState = MutableStateFlow(Song.DEFAULT)
+    override fun currentSong(): Flow<Song> {
+        return currentSongState
     }
 
     override fun currentPlaylistMetadata(): Flow<MediaMetadata> {

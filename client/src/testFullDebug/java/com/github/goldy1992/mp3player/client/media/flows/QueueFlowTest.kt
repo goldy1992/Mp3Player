@@ -35,8 +35,8 @@ class QueueFlowTest : PlayerMediaFlowTestBase<QueueState>() {
 
         val result = resultState.value
         assertEquals(2, result.items.size)
-        assertEquals(mediaItem1, result.items[0])
-        assertEquals(mediaItem2, result.items[1])
+        assertEquals(mediaItem1.mediaId, result.items[0].id)
+        assertEquals(mediaItem2.mediaId, result.items[1].id)
     }
 
 }
