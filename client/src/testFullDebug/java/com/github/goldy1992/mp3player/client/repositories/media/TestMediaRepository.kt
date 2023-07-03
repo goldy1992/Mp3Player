@@ -36,7 +36,7 @@ class TestMediaRepository
         return currentSongState
     }
 
-    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+    override fun currentPlaylist(): Flow<MediaMetadata> {
         TODO("Not yet implemented")
     }
 
@@ -151,7 +151,7 @@ class TestMediaRepository
 
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun prepareFromId(mediaItem: MediaItem) {
         TODO("Not yet implemented")
     }
 

@@ -73,7 +73,7 @@ interface IMediaBrowser {
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)
 
-    suspend fun prepareFromMediaId(mediaItem: MediaItem)
+    suspend fun prepareFromMediaId(mediaId: String)
 
     suspend fun search(query: String, extras: Bundle)
 

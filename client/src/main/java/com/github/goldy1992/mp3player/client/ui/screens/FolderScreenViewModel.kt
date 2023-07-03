@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createPlaylist
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createPlaylist
 import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State

@@ -59,7 +59,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                   windowSize: WindowSize = WindowSize.Compact,
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val rootItems by viewModel.rootItems.collectAsState()
+    val rootItems by viewModel.rootChildren.collectAsState()
     val songs by viewModel.playlist.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
@@ -112,7 +112,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         LibraryScreenContent(
             scope = scope,
             pagerState = pagerState,
-            rootItemsProvider =  { rootItems },
+            rootChildrenProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
             playlist = { songs },
             folders = { folders },
@@ -245,11 +245,11 @@ fun SmallLibraryScreen(
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
-    rootItemsProvider:  () -> RootItems,
+    rootChildrenProvider:  () -> RootChildren,
     scope: CoroutineScope
 ) {
 
-    val rootItemsState = rootItemsProvider()
+    val rootItemsState = rootChildrenProvider()
 
     if (rootItemsState.state == State.LOADED) {
         val rootItems = rootItemsState.items
@@ -296,7 +296,7 @@ fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(initialPage = 0),
-    rootItemsProvider: () -> RootItems,
+    rootChildrenProvider: () -> RootChildren,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     playlist : () -> Playlist = { Playlist(State.NOT_LOADED) },
     folders : () -> Folders = { Folders(State.NOT_LOADED) },
@@ -309,7 +309,7 @@ fun LibraryScreenContent(
     Column(modifier.fillMaxHeight()) {
         LibraryTabs(
             pagerState = pagerState,
-            rootItemsProvider = rootItemsProvider,
+            rootChildrenProvider = rootChildrenProvider,
             scope = scope
         )
 

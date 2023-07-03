@@ -6,10 +6,10 @@ import com.github.goldy1992.mp3player.commons.Constants
 /**
  * UI representation of a list of playable songs.
  */
-data class Playlist
+open data class Playlist
     constructor(
         val state : State = State.NOT_LOADED,
-        val id : String = Constants.UNKNOWN,
+        override val id : String = Constants.UNKNOWN,
         val songs: List<Song> = emptyList(),
         val totalDuration : Long = 0L
     ) : MediaEntity {

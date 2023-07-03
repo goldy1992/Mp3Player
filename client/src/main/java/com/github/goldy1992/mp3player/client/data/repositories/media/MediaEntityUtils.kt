@@ -1,7 +1,16 @@
-package com.github.goldy1992.mp3player.client.data
+package com.github.goldy1992.mp3player.client.data.repositories.media
 
 import android.net.Uri
 import androidx.media3.common.MediaItem
+import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.data.Albums
+import com.github.goldy1992.mp3player.client.data.Folder
+import com.github.goldy1992.mp3player.client.data.Folders
+import com.github.goldy1992.mp3player.client.data.MediaEntity
+import com.github.goldy1992.mp3player.client.data.Playlist
+import com.github.goldy1992.mp3player.client.data.RootChild
+import com.github.goldy1992.mp3player.client.data.RootChildren
+import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
@@ -16,6 +25,12 @@ object MediaEntityUtils {
             duration = MediaItemUtils.getDuration(mediaItem),
             albumArt = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY
         )
+    }
+
+    fun createMediaItem(song: Song) : MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(song.id)
+            .build()
     }
 
     fun createPlaylist(
@@ -44,7 +59,7 @@ object MediaEntityUtils {
             recordingYear = MediaItemUtils.getAlbumRecordingYear(mediaItem),
             releaseYear = MediaItemUtils.getAlbumReleaseYear(mediaItem),
             albumArt = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY,
-            playlist = playlist
+          //  playlist = playlist
         )
     }
 
@@ -84,8 +99,8 @@ object MediaEntityUtils {
         )
     }
 
-    private fun createRootItem(mediaItem : MediaItem) : RootItem {
-        return RootItem(
+    private fun createRootItem(mediaItem : MediaItem) : RootChild {
+        return RootChild(
             id = mediaItem.mediaId,
             type = MediaItemUtils.getMediaItemType(mediaItem)
         )
@@ -94,11 +109,15 @@ object MediaEntityUtils {
     fun createRootItems(
         state : State,
         mediaItems: List<MediaItem>
-    ) : RootItems {
+    ) : RootChildren {
         val rootItems = mediaItems.map { createRootItem(it) }
-        return RootItems(
+        return RootChildren(
             state = state,
             items = rootItems
         )
+    }
+
+    fun mapMediaItemsToMediaEntities(mediaItems : List<MediaItem>) : List<MediaEntity> {
+        return emptyList()
     }
 }

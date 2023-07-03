@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.utils
 
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
 

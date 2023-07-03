@@ -4,17 +4,28 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
-import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.data.CustomCommandEvent
+import com.github.goldy1992.mp3player.client.data.MediaEntity
+import com.github.goldy1992.mp3player.client.data.PlaybackParameters
+import com.github.goldy1992.mp3player.client.data.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.Playlist
+import com.github.goldy1992.mp3player.client.data.QueueChangedEvent
+import com.github.goldy1992.mp3player.client.data.RepeatMode
+import com.github.goldy1992.mp3player.client.data.Root
+import com.github.goldy1992.mp3player.client.data.SearchResultsChangedEvent
 import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createMediaItem
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.mapMediaItemsToMediaEntities
 import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
 import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
+import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.getRepeatMode
+import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.uiToPlayerMap
+
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -23,6 +34,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@UnstableApi
 @ActivityRetainedScoped
 class DefaultMediaRepository
     @Inject
@@ -45,9 +57,11 @@ class DefaultMediaRepository
         }
     }
 
-    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
-        return mediaDataSource.currentPlaylistMetadata()
-    }
+//    override fun currentPlaylistId(): Flow<String> {
+//        return mediaDataSource.currentPlaylistMetadata().map {
+//            it.e
+//        }
+//    }
 
     override fun currentSearchQuery(): Flow<String> {
         return mediaDataSource.currentSearchQuery()
@@ -61,40 +75,67 @@ class DefaultMediaRepository
         return mediaDataSource.isShuffleModeEnabled()
     }
 
-    override fun metadata(): Flow<MediaMetadata> {
-        return mediaDataSource.metadata()
+    override fun onChildrenChanged(): Flow<ChildrenChangedEvent> {
+        return mediaDataSource.onChildrenChanged().map {
+            ChildrenChangedEvent(
+                parentId = it.parentId,
+                itemCount = it.itemCount
+            )
+        }
     }
 
-    override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        return mediaDataSource.onChildrenChanged()
+    override fun onCustomCommand() : Flow<CustomCommandEvent> {
+        return mediaDataSource.onCustomCommand().map {
+            CustomCommandEvent(
+                id = it.command.customAction,
+                args = it.args
+            )
+        }
     }
 
-    override fun onCustomCommand() : Flow<SessionCommandEventHolder> {
-        return mediaDataSource.onCustomCommand()
-    }
-
-    override fun onSearchResultsChanged() : Flow<OnSearchResultsChangedEventHolder> {
-        return mediaDataSource.onSearchResultsChanged()
+    override fun  onSearchResultsChanged() : Flow<SearchResultsChangedEvent> {
+        return mediaDataSource.onSearchResultsChanged().map {
+            SearchResultsChangedEvent(
+                query = it.query,
+                itemCount = it.itemCount,
+                params = it.params?.extras
+            )
+        }
     }
 
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        return mediaDataSource.playbackParameters()
+        return mediaDataSource.playbackParameters().map {
+            PlaybackParameters(speed = it.speed,
+            pitch = it.pitch)
+        }
     }
 
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        return mediaDataSource.playbackPosition()
+        return mediaDataSource.playbackPosition().map {
+            PlaybackPositionEvent(isPlaying = it.isPlaying,
+            currentPosition = it.currentPosition,
+            systemTime = it.systemTime
+            )
+        }
     }
 
     override fun playbackSpeed(): Flow<Float> {
         return mediaDataSource.playbackSpeed()
     }
 
-    override fun queue(): Flow<QueueState> {
-        return mediaDataSource.queue()
+    override fun queue(): Flow<QueueChangedEvent> {
+        return mediaDataSource.queue().map {
+            QueueChangedEvent(
+                items = it.items.map { mediaItem -> createSong(mediaItem) }.toList(),
+                currentIndex = it.currentIndex
+            )
+        }
     }
 
-    override fun repeatMode(): Flow<Int> {
-        return mediaDataSource.repeatMode()
+    override fun repeatMode(): Flow<RepeatMode> {
+        return mediaDataSource.repeatMode().map {
+            RepeatModeUtils.getRepeatMode(it)
+        }
     }
 
     override suspend fun changePlaybackSpeed(speed: Float) {
@@ -105,13 +146,17 @@ class DefaultMediaRepository
         parentId: String,
         page: Int,
         pageSize: Int,
-        params: MediaLibraryService.LibraryParams
-    ): List<MediaItem> {
-        return mediaDataSource.getChildren(parentId, page, pageSize, params)
+        params: Bundle
+    ): List<MediaEntity> {
+        val paramsToSend = MediaLibraryService.LibraryParams.Builder().setExtras(params).build()
+        val mediaItems =  mediaDataSource.getChildren(parentId, page, pageSize, paramsToSend)
+        return  mapMediaItemsToMediaEntities(mediaItems)
     }
 
-    override suspend fun getLibraryRoot(): MediaItem {
-        return mediaDataSource.getLibraryRoot()
+
+    override suspend fun getLibraryRoot(): Root {
+        val rootMediaItem = mediaDataSource.getLibraryRoot()
+        return Root(rootMediaItem.mediaId)
     }
 
     override suspend fun getCurrentPlaybackPosition(): Long {
@@ -130,19 +175,25 @@ class DefaultMediaRepository
         mediaDataSource.play()
     }
 
-    override suspend fun play(mediaItem: MediaItem) {
-        mediaDataSource.play(mediaItem)
+    override suspend fun play(song: Song) {
+        mediaDataSource.play(createMediaItem(song))
     }
 
-    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
-        mediaDataSource.playFromPlaylist(items, itemIndex, playlistMetadata)
+//    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
+//        mediaDataSource.playFromPlaylist(items, itemIndex, playlistMetadata)
+//    }
+
+    override suspend fun playPlaylist(playlist: Playlist, startIndex: Int) {
+
+        val mediaItems = playlist.songs.map { createMediaItem(it) }
+        mediaDataSource.playFromPlaylist(mediaItems, startIndex, MediaMetadata.Builder().)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
         mediaDataSource.playFromUri(uri, extras)
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun prepareFromId(mediaItem: MediaItem) {
         mediaDataSource.prepareFromMediaId(mediaItem)
     }
 
@@ -154,8 +205,8 @@ class DefaultMediaRepository
         mediaDataSource.seekTo(position)
     }
 
-    override suspend fun setRepeatMode(repeatMode: Int) {
-        mediaDataSource.setRepeatMode(repeatMode)
+    override suspend fun setRepeatMode(repeatMode: RepeatMode) {
+        mediaDataSource.setRepeatMode(getRepeatMode(repeatMode))
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {

@@ -36,7 +36,7 @@ class TestMediaRepository
     }
 
     val currentPlaylistMediaMetadataState = MutableStateFlow(MediaMetadata.EMPTY)
-    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+    override fun currentPlaylist(): Flow<MediaMetadata> {
         return currentPlaylistMediaMetadataState
     }
 
@@ -154,7 +154,7 @@ class TestMediaRepository
 
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun prepareFromId(mediaItem: MediaItem) {
         TODO("Not yet implemented")
     }
 

@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createPlaylist
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createPlaylist
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
@@ -97,7 +97,7 @@ constructor(savedStateHandle: SavedStateHandle,
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentPlaylistMetadata()
+            mediaRepository.currentPlaylist()
                 .collect {
                     val extras = it.extras
                     val playlistId = extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN

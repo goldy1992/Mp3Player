@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.SearchResult
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createAlbum
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createFolder
-import com.github.goldy1992.mp3player.client.data.MediaEntityUtils.createSong
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.Playlist
 import com.github.goldy1992.mp3player.client.data.SearchResults
 import com.github.goldy1992.mp3player.client.data.Song

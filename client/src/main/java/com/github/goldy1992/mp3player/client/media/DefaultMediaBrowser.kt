@@ -267,9 +267,14 @@ class DefaultMediaBrowser
         _mediaBrowserLFMutableStateFlow.value?.await()?.addMediaItem(mediaItem)
     }
 
+    override suspend fun prepareFromMediaId(mediaId: String) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
         // call from application looper
         val mediaController = _mediaBrowserLFMutableStateFlow.value?.await()
+        mediaController
         mediaController?.addMediaItem(mediaItem)
         mediaController?.prepare()
     }

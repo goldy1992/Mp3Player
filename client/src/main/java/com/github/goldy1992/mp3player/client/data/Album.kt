@@ -6,7 +6,7 @@ import com.github.goldy1992.mp3player.commons.Constants
 
 data class Album
     constructor(
-        val id : String = Constants.UNKNOWN,
+        override val id : String = Constants.UNKNOWN,
         val albumTitle : String = Constants.UNKNOWN,
         val albumArtist : String = Constants.UNKNOWN,
         val recordingYear : String = Constants.UNKNOWN,

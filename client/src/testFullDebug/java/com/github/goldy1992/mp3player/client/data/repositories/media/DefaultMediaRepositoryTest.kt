@@ -353,7 +353,7 @@ class DefaultMediaRepositoryTest {
     @Test
     fun testPrepareFromMediaId() = runTest {
         val expectedMediaItem = MediaItem.EMPTY
-        defaultMediaRepository.prepareFromMediaId(expectedMediaItem)
+        defaultMediaRepository.prepareFromId(expectedMediaItem)
         verify(fakeMediaDataSource, times(1)).prepareFromMediaId(expectedMediaItem)
 
     }
