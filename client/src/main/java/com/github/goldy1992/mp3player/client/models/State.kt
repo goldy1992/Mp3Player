@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.states
+package com.github.goldy1992.mp3player.client.models
 
 enum class State {
     NOT_LOADED,

@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
 
@@ -27,9 +27,9 @@ import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 @Preview
 @Composable
 fun AlbumListItem(modifier: Modifier = Modifier,
-                album : Album = Album(),
-                localDensity: Density = LocalDensity.current,
-                onClick : () -> Unit = {}) {
+                  album : Album = Album(),
+                  localDensity: Density = LocalDensity.current,
+                  onClick : () -> Unit = {}) {
     var width by remember { mutableStateOf(0.dp) }
     Card(modifier= modifier.fillMaxSize()
         .combinedClickable(

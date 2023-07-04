@@ -8,11 +8,11 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

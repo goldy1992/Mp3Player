@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

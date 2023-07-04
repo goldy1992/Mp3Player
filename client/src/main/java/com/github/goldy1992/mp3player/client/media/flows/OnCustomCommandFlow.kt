@@ -6,7 +6,7 @@ import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionResult
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineScope

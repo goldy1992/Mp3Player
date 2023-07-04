@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.viewmodel.state
 
 import android.util.Log
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

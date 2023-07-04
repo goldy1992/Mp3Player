@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.RepeatMode
+import com.github.goldy1992.mp3player.client.models.RepeatMode
 
 @Composable
 fun RepeatButton(repeatModeProvider : () -> RepeatMode = {  RepeatMode.OFF },

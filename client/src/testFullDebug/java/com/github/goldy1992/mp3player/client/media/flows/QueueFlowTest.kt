@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
 import com.github.goldy1992.mp3player.commons.PlayerUtils.buildPlayerEvents
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Assert.*

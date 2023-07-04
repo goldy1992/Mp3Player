@@ -20,15 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.Playlist
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -153,9 +153,9 @@ private fun SmallFolderScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
-                                folderProvider : () -> Folder = { Folder()},
+                                folderProvider : () -> Folder = { Folder() },
                                 isPlayingProvider : () -> Boolean = { false},
-                                currentSong : () -> Song = {Song()},
+                                currentSong : () -> Song = { Song() },
                                 onSongSelected : (Int, Playlist) -> Unit = { _, _->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
@@ -300,7 +300,7 @@ private fun LargeFolderScreen(
 @Composable
 private fun FolderPathDialog(folder: Folder = Folder(),
                              onCopyButtonSelected: () -> Unit = {},
-                            closeDialog : () -> Unit = {}) {
+                             closeDialog : () -> Unit = {}) {
     AlertDialog(
         title = { Text(folder.name + " Path") },
         confirmButton = {

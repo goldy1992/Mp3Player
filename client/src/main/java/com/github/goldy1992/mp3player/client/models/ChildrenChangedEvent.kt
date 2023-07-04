@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.data
+package com.github.goldy1992.mp3player.client.models
 
 import android.os.Bundle
 

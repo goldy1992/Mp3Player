@@ -2,18 +2,20 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 
 import android.net.Uri
 import android.os.Bundle
-import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.data.ChildrenChangedEvent
-import com.github.goldy1992.mp3player.client.data.CustomCommandEvent
-import com.github.goldy1992.mp3player.client.data.MediaEntity
-import com.github.goldy1992.mp3player.client.data.PlaybackParameters
-import com.github.goldy1992.mp3player.client.data.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.data.Playlist
-import com.github.goldy1992.mp3player.client.data.QueueChangedEvent
-import com.github.goldy1992.mp3player.client.data.RepeatMode
-import com.github.goldy1992.mp3player.client.data.Root
-import com.github.goldy1992.mp3player.client.data.SearchResultsChangedEvent
-import com.github.goldy1992.mp3player.client.data.Song
+import androidx.annotation.IntRange
+import com.github.goldy1992.mp3player.client.models.Album
+import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
+import com.github.goldy1992.mp3player.client.models.MediaEntity
+import com.github.goldy1992.mp3player.client.models.PlaybackParameters
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Queue
+import com.github.goldy1992.mp3player.client.models.RepeatMode
+import com.github.goldy1992.mp3player.client.models.Root
+import com.github.goldy1992.mp3player.client.models.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 
@@ -23,7 +25,7 @@ interface MediaRepository {
 
     fun currentSong() : Flow<Song>
 
-   // fun currentPlaylistId() : Flow<String>
+    fun currentPlaylistId() : Flow<String>
 
     fun currentSearchQuery() : Flow<String>
 
@@ -43,23 +45,36 @@ interface MediaRepository {
 
     fun playbackSpeed() : Flow<Float>
 
-    fun queue() : Flow<QueueChangedEvent>
+    fun queue() : Flow<Queue>
 
     fun repeatMode() : Flow<RepeatMode>
 
     suspend fun changePlaybackSpeed(speed : Float)
 
-    suspend fun getChildren(parentId : String,
-                            @androidx.annotation.IntRange(from = 0) page : Int = 0,
-                            @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
-                            params: Bundle = Bundle(),
-    ) : List<MediaEntity>
+//    suspend fun getChildren(
+//        parentId: String,
+//        @IntRange(from = 0) page: Int = 0,
+//        @IntRange(from = 1) pageSize: Int = 20,
+//        params: Bundle = Bundle(),
+//    ) : List<MediaEntity>
+
+    suspend fun <T : MediaEntity> getChildren(
+        parent: T,
+        @IntRange(from = 0) page: Int = 0,
+        @IntRange(from = 1) pageSize: Int = 20,
+        params: Bundle = Bundle(),
+    ) : T
 
     suspend fun getLibraryRoot() : Root
 
+    suspend fun getPlaylist(playlistId : String,
+                            @IntRange(from = 0) page : Int = 0,
+                            @IntRange(from = 1) pageSize : Int = 20,
+                            params: Bundle = Bundle()) : Playlist
+
     suspend fun getCurrentPlaybackPosition(): Long
 
-    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : List<MediaEntity>
+    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : SearchResults
 
     suspend fun pause()
 

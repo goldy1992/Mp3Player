@@ -11,7 +11,7 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Assert.*

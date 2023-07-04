@@ -4,28 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.SearchResult
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
-import com.github.goldy1992.mp3player.client.data.Playlist
-import com.github.goldy1992.mp3player.client.data.SearchResults
-import com.github.goldy1992.mp3player.client.data.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.SearchResults
+import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlaySong
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
-import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
-import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,8 +34,7 @@ class SearchScreenViewModel
     constructor(
         override val mediaRepository: MediaRepository
     )
-
-    : Pause, Play, SkipToNext, SkipToPrevious, ViewModel(), LogTagger {
+    : Pause, Play, PlayPlaylist, PlaySong, SkipToNext, SkipToPrevious, ViewModel(), LogTagger {
 
     override val scope = viewModelScope
     private val _searchQuery = MutableStateFlow("")
@@ -69,7 +59,8 @@ class SearchScreenViewModel
         }
     }
 
-    private val _searchResults : MutableStateFlow<SearchResults> = MutableStateFlow(SearchResults(State.NOT_LOADED))
+    private val _searchResults : MutableStateFlow<SearchResults> = MutableStateFlow(SearchResults(
+        State.NOT_LOADED))
     val searchResults : StateFlow<SearchResults> = _searchResults
     init {
         viewModelScope.launch {
@@ -78,7 +69,7 @@ class SearchScreenViewModel
             .collect {
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
                     val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
-                    _searchResults.value = mapResults(results)
+                    _searchResults.value = results
                     Log.i(logTag(), "got search results $results")
                 } else {
                     _searchResults.value = SearchResults(State.NO_RESULTS)
@@ -94,39 +85,8 @@ class SearchScreenViewModel
 
     fun play(song: Song) {
         viewModelScope.launch {
-            mediaRepository.play(MediaItemBuilder(song.id).build())
+            mediaRepository.play(song)
         }
-    }
-
-    fun playFromList(itemIndex : Int, mediaItemList : Playlist) {
-        val extras = Bundle()
-        extras.putString(Constants.PLAYLIST_ID, "SearchResults")
-
-        val mediaMetadata = MediaMetadata.Builder()
-            .setAlbumTitle("Search Results")
-            .setExtras(extras)
-            .build()
-        viewModelScope.launch { mediaRepository.playFromPlaylist(itemIndex = itemIndex, items = mediaItemList.songs.map { MediaItemBuilder(it.id).build() }, playlistMetadata = mediaMetadata) }
-    }
-
-    private fun mapResults(mediaItemList: List<MediaItem>) : SearchResults {
-        val resultsMap = mutableListOf<SearchResult>()
-
-        mediaItemList.forEach {
-            val result : SearchResult =
-                when (MediaItemUtils.getMediaItemType(it)) {
-                    MediaItemType.SONG -> SearchResult(MediaItemType.SONG, createSong(it))
-                    MediaItemType.FOLDER -> SearchResult(MediaItemType.FOLDER, createFolder(it))
-                    MediaItemType.ALBUM -> SearchResult(MediaItemType.ALBUM, createAlbum(it))
-                    else -> SearchResult(MediaItemUtils.getMediaItemType(it), Any())
-            }
-            resultsMap.add(result)
-        }
-
-        return SearchResults(
-            state = State.LOADED,
-            resultsMap = resultsMap
-        )
     }
 
 

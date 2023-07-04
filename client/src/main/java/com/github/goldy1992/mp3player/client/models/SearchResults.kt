@@ -1,7 +1,4 @@
-package com.github.goldy1992.mp3player.client.data
-
-import com.github.goldy1992.mp3player.client.SearchResult
-import com.github.goldy1992.mp3player.client.ui.states.State
+package com.github.goldy1992.mp3player.client.models
 
 data class SearchResults(
     val state : State = State.NOT_LOADED,

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.states.eventholders
+package com.github.goldy1992.mp3player.client.data.repositories.media.eventholders
 
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams

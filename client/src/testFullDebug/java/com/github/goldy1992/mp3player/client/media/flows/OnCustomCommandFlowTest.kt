@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 import android.os.Bundle
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.SessionCommand
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Assert.assertEquals

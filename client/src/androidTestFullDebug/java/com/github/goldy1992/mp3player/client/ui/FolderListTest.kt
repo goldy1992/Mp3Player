@@ -8,10 +8,10 @@ import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.Folders
+import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.Folders
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.State
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -40,7 +40,8 @@ class FolderListTest {
 
         composeTestRule.setContent {
             FolderList(
-                folders = Folders(state = State.LOADED, folders = listOf(folder1, folder2)))
+                folders = Folders(state = State.LOADED, folders = listOf(folder1, folder2))
+            )
         }
         val folderListDescr = context.getString(R.string.folder_list)
         val node = composeTestRule.onNodeWithContentDescription(folderListDescr)

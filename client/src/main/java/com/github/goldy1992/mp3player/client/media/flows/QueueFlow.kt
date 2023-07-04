@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
 import com.github.goldy1992.mp3player.client.utils.QueueUtils
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.LoggingUtils

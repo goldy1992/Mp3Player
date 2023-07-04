@@ -24,14 +24,14 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.models.Queue
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -166,7 +166,7 @@ fun NowPlayingScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ViewPager(currentSongProvider : () -> Song,
-              queueProvider: () -> QueueState,
+              queueProvider: () -> Queue,
               skipToNext : () -> Unit,
               skipToPrevious : () -> Unit,
               modifier: Modifier = Modifier,

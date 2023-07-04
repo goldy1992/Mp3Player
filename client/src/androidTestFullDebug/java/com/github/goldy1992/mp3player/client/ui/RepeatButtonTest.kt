@@ -5,7 +5,7 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.RepeatMode
+import com.github.goldy1992.mp3player.client.models.RepeatMode
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import org.junit.Rule
 import org.junit.Test

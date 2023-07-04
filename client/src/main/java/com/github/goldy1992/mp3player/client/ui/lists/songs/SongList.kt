@@ -16,12 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Playlist
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
@@ -31,7 +31,7 @@ private const val LOG_TAG = "SongList"
 @Composable
 fun SongList(
     modifier : Modifier = Modifier,
-    playlist : Playlist = Playlist(State.NOT_LOADED),
+    playlist : Playlist = Playlist(state= State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
     onSongSelected : (itemIndex: Int, playlist : Playlist) -> Unit = { _, _ -> }) {

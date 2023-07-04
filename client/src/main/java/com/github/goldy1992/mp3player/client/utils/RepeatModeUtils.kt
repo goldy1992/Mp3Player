@@ -1,10 +1,10 @@
 package com.github.goldy1992.mp3player.client.utils
 
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.data.RepeatMode
-import com.github.goldy1992.mp3player.client.data.RepeatMode.ALL
-import com.github.goldy1992.mp3player.client.data.RepeatMode.OFF
-import com.github.goldy1992.mp3player.client.data.RepeatMode.ONE
+import com.github.goldy1992.mp3player.client.models.RepeatMode
+import com.github.goldy1992.mp3player.client.models.RepeatMode.ALL
+import com.github.goldy1992.mp3player.client.models.RepeatMode.OFF
+import com.github.goldy1992.mp3player.client.models.RepeatMode.ONE
 
 object RepeatModeUtils {
 

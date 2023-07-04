@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.utils
 import android.annotation.TargetApi
 import android.os.Build
 import android.util.Log
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
 

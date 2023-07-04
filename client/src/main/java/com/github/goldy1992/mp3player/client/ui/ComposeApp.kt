@@ -55,7 +55,6 @@ private const val transitionTime = 2000
     ExperimentalMaterialApi::class,
     InternalCoroutinesApi::class,
 )
-@androidx.annotation.OptIn(markerClass = [UnstableApi::class])
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,

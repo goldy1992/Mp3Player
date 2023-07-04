@@ -34,6 +34,11 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
+import com.github.goldy1992.mp3player.client.models.Album
+import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.SearchResults
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
@@ -72,7 +77,7 @@ fun SearchScreen(
             onFolderSelected = onFolderSelected(navController),
             onSongsSelected = {
                 itemIndex : Int, mediaItemList : Playlist ->
-                    viewModel.playFromList(itemIndex, mediaItemList)
+                    viewModel.playPlaylist(mediaItemList, itemIndex)
             },
             onSongSelected = {
                 song -> viewModel.play(song)
@@ -291,7 +296,7 @@ fun SearchResultsContent(
             items(count = searchResults.resultsMap.size) { itemIndex ->
                 run {
                     val searchResult = searchResults.getResult(itemIndex)
-                    when (searchResult.mediaItemType) {
+                    when (searchResult.type) {
                         MediaItemType.SONG -> {
                             val song = searchResult.value as Song
                             SongListItem(song = song, onClick = {
@@ -324,7 +329,7 @@ fun SearchResultsContent(
                                     )
                             ) {
                                 Text(
-                                    text = searchResult.mediaItemType.name,
+                                    text = searchResult.type.name,
                                     style = MaterialTheme.typography.titleMedium,
                                 )
                             }

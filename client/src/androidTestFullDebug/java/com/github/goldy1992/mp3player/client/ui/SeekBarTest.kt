@@ -1,19 +1,15 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
-import android.os.Bundle
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.commons.MetaDataKeys
-import org.junit.Before
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
 import org.junit.Rule
 import org.junit.Test
 

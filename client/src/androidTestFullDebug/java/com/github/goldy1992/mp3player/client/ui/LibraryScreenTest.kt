@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.client.repositories.media.TestMediaReposit
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType

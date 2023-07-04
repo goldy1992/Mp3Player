@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.data
+package com.github.goldy1992.mp3player.client.models
 
 data class PlaybackParameters(
     val speed : Float = 1.0f,

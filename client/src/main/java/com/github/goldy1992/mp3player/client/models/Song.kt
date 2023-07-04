@@ -1,11 +1,13 @@
-package com.github.goldy1992.mp3player.client.data
+package com.github.goldy1992.mp3player.client.models
 
 import android.net.Uri
 import com.github.goldy1992.mp3player.commons.Constants
+import com.github.goldy1992.mp3player.commons.MediaItemType
 
 data class Song
     constructor(
-        val id : String = Constants.UNKNOWN,
+        override val id : String = Constants.UNKNOWN,
+        override val type: MediaItemType = MediaItemType.SONG,
         val title : String = Constants.UNKNOWN,
         val artist : String = Constants.UNKNOWN,
         val duration : Long = 0L,

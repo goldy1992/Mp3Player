@@ -3,11 +3,8 @@ package com.github.goldy1992.mp3player.client.ui.screens
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createPlaylist
-import com.github.goldy1992.mp3player.client.data.Playlist
+import com.github.goldy1992.mp3player.client.models.Folder
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
@@ -23,7 +20,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isEmpty
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,27 +61,13 @@ class FolderScreenViewModel
                 )
                 .filter { it.parentId == folderId }
                 .collect {
-                    val mediaItems = mediaRepository.getChildren(parentId = folderId)
                     val currentFolderValue = folder.value
-                    if (isEmpty(mediaItems)) {
-                        _folder.value = Folder(
-                            name = currentFolderValue.name,
-                            path = currentFolderValue.path,
-                            uri = currentFolderValue.uri,
-                            playlist = Playlist(State.NO_RESULTS),
-                            state = State.NO_RESULTS
-                        )
-                    } else {
-                        val songs = createPlaylist(State.LOADED, mediaItems, id = folderId)
-                        _folder.value = Folder(
-                            name = currentFolderValue.name,
-                            path = currentFolderValue.path,
-                            uri = currentFolderValue.uri,
-                            playlist = songs,
-                            totalDuration = songs.totalDuration,
-                            state = State.LOADED
-                        )
-                    }
+                    _folder.value = Folder(
+                        name = currentFolderValue.name,
+                        path = currentFolderValue.path,
+                        uri = currentFolderValue.uri,
+                        playlist = mediaRepository.getPlaylist(folderId),
+                    )
                 }
         }
     }

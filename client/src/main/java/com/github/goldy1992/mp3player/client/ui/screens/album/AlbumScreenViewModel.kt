@@ -1,18 +1,14 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import android.net.Uri
-import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import com.github.goldy1992.mp3player.client.data.Album
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createPlaylist
+import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SetShuffleEnabled
@@ -22,10 +18,7 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.ShuffleModeViewModelState
-import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
 import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -52,22 +45,29 @@ constructor(savedStateHandle: SavedStateHandle,
     init {
         Log.d(logTag(), "AlbumScreenViewModel init, decoded album uri: $albumArtUri")
     }
-    private val album : Album = Album(
+
+    private val _album : MutableStateFlow<Album> = MutableStateFlow(Album(
         id = albumId,
         albumTitle = albumTitle,
         albumArtist = albumArtist,
         albumArt = albumArtUri,
-    )
-
-    private val _album : MutableStateFlow<Album> = MutableStateFlow(album)
+    ))
     // The UI collects from this StateFlow to get its state updates
     val albumState : StateFlow<Album> = _album
 
     init {
         viewModelScope.launch {
             mediaRepository.subscribe(albumId)
-            val albumChildren = mediaRepository.getChildren(albumId)
-            _album.value = mapSongsToAlbum(albumChildren)
+            val albumPlaylist = mediaRepository.getPlaylist(albumId)
+            val currentAlbum = _album.value
+            _album.value = Album(
+                id = currentAlbum.id,
+                albumTitle = currentAlbum.albumTitle,
+                albumArtist = currentAlbum.albumArtist,
+                albumArt = currentAlbum.albumArt,
+                playlist = albumPlaylist,
+                state = State.LOADED
+            )
         }
 
         viewModelScope.launch {
@@ -81,7 +81,18 @@ constructor(savedStateHandle: SavedStateHandle,
                     it.parentId == albumId
                 }
                 .collect {
-                    mediaRepository.getChildren(parentId = albumId)
+                    val currentAlbum = _album.value
+                    _album.value = Album(
+                        id =currentAlbum.id,
+                        type=currentAlbum.type,
+                        albumTitle=currentAlbum.albumTitle,
+                        albumArtist=currentAlbum.albumArtist,
+                        recordingYear=currentAlbum.recordingYear,
+                        releaseYear=currentAlbum.releaseYear,
+                        playlist = mediaRepository.getPlaylist(currentAlbum.id),
+                        totalDuration = currentAlbum.totalDuration,
+                        albumArt = currentAlbum.albumArt
+                    )
                 }
         }
     }
@@ -97,56 +108,24 @@ constructor(savedStateHandle: SavedStateHandle,
 
     init {
         viewModelScope.launch {
-            mediaRepository.currentPlaylist()
+            mediaRepository.currentPlaylistId()
                 .collect {
-                    val extras = it.extras
-                    val playlistId = extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN
-                    Log.d(logTag(), "mediaRepository.currentPlaylistMetadata() collect: new playlist metadata retrieved: $playlistId")
-                    _currentPlaylistIdState.value = playlistId
+                    _currentPlaylistIdState.value = it
                 }
         }
     }
 
 
     fun playAlbum(index : Int, album: Album) {
-        val mediaItems = album.playlist.songs.map { MediaItemBuilder(it.id).build() }
-        val mediaMetadata = createAlbumPlaylistMetadata(album)
-        viewModelScope.launch { mediaRepository.playFromPlaylist(mediaItems, index, mediaMetadata) }
+        viewModelScope.launch { mediaRepository.playPlaylist(album.playlist, index) }
     }
 
 
 
     fun shuffleAlbum(album: Album) {
-        val mediaItems = album.playlist.songs.map { MediaItemBuilder(it.id).build() }
         viewModelScope.launch {
-            mediaRepository.playFromPlaylist( mediaItems, 0, createAlbumPlaylistMetadata(album))
+            mediaRepository.playPlaylist( album.playlist, 0)
         }
-    }
-
-
-    private fun mapSongsToAlbum(mediaItems : List<MediaItem>) : Album {
-        val songs = createPlaylist(state = State.LOADED, mediaItems)
-        val currentAlbum = album
-        return Album(
-            id = currentAlbum.id,
-            albumTitle = currentAlbum.albumTitle,
-            albumArtist = currentAlbum.albumArtist,
-            albumArt = currentAlbum.albumArt,
-            playlist = songs,
-            totalDuration = songs.totalDuration,
-            state = State.LOADED
-        )
-    }
-
-    private fun createAlbumPlaylistMetadata(album: Album): MediaMetadata {
-        val extras = Bundle()
-        extras.putString(PLAYLIST_ID, albumId)
-
-        return MediaMetadata.Builder()
-            .setAlbumTitle(album.albumTitle)
-            .setAlbumArtist(album.albumArtist)
-            .setExtras(extras)
-            .build()
     }
 
 

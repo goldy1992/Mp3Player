@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.states.eventholders
+package com.github.goldy1992.mp3player.client.data.repositories.media.eventholders
 
 import android.os.SystemClock
 

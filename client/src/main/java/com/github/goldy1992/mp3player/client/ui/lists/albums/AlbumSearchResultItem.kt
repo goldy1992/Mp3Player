@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
 @OptIn(
@@ -26,8 +26,8 @@ import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 @Preview
 @Composable
 fun AlbumSearchResultItem(album : Album = Album(),
-                   containerColor : Color = MaterialTheme.colorScheme.surface,
-                   onClick: (selectedAlbum : Album) -> Unit = {}) {
+                          containerColor : Color = MaterialTheme.colorScheme.surface,
+                          onClick: (selectedAlbum : Album) -> Unit = {}) {
     ListItem(
         modifier = Modifier.combinedClickable(
             onClick = { onClick(album) },

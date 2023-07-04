@@ -24,13 +24,20 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
+import com.github.goldy1992.mp3player.client.models.Album
+import com.github.goldy1992.mp3player.client.models.Albums
+import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.Folders
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Root
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.ui.states.State
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
@@ -59,8 +66,8 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
                   windowSize: WindowSize = WindowSize.Compact,
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
-    val rootItems by viewModel.rootChildren.collectAsState()
-    val songs by viewModel.playlist.collectAsState()
+    val rootItems by viewModel.root.collectAsState()
+    val songs by viewModel.songs.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
     val isPlaying by viewModel.isPlaying.state().collectAsState()
@@ -245,43 +252,50 @@ fun SmallLibraryScreen(
 @Composable
 private fun LibraryTabs(
     pagerState: PagerState,
-    rootChildrenProvider:  () -> RootChildren,
+    rootChildrenProvider:  () -> Root,
     scope: CoroutineScope
 ) {
 
     val rootItemsState = rootChildrenProvider()
 
     if (rootItemsState.state == State.LOADED) {
-        val rootItems = rootItemsState.items
+        val rootItems = rootItemsState.childMap
         Column {
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
             ) {
-                rootItems.forEachIndexed { index, item ->
-                    val isSelected = index == pagerState.currentPage
-                    val context = LocalContext.current
-                    Tab(
-                        selected = isSelected,
-                        modifier = Modifier
-                            .height(48.dp)
-                            .padding(start = 10.dp, end = 10.dp),
-                        content = {
-                            Text(
-                                text = MediaItemNameUtils.getMediaItemTypeName(context, item.type).uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
-                                style = MaterialTheme.typography.titleSmall,
-                                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                            )
-                        },
-                        onClick = {                    // Animate to the selected page when clicked
-                            scope.launch {
-                                Log.d(
-                                    LOG_TAG,
-                                    "Clicked to go to index ${index}, string: ${item.id} "
+                rootItems.keys.forEachIndexed { index, key ->
+                    val item = rootItems[key]
+                    if (item != null) {
+                        val isSelected = index == pagerState.currentPage
+                        val context = LocalContext.current
+                        Tab(
+                            selected = isSelected,
+                            modifier = Modifier
+                                .height(48.dp)
+                                .padding(start = 10.dp, end = 10.dp),
+                            content = {
+                                Text(
+                                    text = MediaItemNameUtils.getMediaItemTypeName(
+                                        context,
+                                        item.type
+                                    )
+                                        .uppercase(),//getRootMediaItemType(item = item)?.name ?: Constants.UNKNOWN,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                                 )
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                    )
+                            },
+                            onClick = {                    // Animate to the selected page when clicked
+                                scope.launch {
+                                    Log.d(
+                                        LOG_TAG,
+                                        "Clicked to go to index ${index}, string: ${item.id} "
+                                    )
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -296,12 +310,12 @@ fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
     pagerState: PagerState = rememberPagerState(initialPage = 0),
-    rootChildrenProvider: () -> RootChildren,
+    rootChildrenProvider: () -> Root,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    playlist : () -> Playlist = { Playlist(State.NOT_LOADED) },
-    folders : () -> Folders = { Folders(State.NOT_LOADED) },
-    albums : () -> Albums = { Albums(State.NOT_LOADED) },
-    currentMediaItemProvider : () -> Song = {Song()},
+    playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(state= State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(state= State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = { Song() },
     isPlayingProvider : () -> Boolean = {false}
 
 ) {
@@ -340,10 +354,10 @@ fun TabBarPages(
     modifier: Modifier = Modifier,
     pagerState: PagerState = rememberPagerState(),
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
-    playlist : () -> Playlist = { Playlist(State.NOT_LOADED) },
-    folders : () -> Folders = { Folders(State.NOT_LOADED) },
-    albums : () -> Albums = { Albums(State.NOT_LOADED) },
-    currentMediaItemProvider : () -> Song = {Song()},
+    playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
+    folders : () -> Folders = { Folders(state= State.NOT_LOADED) },
+    albums : () -> Albums = { Albums(state= State.NOT_LOADED) },
+    currentMediaItemProvider : () -> Song = { Song() },
     isPlayingProvider : () -> Boolean = {false}
 
 ) {

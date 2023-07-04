@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 
@@ -29,9 +29,9 @@ private const val logTag = "SongListItem"
 @Composable
 fun SongListItem(
     song : Song = Song(),
-     isSelected : Boolean = false,
-     isPlayingProvider : () -> Boolean = {false},
-     onClick: () -> Unit = {},
+    isSelected : Boolean = false,
+    isPlayingProvider : () -> Boolean = {false},
+    onClick: () -> Unit = {},
     containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
 ) {
     ListItem(

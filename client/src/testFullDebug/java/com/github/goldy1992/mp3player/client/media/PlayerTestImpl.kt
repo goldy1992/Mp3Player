@@ -19,7 +19,7 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.Size
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
 
 class PlayerTestImpl() : Player {
     private val listeners = mutableSetOf<Player.Listener>()

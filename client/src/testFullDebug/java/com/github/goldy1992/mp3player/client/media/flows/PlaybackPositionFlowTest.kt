@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 
 import androidx.media3.common.FlagSet
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Assert.*

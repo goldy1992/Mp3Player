@@ -1,7 +1,6 @@
-package com.github.goldy1992.mp3player.client.ui.states
+package com.github.goldy1992.mp3player.client.data.repositories.media.eventholders
 
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.data.Song
 
 data class QueueState(
     val items : List<MediaItem>,

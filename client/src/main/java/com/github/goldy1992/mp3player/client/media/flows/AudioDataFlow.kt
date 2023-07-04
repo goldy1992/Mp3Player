@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
 import android.util.Log
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
@@ -31,9 +31,9 @@ class AudioDataFlow private constructor(
          * @param onCustomCommandFlow The [OnCustomCommandFlow] to subscribe to.
          * @param onCollect The function to invoke when the flow receives data.
          */
-        fun create( scope : CoroutineScope,
-                    onCustomCommandFlow : Flow<SessionCommandEventHolder>,
-                    onCollect : (AudioSample) -> Unit) : AudioDataFlow {
+        fun create(scope : CoroutineScope,
+                   onCustomCommandFlow : Flow<SessionCommandEventHolder>,
+                   onCollect : (AudioSample) -> Unit) : AudioDataFlow {
             val audioDataFlow = AudioDataFlow(scope, onCustomCommandFlow, onCollect)
             audioDataFlow.initFlow(audioDataFlow.getFlow())
             return audioDataFlow

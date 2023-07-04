@@ -1,9 +1,9 @@
-package com.github.goldy1992.mp3player.client.data
+package com.github.goldy1992.mp3player.client.models
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
 data class RootChild
     constructor(
         override val id : String,
-        val type : MediaItemType,
+        override val type : MediaItemType,
     ) : MediaEntity

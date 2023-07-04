@@ -14,6 +14,10 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentPlaylistMetadataFlow
@@ -28,7 +32,7 @@ import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
 import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
 import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
 import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.*
@@ -134,7 +138,8 @@ class DefaultMediaBrowser
 
 
     private val _playerEventMSF = MutableSharedFlow<Player.Events>()
-    private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
+    private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(
+        OnSearchResultsChangedEventHolder.DEFAULT)
 
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
         return _onSearchResultsChangedMutableStateFlow.asStateFlow()
@@ -267,14 +272,11 @@ class DefaultMediaBrowser
         _mediaBrowserLFMutableStateFlow.value?.await()?.addMediaItem(mediaItem)
     }
 
-    override suspend fun prepareFromMediaId(mediaId: String) {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun prepareFromMediaId(mediaId: String) {
         // call from application looper
         val mediaController = _mediaBrowserLFMutableStateFlow.value?.await()
-        mediaController
+        val mediaItem = mediaController?.getItem(mediaId)?.await()?.value ?: MediaItem.EMPTY
         mediaController?.addMediaItem(mediaItem)
         mediaController?.prepare()
     }
