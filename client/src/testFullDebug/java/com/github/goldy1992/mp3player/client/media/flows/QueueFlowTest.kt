@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.commons.PlayerUtils.buildPlayerEvents
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Assert.*
@@ -13,11 +13,11 @@ import org.robolectric.RobolectricTestRunner
 
 @UnstableApi
 @RunWith(RobolectricTestRunner::class)
-class QueueFlowTest : PlayerMediaFlowTestBase<QueueState>() {
+class QueueFlowTest : PlayerMediaFlowTestBase<OnQueueChangedEventHolder>() {
 
     @Test
     fun testQueueFlowIsCollected() {
-        val resultState = initTestFlow(QueueState.EMPTY)
+        val resultState = initTestFlow(OnQueueChangedEventHolder.EMPTY)
         QueueFlow.create(controllerFuture, dispatcher, testScope, collectLambda)
 
         val expectedFirstId = "expectedFirstId"
@@ -35,8 +35,8 @@ class QueueFlowTest : PlayerMediaFlowTestBase<QueueState>() {
 
         val result = resultState.value
         assertEquals(2, result.items.size)
-        assertEquals(mediaItem1.mediaId, result.items[0].id)
-        assertEquals(mediaItem2.mediaId, result.items[1].id)
+        assertEquals(mediaItem1.mediaId, result.items[0].mediaId)
+        assertEquals(mediaItem2.mediaId, result.items[1].mediaId)
     }
 
 }

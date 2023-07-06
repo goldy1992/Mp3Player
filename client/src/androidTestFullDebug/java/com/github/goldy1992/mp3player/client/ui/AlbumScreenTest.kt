@@ -5,12 +5,13 @@ import android.util.Base64
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.lifecycle.SavedStateHandle
-import androidx.media3.common.MediaItem
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.album.AlbumScreen
 import com.github.goldy1992.mp3player.client.ui.screens.album.AlbumScreenViewModel
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -48,22 +49,19 @@ class AlbumScreenTest {
         savedStateHandle["albumTitle"] = expectedAlbumTitle
         savedStateHandle["albumArtist"] = expectedAlbumArtist
         savedStateHandle["albumArtUri"] = albumUriEncoded
-        val expectedAlbumSongs = mutableListOf<MediaItem>()
+
         val expectedSong1Title = "song1Title"
-        val song1 = MediaItemBuilder("id1")
-            .setTitle(expectedSong1Title)
-            .setDuration(3000L)
-            .setArtist("artist1")
-            .build()
+        val expectedSong1Artist = "song1Artist"
+        val expectedSong1Duration = 3000L
+        val song1 = Song(id = "id1", title = expectedSong1Title, duration = expectedSong1Duration, artist = expectedSong1Artist )
         val expectedSong2Title = "song2Title"
-        val song2 = MediaItemBuilder("id2")
-            .setTitle(expectedSong2Title)
-            .setDuration(6000L)
-            .setArtist("artist2")
-            .build()
-        expectedAlbumSongs.add(song1)
-        expectedAlbumSongs.add(song2)
-        testMediaRepository.getChildrenState = expectedAlbumSongs
+        val expectedSong2Artist = "song2Artist"
+        val expectedSong2Duration = 6000L
+        val song2 = Song(id = "id2", title = expectedSong2Title, duration = expectedSong2Duration, artist = expectedSong2Artist )
+
+        val albumSongs = listOf(song1, song2)
+        val albumPlaylist = Playlist(id = albumId, state = State.LOADED, songs = albumSongs)
+        testMediaRepository.playlist = albumPlaylist
 
         this.albumScreenViewModel =
             AlbumScreenViewModel(

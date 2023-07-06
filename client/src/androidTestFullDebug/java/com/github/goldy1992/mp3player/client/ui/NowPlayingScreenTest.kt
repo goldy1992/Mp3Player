@@ -4,9 +4,9 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.media3.common.MediaMetadata
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel
@@ -35,10 +35,9 @@ class NowPlayingScreenTest {
 
     @Test
     fun testDisplay() {
+        val songId = "songId"
         val expectedTitle = "MySong"
-        testMediaRepository.metadataState.value = MediaMetadata.Builder()
-            .setTitle(expectedTitle)
-            .build()
+        testMediaRepository.currentMediaItemState.value = Song(id = songId, title = expectedTitle )
         composeTestRule.setContent {
             NowPlayingScreen(
                 viewModel = nowPlayingScreenViewModel

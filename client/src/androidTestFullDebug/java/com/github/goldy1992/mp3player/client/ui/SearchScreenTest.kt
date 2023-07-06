@@ -12,6 +12,13 @@ import com.github.goldy1992.mp3player.client.repositories.media.TestMediaReposit
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.MediaEntity
+import com.github.goldy1992.mp3player.client.models.SearchResult
+import com.github.goldy1992.mp3player.client.models.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Assert.*
@@ -69,17 +76,16 @@ class SearchScreenTest {
     @OptIn(ExperimentalFoundationApi::class)
     @Test
     fun testSearchResultsDisplayedCorrectly() {
+        val searchQuery = "query"
         val expectedLibId= "sdfsdf"
         val songTitle = "songTitle"
-        val songItem = MediaItemBuilder("a")
-            .setLibraryId(expectedLibId)
-            .setMediaItemType(MediaItemType.SONG)
-            .setDuration(10000L)
-            .setTitle(songTitle)
-            .build()
+        val songDuration = 10000L
+        val song = Song(id = expectedLibId, title = songTitle, duration = songDuration)
+        val songSearchResult = SearchResult(id = searchQuery, type = MediaItemType.SONG, value = song)
 
         val folderName = "/c/folder1"
         val libId = "3fk4"
+
 
         val folderItem = MediaItemBuilder("a")
             .setMediaItemType(MediaItemType.FOLDER)
@@ -88,9 +94,14 @@ class SearchScreenTest {
             .setDirectoryFile(File(folderName))
             .build()
 
-        testMediaRepository.searchResults = listOf(songItem, folderItem)
+        val folder = Folder(id = "a", name = folderName)
+        val folderSearchResult = SearchResult(id = searchQuery, type = MediaItemType.FOLDER, value = folder)
+
+        testMediaRepository.searchResults = SearchResults(
+            State.LOADED,  listOf(songSearchResult, folderSearchResult))
+
         // push a change of state of change to search results
-        testMediaRepository.searchResultsChangedState.value = OnSearchResultsChangedEventHolder("newQuery", 2)
+        testMediaRepository.searchResultsChangedState.value = SearchResultsChangedEvent(searchQuery, 2)
         val searchResultsColumn = context.resources.getString(R.string.search_results_column)
 
         composeTestRule.setContent {

@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
 import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
 import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.PlaybackParameters
+import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.models.Playlist
 import com.github.goldy1992.mp3player.client.models.Queue
@@ -117,9 +117,9 @@ class DefaultMediaRepository
         }
     }
 
-    override fun playbackParameters(): Flow<PlaybackParameters> {
+    override fun playbackParameters(): Flow<PlaybackParametersEvent> {
         return mediaDataSource.playbackParameters().map {
-            PlaybackParameters(speed = it.speed,
+            PlaybackParametersEvent(speed = it.speed,
             pitch = it.pitch)
         }
     }
@@ -157,6 +157,7 @@ class DefaultMediaRepository
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     override suspend fun <T : MediaEntity> getChildren(
         parent: T,
         page: Int,
@@ -302,14 +303,10 @@ class DefaultMediaRepository
         TODO("Not yet implemented")
     }
 
-//    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
-//        mediaDataSource.playFromPlaylist(items, itemIndex, playlistMetadata)
-//    }
-
     override suspend fun playPlaylist(playlist: Playlist, startIndex: Int) {
 
         val mediaItems = playlist.songs.map { createMediaItem(it) }
-        mediaDataSource.playFromPlaylist(mediaItems, startIndex, MediaMetadata.Builder().build())
+        mediaDataSource.playFromPlaylist(mediaItems, startIndex, playlist.id)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
@@ -317,12 +314,8 @@ class DefaultMediaRepository
     }
 
     override suspend fun prepareFromId(mediaId: String) {
-        TODO("Not yet implemented")
+        mediaDataSource.prepareFromMediaId(mediaId)
     }
-
-//    override suspend fun prepareFromId(song: Song) {
-//        mediaDataSource.prepareFromMediaId(createMediaItem(song))
-//    }
 
     override suspend fun search(query: String, extras: Bundle) {
         mediaDataSource.search(query, extras)

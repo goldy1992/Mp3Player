@@ -5,23 +5,24 @@ import android.os.Bundle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.models.MediaEntity
+import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.Root
+import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
-import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.EnumMap
 
 /**
  * Test class for the [MainScreen] composable function.
@@ -40,7 +41,7 @@ class LibraryScreenTest {
 
     companion object{
         private const val TEST_ROOT_ID = "rootId"
-        private val testRootItem =  MediaItem.Builder().setMediaId(TEST_ROOT_ID).build()
+        private val testRootItem = Root(id = TEST_ROOT_ID)// MediaItem.Builder().setMediaId(TEST_ROOT_ID).build()
     }
 
     /**
@@ -59,17 +60,13 @@ class LibraryScreenTest {
     @Test
     fun testDisplay() {
         val songsId = "SongsId"
-        val songExtras = Bundle()
-        songExtras.putSerializable(Constants.ROOT_ITEM_TYPE, MediaItemType.SONGS)
-        songExtras.putSerializable(Constants.MEDIA_ITEM_TYPE, MediaItemType.SONGS)
-        val songsItem = MediaItem.Builder().setMediaId(songsId).setMediaMetadata(
-            MediaMetadata.Builder()
-                .setExtras(songExtras).build()
-        )
-        .build()
+        val songs = Playlist(id = songsId)
+        val originalRoot = testMediaRepository.libraryRootState
+        val loadedRoot = Root(id = originalRoot.id, state = State.LOADED, childMap = EnumMap(
+            mapOf<MediaItemType, MediaEntity>(MediaItemType.SONGS to songs)))
 
-        testMediaRepository.getChildrenState = listOf(songsItem)
-        testMediaRepository.onChildrenChangedState.value = OnChildrenChangedEventHolder(TEST_ROOT_ID, itemCount = 1, getDefaultLibraryParams())
+        testMediaRepository.getChildrenState = loadedRoot
+        testMediaRepository.onChildrenChangedState.value = ChildrenChangedEvent(TEST_ROOT_ID, itemCount = 1, Bundle())
 
         composeTestRule.setContent {
             LibraryScreen(
@@ -82,8 +79,5 @@ class LibraryScreenTest {
             composeTestRule.onAllNodesWithText(MediaItemType.SONGS.name).fetchSemanticsNodes()
                 .isNotEmpty()
         }
-
     }
-
-
 }

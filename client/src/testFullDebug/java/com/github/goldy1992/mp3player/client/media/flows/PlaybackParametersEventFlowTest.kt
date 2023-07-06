@@ -7,7 +7,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class PlaybackParametersFlowTest : PlayerMediaFlowTestBase<PlaybackParameters>() {
+class PlaybackParametersEventFlowTest : PlayerMediaFlowTestBase<PlaybackParameters>() {
 
     @Test
     fun testPlaybackParametersCollected() {

@@ -5,15 +5,17 @@ import android.os.Bundle
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.concurrent.atomic.AtomicInteger
 
 class FakeMediaDataSource : MediaDataSource {
 
@@ -71,8 +73,8 @@ class FakeMediaDataSource : MediaDataSource {
         return playbackParametersState
     }
 
-    var playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
-    override fun playbackPosition(): Flow<PlaybackPositionEvent> {
+    var playbackPositionState = MutableStateFlow(OnPlaybackPositionChangedEvent.DEFAULT)
+    override fun playbackPosition(): Flow<OnPlaybackPositionChangedEvent> {
         return playbackPositionState
     }
 
@@ -81,9 +83,9 @@ class FakeMediaDataSource : MediaDataSource {
         return playbackSpeedState
     }
 
-    val queueState = MutableStateFlow(QueueState.EMPTY)
-    override fun queue(): Flow<QueueState> {
-        return queueState
+    val onQueueChangedEventHolder = MutableStateFlow(OnQueueChangedEventHolder.EMPTY)
+    override fun queue(): Flow<OnQueueChangedEventHolder> {
+        return onQueueChangedEventHolder
     }
 
     val repeatModeState = MutableStateFlow(0)
@@ -91,7 +93,10 @@ class FakeMediaDataSource : MediaDataSource {
         return repeatModeState
     }
 
-    override suspend fun changePlaybackSpeed(speed: Float) { }
+    var playbackSpeed: Float? = null
+    override suspend fun changePlaybackSpeed(speed: Float) {
+        this.playbackSpeed = speed
+    }
     override suspend fun getCurrentPlaybackPosition(): Long {
         TODO("Not yet implemented")
     }
@@ -118,34 +123,77 @@ class FakeMediaDataSource : MediaDataSource {
         pageSize: Int
     ): List<MediaItem> {  return searchResultsState  }
 
-    override suspend fun pause() {    }
+    val pauseInvocations = AtomicInteger(0)
+    override suspend fun pause() {
+        pauseInvocations.incrementAndGet()
+    }
 
-    override suspend fun play() {    }
+    val playInvocations = AtomicInteger(0)
+    override suspend fun play() {
+        playInvocations.incrementAndGet()
+    }
 
     override suspend fun play(mediaItem: MediaItem) {    }
+    var playlistItems : List<MediaItem>? = null
+    var playlistItemIndex : Int? = null
+    var playlistId : String? = null
     override suspend fun playFromPlaylist(
         items: List<MediaItem>,
         itemIndex: Int,
-        playlistMetadata: MediaMetadata
+        playlistId: String
     ) {
+        this.playlistItems = items
+        this.playlistItemIndex = itemIndex
+        this.playlistId = playlistId
     }
-    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) { }
+    var uriToPlayFrom : Uri? = null
+    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
+        this.uriToPlayFrom = uri
+    }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {   }
+    var idToPrepare : String? = null
+    override suspend fun prepareFromMediaId(mediaId: String) {
+        this.idToPrepare = mediaId
+    }
 
-    override suspend fun search(query: String, extras: Bundle) {  }
+    var searchQuery : String? = null
+    override suspend fun search(query: String, extras: Bundle) {
+        this.searchQuery = query
+    }
 
-    override suspend fun seekTo(position: Long) {    }
+    var seekToValue : Long? = null
+    override suspend fun seekTo(position: Long) {
+        this.seekToValue = position
+    }
 
-    override suspend fun setRepeatMode(repeatMode: Int) {   }
+    @Player.RepeatMode
+    var repeatMode : Int? = null
+    override suspend fun setRepeatMode(repeatMode: Int) {
+        this.repeatMode = repeatMode
+    }
 
-    override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {  }
+    var shuffleEnabled : Boolean = false
+    override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
+        this.shuffleEnabled = shuffleModeEnabled
+    }
 
-    override suspend fun skipToNext() {  }
+    val skipToNextInvocations = AtomicInteger(0)
 
-    override suspend fun skipToPrevious() { }
+    override suspend fun skipToNext() {
+        skipToNextInvocations.incrementAndGet()
+    }
+    val skipToPreviousInvocations = AtomicInteger(0)
+    override suspend fun skipToPrevious() {
+        skipToPreviousInvocations.incrementAndGet()
+    }
 
-    override suspend fun stop() { }
+    val stopInvocations = AtomicInteger(0)
+    override suspend fun stop() {
+        stopInvocations.incrementAndGet()
+    }
 
-    override suspend fun subscribe(id: String) {}
+    var subscribeId : String? = null
+    override suspend fun subscribe(id: String) {
+        this.subscribeId = id
+    }
 }

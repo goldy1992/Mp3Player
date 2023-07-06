@@ -2,11 +2,11 @@ package com.github.goldy1992.mp3player.client.data.repositories.media.eventholde
 
 import androidx.media3.common.MediaItem
 
-data class QueueState(
+data class OnQueueChangedEventHolder(
     val items : List<MediaItem>,
     val currentIndex : Int)
 {
     companion object {
-        val EMPTY = QueueState(emptyList(), 0)
+        val EMPTY = OnQueueChangedEventHolder(emptyList(), 0)
     }
 }

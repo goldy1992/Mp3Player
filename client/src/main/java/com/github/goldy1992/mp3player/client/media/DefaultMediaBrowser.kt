@@ -16,7 +16,7 @@ import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
@@ -32,8 +32,7 @@ import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
 import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
 import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
@@ -150,8 +149,8 @@ class DefaultMediaBrowser
         return _playbackParametersMutableStateFlow.asStateFlow()
     }
 
-    private val _playbackPositionMutableStateFlow = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
-    override fun playbackPosition(): Flow<PlaybackPositionEvent> {
+    private val _playbackPositionMutableStateFlow = MutableStateFlow(OnPlaybackPositionChangedEvent.DEFAULT)
+    override fun playbackPosition(): Flow<OnPlaybackPositionChangedEvent> {
         return _playbackPositionMutableStateFlow.asStateFlow()
     }
 
@@ -164,8 +163,8 @@ class DefaultMediaBrowser
         return _playbackSpeedFlow
     }
 
-    private val _queueMutableStateFlow = MutableStateFlow(QueueState.EMPTY)
-    override fun queue(): Flow<QueueState> {
+    private val _queueMutableStateFlow = MutableStateFlow(OnQueueChangedEventHolder.EMPTY)
+    override fun queue(): Flow<OnQueueChangedEventHolder> {
         return _queueMutableStateFlow.asStateFlow()
     }
 
@@ -255,16 +254,24 @@ class DefaultMediaBrowser
 
     }
 
-    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
-        Log.v(logTag(), "playFromPlaylist() invoked with MediaMetadata: $playlistMetadata")
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistId: String) {
+        Log.v(logTag(), "playFromPlaylist() invoked with MediaMetadata: $playlistId")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
         mediaBrowser?.setMediaItems(items, itemIndex, 0L)
 
-        Log.d(logTag(), "playFromPlaylist() setting playlist metadata to ${playlistMetadata.extras?.getString(PLAYLIST_ID)}")
+        Log.d(logTag(), "playFromPlaylist() setting playlist metadata to ${playlistId}")
         mediaBrowser?.play()
-        mediaBrowser?.playlistMetadata = playlistMetadata
+        val extras = Bundle()
+        extras.putString(PLAYLIST_ID, playlistId)
+        mediaBrowser?.playlistMetadata = MediaMetadata.Builder().setExtras(extras).build()
 
         Log.v(logTag(), "playFromPlaylist() invocation complete")
+    }
+
+    override suspend fun playFromPlaylist(playlistId: String, itemIndex: Int) {
+        Log.v(logTag(), "playFromPlaylist() invoked with id $playlistId")
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
+       // mediaBrowser?.getChildren(playlistId)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {

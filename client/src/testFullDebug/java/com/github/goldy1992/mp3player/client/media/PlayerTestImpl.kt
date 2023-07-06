@@ -19,7 +19,7 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.VideoSize
 import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.Size
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
 
 class PlayerTestImpl() : Player {
     private val listeners = mutableSetOf<Player.Listener>()
@@ -547,9 +547,9 @@ class PlayerTestImpl() : Player {
     }
 
 
-    fun setPlaybackPositionEvent(playbackPositionEvent: PlaybackPositionEvent, playerEvents: Events) {
-        this.testCurrentPosition = playbackPositionEvent.currentPosition
-        this.isPlayingTestValue = playbackPositionEvent.isPlaying
+    fun setPlaybackPositionEvent(onPlaybackPositionChangedEvent: OnPlaybackPositionChangedEvent, playerEvents: Events) {
+        this.testCurrentPosition = onPlaybackPositionChangedEvent.currentPosition
+        this.isPlayingTestValue = onPlaybackPositionChangedEvent.isPlaying
 
         updateListeners { it.onEvents(this, playerEvents) }
     }

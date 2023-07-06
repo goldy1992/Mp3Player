@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.LoggingUtils
 import com.github.goldy1992.mp3player.commons.MainDispatcher
@@ -23,8 +23,8 @@ class PlaybackPositionFlow
         private val controllerLf: ListenableFuture<Player>,
         @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
         @ActivityCoroutineScope scope: CoroutineScope,
-        onCollect : (PlaybackPositionEvent) -> Unit
-    )  : FlowBase<PlaybackPositionEvent>(scope, onCollect) {
+        onCollect : (OnPlaybackPositionChangedEvent) -> Unit
+    )  : FlowBase<OnPlaybackPositionChangedEvent>(scope, onCollect) {
 
 
     companion object {
@@ -32,7 +32,7 @@ class PlaybackPositionFlow
             @ActivityCoroutineScope scope : CoroutineScope,
             controllerFuture : ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
-            onCollect : (PlaybackPositionEvent) -> Unit) : PlaybackPositionFlow {
+            onCollect : (OnPlaybackPositionChangedEvent) -> Unit) : PlaybackPositionFlow {
             val playbackPositionFlow = PlaybackPositionFlow(controllerFuture, mainDispatcher, scope, onCollect)
             playbackPositionFlow.initFlow(playbackPositionFlow.getFlow())
             return playbackPositionFlow
@@ -45,11 +45,11 @@ class PlaybackPositionFlow
         Player.EVENT_PLAYBACK_PARAMETERS_CHANGED
     )
     
-    override fun getFlow(): Flow<PlaybackPositionEvent> = callbackFlow {
+    override fun getFlow(): Flow<OnPlaybackPositionChangedEvent> = callbackFlow {
             val controller = controllerLf.await()
             withContext(mainDispatcher) {
                 trySend(
-                    PlaybackPositionEvent(
+                    OnPlaybackPositionChangedEvent(
                         controller.isPlaying,
                         controller.currentPosition,
                         TimerUtils.getSystemTime()
@@ -69,7 +69,7 @@ class PlaybackPositionFlow
                             } with position $currentPosition, isPlaying: $isPlaying"
                         )
                         trySend(
-                            PlaybackPositionEvent(
+                            OnPlaybackPositionChangedEvent(
                                 isPlaying,
                                 currentPosition,
                                 TimerUtils.getSystemTime()
@@ -82,7 +82,7 @@ class PlaybackPositionFlow
                     val isPlaying = controller.isPlaying
                     val currentPosition = controller.currentPosition
                     trySend(
-                        PlaybackPositionEvent(
+                        OnPlaybackPositionChangedEvent(
                             isPlaying ?: false,
                             currentPosition ?: 0L,
                             TimerUtils.getSystemTime()

@@ -69,27 +69,32 @@ class LibraryScreenViewModel
                         root.value.id -> {
                             val rootItem = mediaRepository.getChildren(root.value, 0, it.itemCount)
                             _root.value = rootItem
-                            val albums = rootItem.childMap[MediaItemType.ALBUMS] as Albums
-                            _albums.value = Albums(
-                                id = albums.id,
-                                state = State.LOADING
-                            )
-                            mediaRepository.subscribe(albums.id)
+                            if (rootItem.childMap.containsKey(MediaItemType.ALBUMS)) {
+                                val albums = rootItem.childMap[MediaItemType.ALBUMS] as Albums
+                                _albums.value = Albums(
+                                    id = albums.id,
+                                    state = State.LOADING
+                                )
+                                mediaRepository.subscribe(albums.id)
+                            }
 
-                            val folders = rootItem.childMap[MediaItemType.FOLDERS] as Folders
-                            _folders.value = Folders(
-                                id = folders.id,
-                                state = State.LOADING
-                            )
-                            mediaRepository.subscribe(folders.id)
+                            if (rootItem.childMap.containsKey(MediaItemType.FOLDERS)) {
+                                val folders = rootItem.childMap[MediaItemType.FOLDERS] as Folders
+                                _folders.value = Folders(
+                                    id = folders.id,
+                                    state = State.LOADING
+                                )
+                                mediaRepository.subscribe(folders.id)
+                            }
 
-                            val songs = rootItem.childMap[MediaItemType.SONGS] as Playlist
-                            _songs.value = Playlist(
-                                id = songs.id,
-                                state = State.LOADING
-                            )
-                            mediaRepository.subscribe(songs.id)
-
+                            if (rootItem.childMap.containsKey(MediaItemType.SONGS)) {
+                                val songs = rootItem.childMap[MediaItemType.SONGS] as Playlist
+                                _songs.value = Playlist(
+                                    id = songs.id,
+                                    state = State.LOADING
+                                )
+                                mediaRepository.subscribe(songs.id)
+                            }
                         }
 
                         albums.value.id -> {

@@ -7,7 +7,7 @@ import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
 import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
 import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.PlaybackParameters
+import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.models.Playlist
 import com.github.goldy1992.mp3player.client.models.Queue
@@ -39,7 +39,7 @@ interface MediaRepository {
 
     fun onSearchResultsChanged() : Flow<SearchResultsChangedEvent>
 
-    fun playbackParameters() : Flow<PlaybackParameters>
+    fun playbackParameters() : Flow<PlaybackParametersEvent>
 
     fun playbackPosition() : Flow<PlaybackPositionEvent>
 
@@ -50,13 +50,6 @@ interface MediaRepository {
     fun repeatMode() : Flow<RepeatMode>
 
     suspend fun changePlaybackSpeed(speed : Float)
-
-//    suspend fun getChildren(
-//        parentId: String,
-//        @IntRange(from = 0) page: Int = 0,
-//        @IntRange(from = 1) pageSize: Int = 20,
-//        params: Bundle = Bundle(),
-//    ) : List<MediaEntity>
 
     suspend fun <T : MediaEntity> getChildren(
         parent: T,

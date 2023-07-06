@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.media.flows
 import android.util.Log
 import androidx.concurrent.futures.await
 import androidx.media3.common.Player
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.QueueState
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.client.utils.QueueUtils
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.LoggingUtils
@@ -23,16 +23,16 @@ class QueueFlow
         @ActivityCoroutineScope scope: CoroutineScope,
         private val controllerFuture : ListenableFuture<Player>,
         @MainDispatcher private val  mainDispatcher : CoroutineDispatcher,
-        onCollect : suspend (QueueState) -> Unit)
+        onCollect : suspend (OnQueueChangedEventHolder) -> Unit)
         
-     : FlowBase<QueueState>(scope, onCollect) {
+     : FlowBase<OnQueueChangedEventHolder>(scope, onCollect) {
     
     companion object {
         fun create(
             controllerLf: ListenableFuture<Player>,
             @MainDispatcher mainDispatcher: CoroutineDispatcher,
             @ActivityCoroutineScope scope: CoroutineScope,
-            onCollect : suspend (QueueState) -> Unit
+            onCollect : suspend (OnQueueChangedEventHolder) -> Unit
         ): QueueFlow {
             val queueFlow = QueueFlow(scope, controllerLf, mainDispatcher, onCollect)  
             queueFlow.initFlow(queueFlow.getFlow())
@@ -47,11 +47,11 @@ class QueueFlow
         )
     }
     
-    override fun getFlow(): Flow<QueueState> = callbackFlow {
+    override fun getFlow(): Flow<OnQueueChangedEventHolder> = callbackFlow {
         Log.v(logTag(), "QueueFlow callbackFlow invoked, awaiting MediaController")
         val controller = controllerFuture.await()
         Log.v(logTag(), "QueueFlow callbackFlow finished awaiting MediaController")
-        var queue: QueueState
+        var queue: OnQueueChangedEventHolder
         withContext(mainDispatcher) {
             queue = QueueUtils.getQueue(controller)
         }
