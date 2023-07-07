@@ -27,11 +27,11 @@ object MediaEntityUtils {
             Root(
                 id=root.id,
                 state = State.NO_RESULTS,
-                childMap = EnumMap(emptyMap<MediaItemType, MediaEntity>())
+                childMap = EnumMap(MediaItemType::class.java)
             )
         }
         else {
-            val rootChildMap = mutableMapOf<MediaItemType, MediaEntity>()
+            val rootChildMap : EnumMap<MediaItemType, MediaEntity> = EnumMap(MediaItemType::class.java)
             for (mediaItem: MediaItem in mediaItems) {
                 val mediaItemId = mediaItem.mediaId
                 when (val mediaItemType = MediaItemUtils.getMediaItemType(mediaItem)) {

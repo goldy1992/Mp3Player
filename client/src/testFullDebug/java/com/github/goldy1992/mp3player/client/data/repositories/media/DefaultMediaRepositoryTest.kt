@@ -139,7 +139,6 @@ class DefaultMediaRepositoryTest {
     fun testOnChildrenChanged() = runTest {
         val expectedParentId = "expecPId"
         val expectedItemCount = 44
-        val expectedParams = Bundle()
 
         var result : ChildrenChangedEvent? = null
         val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {

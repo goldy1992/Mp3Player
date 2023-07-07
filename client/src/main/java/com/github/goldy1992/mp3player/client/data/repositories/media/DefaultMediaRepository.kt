@@ -159,8 +159,6 @@ class DefaultMediaRepository
         mediaDataSource.changePlaybackSpeed(speed)
     }
 
-
-    @Suppress("UNCHECKED_CAST")
     override suspend fun <T : MediaEntity> getChildren(
         parent: T,
         page: Int,
@@ -168,32 +166,7 @@ class DefaultMediaRepository
         params: Bundle
     ): T {
         val mediaItems = mediaDataSource.getChildren(parent.id, page, pageSize, getLibraryParams(params))
-        if (parent is Root) {
-            return createRootChildren(parent, mediaItems) as T
-        }
-        if (parent is Albums) {
-           return createAlbums(parent, mediaItems) as T
-        }
-
-        if (parent is Album) {
-            return createAlbum(parent, mediaItems) as T
-        }
-
-        if (parent is Folders) {
-            return createFolders(parent, mediaItems) as T
-        }
-
-        if (parent is Folder) {
-            return createFolder(parent, mediaItems) as T
-        }
-
-        if (parent is Playlist) {
-            return createPlaylist(parent, mediaItems) as T
-        }
-
-
-
-        return Song() as T
+        return MediaEntityParser.parse(parent, mediaItems)
     }
 
     override suspend fun getPlaylist(

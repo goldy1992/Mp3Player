@@ -14,5 +14,6 @@ class Root(
     companion object {
         val NOT_LOADED = Root(state = State.NOT_LOADED)
         val LOADING = Root(state = State.LOADING)
+        val NO_RESULTS = Root(state =  State.NO_RESULTS)
     }
 }
