@@ -39,13 +39,13 @@ fun AlbumListItem(modifier: Modifier = Modifier,
         .onSizeChanged { width = (it.width.toFloat() / localDensity.density).dp },
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {
-            AlbumArtAsync(album.albumArt, contentDescription = album.albumTitle, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
+            AlbumArtAsync(album.artworkUri, contentDescription = album.title, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
             Column(Modifier.padding(start = 16.dp)) {
-                Text(album.albumTitle,
+                Text(album.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
-                Text(album.albumArtist,
+                Text(album.artist,
                     style = MaterialTheme.typography.bodySmall,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)

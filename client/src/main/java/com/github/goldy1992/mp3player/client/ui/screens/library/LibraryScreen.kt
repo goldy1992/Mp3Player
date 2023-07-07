@@ -91,10 +91,10 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
 
     val onAlbumSelected : (Album) -> Unit = {
         val albumId = it.id
-        val albumTitle = it.albumTitle
-        val albumArtist = it.albumArtist
-        val albumArtUriBase64 = Base64.encodeToString(it.albumArt.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${it.albumArt}")
+        val albumTitle = it.title
+        val albumArtist = it.artist
+        val albumArtUriBase64 = Base64.encodeToString(it.artworkUri.toString().encodeToByteArray(), Base64.DEFAULT)
+        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${it.artworkUri}")
         navController.navigate(
             Screen.ALBUM.name
                     + "/" + albumId

@@ -176,21 +176,21 @@ private fun AlbumHeaderItem(
     ) {
         val album = albumProvider()
         Card {
-            AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(200.dp))
+            AlbumArtAsync(uri = album.artworkUri, contentDescription = album.title, modifier = Modifier.size(200.dp))
         }
 
         Column(
             Modifier.padding(7.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = album.albumArtist,
+                text = album.artist,
                 style = MaterialTheme.typography.labelLarge
             )
             val singularSong = "song"
             val pluralSongs = "songs"
             val numOfSongs = album.playlist.songs.size
             val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
-            val duration = TimerUtils.formatTime(album.totalDuration)
+            val duration = TimerUtils.formatTime(album.playlist.duration)
             val summary = "$numOfSongs $songDescr | $duration"
             Text(
                 text = summary,
@@ -229,7 +229,7 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
     LargeTopAppBar(
         modifier = modifier,
         title = {
-            Text(album.albumTitle)
+            Text(album.title)
         },
         navigationIcon = {
                 IconButton(onClick = {

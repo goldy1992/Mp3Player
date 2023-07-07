@@ -264,13 +264,15 @@ private fun HeaderItem(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
             verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Outlined.Timer, contentDescription = "")
+
             Text(
                 modifier = Modifier.padding(start = 4.dp, end = 4.dp),
-                text = TimerUtils.formatTime(folder.totalDuration),
+                text = TimerUtils.formatTime(folder.playlist.duration),
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+
         }
         Divider(Modifier.padding(start = 4.dp, end = 4.dp))
     }

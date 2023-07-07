@@ -18,7 +18,7 @@ class AlbumArtTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val testUri = Uri.parse("https://www.example.com/image.jpg")
+    private val testUri = Uri.parse("file://www.example.com/image.jpg")
 
     @Test
     fun assertErrorIconIsDisplayedOnError() {

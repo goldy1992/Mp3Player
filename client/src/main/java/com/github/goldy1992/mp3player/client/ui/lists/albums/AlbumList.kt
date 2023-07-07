@@ -35,8 +35,8 @@ fun AlbumsList(modifier : Modifier = Modifier,
 }
 
 val testAlbumList = listOf(
-    Album(id = "id1", albumTitle = "title1", albumArtist = "artist1" ),
-    Album(id = "id2", albumTitle = "title2", albumArtist = "artist2" )
+    Album(id = "id1", title = "title1", artist = "artist1" ),
+    Album(id = "id2", title = "title2", artist = "artist2" )
 )
 @Preview
 @Composable

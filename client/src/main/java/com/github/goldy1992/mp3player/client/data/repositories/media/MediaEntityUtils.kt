@@ -9,12 +9,13 @@ import com.github.goldy1992.mp3player.client.models.Folder
 import com.github.goldy1992.mp3player.client.models.Folders
 import com.github.goldy1992.mp3player.client.models.MediaEntity
 import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateAlbum
+import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateFolder
 import com.github.goldy1992.mp3player.client.models.Root
 import com.github.goldy1992.mp3player.client.models.RootChild
 import com.github.goldy1992.mp3player.client.models.RootChildren
 import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.models.State
-import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import java.util.EnumMap
@@ -65,6 +66,12 @@ object MediaEntityUtils {
         return Albums(currentAlbum.id, state, albums)
     }
 
+    fun createAlbum(currentAlbum: Album, albumChildren : List<MediaItem>) : Album {
+        val albumPlaylist = createPlaylist(currentAlbum.playlist, albumChildren)
+        return populateAlbum(currentAlbum, albumPlaylist)
+    }
+
+
 
 
     fun createSong(mediaItem : MediaItem) : Song {
@@ -94,9 +101,16 @@ object MediaEntityUtils {
             id = playlist.id,
             state = state,
             songs = songs,
-            totalDuration = duration,
+            duration = duration,
         )
     }
+    
+    fun createFolder(folder : Folder,
+                     folderChildren : List<MediaItem>) : Folder {
+        val folderPlaylist = createPlaylist(folder.playlist, folderChildren)
+        return populateFolder(folder, folderPlaylist)
+    }
+    
 
 
     fun createAlbum(mediaItem : MediaItem,
@@ -104,11 +118,11 @@ object MediaEntityUtils {
     ) : Album {
         return Album(
             id = mediaItem.mediaId,
-            albumTitle = MediaItemUtils.getAlbumTitle(mediaItem),
-            albumArtist = MediaItemUtils.getAlbumArtist(mediaItem),
+            title = MediaItemUtils.getAlbumTitle(mediaItem),
+            artist = MediaItemUtils.getAlbumArtist(mediaItem),
             recordingYear = MediaItemUtils.getAlbumRecordingYear(mediaItem),
             releaseYear = MediaItemUtils.getAlbumReleaseYear(mediaItem),
-            albumArt = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY,
+            artworkUri = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY,
           //  playlist = playlist
         )
     }

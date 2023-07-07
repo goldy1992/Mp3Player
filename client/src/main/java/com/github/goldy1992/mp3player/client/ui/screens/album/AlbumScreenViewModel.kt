@@ -48,9 +48,9 @@ constructor(savedStateHandle: SavedStateHandle,
 
     private val _album : MutableStateFlow<Album> = MutableStateFlow(Album(
         id = albumId,
-        albumTitle = albumTitle,
-        albumArtist = albumArtist,
-        albumArt = albumArtUri,
+        title = albumTitle,
+        artist = albumArtist,
+        artworkUri = albumArtUri,
     ))
     // The UI collects from this StateFlow to get its state updates
     val albumState : StateFlow<Album> = _album
@@ -62,9 +62,9 @@ constructor(savedStateHandle: SavedStateHandle,
             val currentAlbum = _album.value
             _album.value = Album(
                 id = currentAlbum.id,
-                albumTitle = currentAlbum.albumTitle,
-                albumArtist = currentAlbum.albumArtist,
-                albumArt = currentAlbum.albumArt,
+                title = currentAlbum.title,
+                artist = currentAlbum.artist,
+                artworkUri = currentAlbum.artworkUri,
                 playlist = albumPlaylist,
                 state = State.LOADED
             )
@@ -82,17 +82,7 @@ constructor(savedStateHandle: SavedStateHandle,
                 }
                 .collect {
                     val currentAlbum = _album.value
-                    _album.value = Album(
-                        id =currentAlbum.id,
-                        type=currentAlbum.type,
-                        albumTitle=currentAlbum.albumTitle,
-                        albumArtist=currentAlbum.albumArtist,
-                        recordingYear=currentAlbum.recordingYear,
-                        releaseYear=currentAlbum.releaseYear,
-                        playlist = mediaRepository.getPlaylist(currentAlbum.id),
-                        totalDuration = currentAlbum.totalDuration,
-                        albumArt = currentAlbum.albumArt
-                    )
+                    _album.value = mediaRepository.getChildren(currentAlbum, 0, it.itemCount)
                 }
         }
     }

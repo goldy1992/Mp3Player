@@ -11,7 +11,7 @@ data class Playlist
         override val id : String = Constants.UNKNOWN,
         val state : State = State.NOT_LOADED,
         val songs: List<Song> = emptyList(),
-        val totalDuration : Long = 0L
+        val duration : Long = 0L
     ) : MediaEntity {
     override val type: MediaItemType = MediaItemType.SONGS
         companion object {

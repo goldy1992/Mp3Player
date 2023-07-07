@@ -6,7 +6,9 @@ import android.util.Log
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbums
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolders
 import com.github.goldy1992.mp3player.client.models.SearchResult
 import com.github.goldy1992.mp3player.client.models.Album
@@ -27,6 +29,7 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntity
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
 import com.github.goldy1992.mp3player.client.models.Albums
+import com.github.goldy1992.mp3player.client.models.Folder
 import com.github.goldy1992.mp3player.client.models.Folders
 import com.github.goldy1992.mp3player.client.models.SearchResults
 import com.github.goldy1992.mp3player.client.models.State
@@ -172,13 +175,23 @@ class DefaultMediaRepository
            return createAlbums(parent, mediaItems) as T
         }
 
+        if (parent is Album) {
+            return createAlbum(parent, mediaItems) as T
+        }
+
         if (parent is Folders) {
             return createFolders(parent, mediaItems) as T
+        }
+
+        if (parent is Folder) {
+            return createFolder(parent, mediaItems) as T
         }
 
         if (parent is Playlist) {
             return createPlaylist(parent, mediaItems) as T
         }
+
+
 
         return Song() as T
     }

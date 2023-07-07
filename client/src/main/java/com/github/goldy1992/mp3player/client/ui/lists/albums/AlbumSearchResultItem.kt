@@ -34,16 +34,16 @@ fun AlbumSearchResultItem(album : Album = Album(),
             onLongClick = { }
         ),
         colors = ListItemDefaults.colors(containerColor = containerColor),
-        leadingContent = { AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(40.dp))},
+        leadingContent = { AlbumArtAsync(uri = album.artworkUri, contentDescription = album.title, modifier = Modifier.size(40.dp))},
         headlineContent = {
-                Text(text = album.albumTitle,
+                Text(text = album.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis)
             },
         supportingContent = {
             Text(
-                text = album.albumArtist,
+                text = album.artist,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,
                 overflow = TextOverflow.Ellipsis)
