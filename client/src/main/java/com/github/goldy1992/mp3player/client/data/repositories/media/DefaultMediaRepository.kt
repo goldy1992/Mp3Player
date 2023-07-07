@@ -204,54 +204,6 @@ class DefaultMediaRepository
         TODO("Not yet implemented")
     }
 
-//    override suspend fun getRootChildren(rootId: String): RootChildren {
-//        val rootChildren = mediaRepository.getChildren(it.parentId, 0, it.itemCount) as RootChildren
-//
-//        if (rootChildren.isEmpty()) {
-//            _rootChildren.value = RootChildren.NO_RESULTS
-//            Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: No root children found")
-//        } else {
-//            _rootChildren.value = MediaEntityUtils.createRootItems(State.LOADED, rootChildren)
-//
-//            for (rootChild: RootChild in rootChildren) {
-//                val id = rootChild.id
-//                mediaRepository.subscribe(id)
-//                //val mediaItemType = MediaItemUtils.getMediaItemType(rootChild)
-//                //idToMediaItemTypeMap[id] = rootChild.type
-//                when (rootChild.type) {
-//                    MediaItemType.ALBUMS -> _albums.value = Albums(State.LOADING)
-//                    MediaItemType.SONGS -> _playlist.value = Playlist(State.LOADING)
-//                    MediaItemType.FOLDERS -> _folders.value = Folders(State.LOADING)
-//                    MediaItemType.ROOT -> _rootChildren.value = RootChildren.LOADING
-//                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//                }
-//            }
-//        }
-//    } else {
-//        val children = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
-//        //val mediaItemType = idToMediaItemTypeMap[it.parentId] ?: MediaItemType.NONE
-//
-//        if (CollectionUtils.isEmpty(children)) {
-//            if (!hasPermissions(params = it.params!!)) {
-//                when (mediaItemType) {
-//                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_PERMISSIONS)
-//                    MediaItemType.SONGS -> _playlist.value = Playlist(State.NO_PERMISSIONS)
-//                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_PERMISSIONS)
-//                    MediaItemType.ROOT -> _rootChildren.value = RootChildren.NO_PERMISSIONS
-//                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//
-//                }
-//            } else {
-//                when (mediaItemType) {
-//                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
-//                    MediaItemType.SONGS -> _playlist.value = Playlist(State.NO_RESULTS)
-//                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
-//                    MediaItemType.ROOT -> _rootChildren.value = RootChildren.NO_RESULTS
-//                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//                }
-//            }
-//    }
-
     override suspend fun getSearchResults(query: String, page: Int, pageSize: Int) : SearchResults {
         val mediaItems = mediaDataSource.getSearchResults(query, page, pageSize)
         val resultsMap = mutableListOf<SearchResult>()
@@ -260,9 +212,9 @@ class DefaultMediaRepository
             val result : SearchResult =
                 when (MediaItemUtils.getMediaItemType(it)) {
                     MediaItemType.SONG -> SearchResult(query, MediaItemType.SONG, createSong(it))
-                    MediaItemType.FOLDER -> SearchResult(query, MediaItemType.FOLDER, MediaEntityUtils.createFolder(it))
-                    MediaItemType.ALBUM -> SearchResult(query, MediaItemType.ALBUM, MediaEntityUtils.createAlbum(it))
-                    else -> SearchResult.EMPTY
+                    MediaItemType.FOLDER -> SearchResult(query, MediaItemType.FOLDER, createFolder(it))
+                    MediaItemType.ALBUM -> SearchResult(query, MediaItemType.ALBUM, createAlbum(it))
+                    else -> SearchResult(query, MediaItemUtils.getMediaItemType(it))
                 }
             resultsMap.add(result)
         }

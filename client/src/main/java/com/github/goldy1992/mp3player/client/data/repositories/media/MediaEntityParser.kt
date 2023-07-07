@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.data.repositories.media
 
+import android.util.Log
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.models.Albums
@@ -9,14 +10,16 @@ import com.github.goldy1992.mp3player.client.models.MediaEntity
 import com.github.goldy1992.mp3player.client.models.Playlist
 import com.github.goldy1992.mp3player.client.models.Root
 import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.commons.LogTagger
 
 
-object MediaEntityParser {
+object MediaEntityParser : LogTagger {
 
     @Suppress("UNCHECKED_CAST")
     fun <T : MediaEntity> parse(
     parent: T,
     mediaItems : List<MediaItem>) : T {
+        Log.v(logTag(), "parse() invoked with parent: ${parent.javaClass} and ${mediaItems.size} mediaItems")
         if (parent is Root) {
             return MediaEntityUtils.createRootChildren(parent, mediaItems) as T
         }
@@ -41,7 +44,11 @@ object MediaEntityParser {
         }
 
 
-
+        Log.w(logTag(), "parent of type: ${parent.javaClass} does not contain an implementation! Returning a Song()")
         return Song() as T
+    }
+
+    override fun logTag(): String {
+        return "MediaEntityParser"
     }
 }

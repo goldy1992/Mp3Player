@@ -17,7 +17,7 @@ object MediaBrowserModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun providesDefaultMediaBrowser2Module(
+    fun providesDefaultMediaBrowserModule(
         @ApplicationContext context: Context,
         @MainDispatcher mainDispatcher: CoroutineDispatcher,
     ): DefaultMediaBrowser {

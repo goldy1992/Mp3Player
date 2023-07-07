@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.albums
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.models.Album
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 
+private const val LOG_TAG = "AlbumListItem"
 
 @OptIn(ExperimentalFoundationApi::class)
 @Preview
@@ -31,16 +33,24 @@ fun AlbumListItem(modifier: Modifier = Modifier,
                   localDensity: Density = LocalDensity.current,
                   onClick : () -> Unit = {}) {
     var width by remember { mutableStateOf(0.dp) }
-    Card(modifier= modifier.fillMaxSize()
-        .combinedClickable(
-            onClick = { onClick()},
-            onLongClick = {}
-        )
-        .onSizeChanged { width = (it.width.toFloat() / localDensity.density).dp },
+    Card(
+        modifier= modifier
+            .fillMaxSize()
+            .combinedClickable(
+                onClick = { onClick() },
+                onLongClick = {}
+            )
+            .onSizeChanged {
+                Log.d(LOG_TAG, "onSizeChanged: $it")
+                width = (it.width.toFloat() / localDensity.density).dp },
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {
-            AlbumArtAsync(album.artworkUri, contentDescription = album.title, modifier = modifier.align(Alignment.CenterHorizontally).size(width))
-            Column(Modifier.padding(start = 16.dp)) {
+            AlbumArtAsync(album.artworkUri,
+                contentDescription = album.title,
+                modifier = modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(width))
+            Column(Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)) {
                 Text(album.title,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines=1,

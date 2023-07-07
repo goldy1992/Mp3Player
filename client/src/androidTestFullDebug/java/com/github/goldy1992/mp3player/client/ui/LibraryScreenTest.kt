@@ -41,7 +41,7 @@ class LibraryScreenTest {
 
     companion object{
         private const val TEST_ROOT_ID = "rootId"
-        private val testRootItem = Root(id = TEST_ROOT_ID)// MediaItem.Builder().setMediaId(TEST_ROOT_ID).build()
+        private val testRootItem = Root(id = TEST_ROOT_ID)
     }
 
     /**

@@ -25,7 +25,8 @@ fun AlbumArtAsync(uri : Uri,
     Log.v(LOG_TAG, "AlbumArtAsync() Invoked with Uri: ${uri.path}")
     SubcomposeAsyncImage(
         model = uri,
-        contentDescription = contentDescription
+        contentDescription = contentDescription,
+        modifier = modifier
     ) {
         when (painter.state) {
             is AsyncImagePainter.State.Loading -> {
@@ -40,7 +41,7 @@ fun AlbumArtAsync(uri : Uri,
             }
             is AsyncImagePainter.State.Success -> {
                 Log.v(LOG_TAG, "AlbumArtAsync() PainterState: SUCCESS")
-                SubcomposeAsyncImageContent()
+                SubcomposeAsyncImageContent(modifier = modifier)
             }
             else -> {
                 Log.v(LOG_TAG, "AlbumArtAsync() PainterState: OTHER")

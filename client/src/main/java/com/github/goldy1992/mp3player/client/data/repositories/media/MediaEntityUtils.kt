@@ -12,8 +12,6 @@ import com.github.goldy1992.mp3player.client.models.Playlist
 import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateAlbum
 import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateFolder
 import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.RootChild
-import com.github.goldy1992.mp3player.client.models.RootChildren
 import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.models.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -44,7 +42,6 @@ object MediaEntityUtils {
                     MediaItemType.FOLDERS -> rootChildMap[MediaItemType.FOLDERS] =
                         Folders(id = mediaItemId, state = State.LOADING)
 
-                    MediaItemType.ROOT -> rootChildMap[MediaItemType.ROOT] = RootChildren.LOADING
                     else -> Log.w(
                         "MediaEntityUtils",
                         "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded."
@@ -123,7 +120,7 @@ object MediaEntityUtils {
             recordingYear = MediaItemUtils.getAlbumRecordingYear(mediaItem),
             releaseYear = MediaItemUtils.getAlbumReleaseYear(mediaItem),
             artworkUri = MediaItemUtils.getAlbumArtUri(mediaItem) ?: Uri.EMPTY,
-          //  playlist = playlist
+            playlist = playlist
         )
     }
 
@@ -149,26 +146,5 @@ object MediaEntityUtils {
         val state = if (foldersList.isEmpty()) State.NO_RESULTS else State.LOADED
         return Folders(folders.id, state, foldersList
         )
-    }
-
-    private fun createRootItem(mediaItem : MediaItem) : RootChild {
-        return RootChild(
-            id = mediaItem.mediaId,
-            type = MediaItemUtils.getMediaItemType(mediaItem)
-        )
-    }
-
-    fun createRootItems(
-        state : State,
-        rootChildren: List<RootChild>
-    ) : RootChildren {
-        return RootChildren(
-            state = state,
-            items = rootChildren
-        )
-    }
-
-    fun mapMediaItemsToMediaEntities(mediaItems : List<MediaItem>) : List<MediaEntity> {
-        return emptyList()
     }
 }
