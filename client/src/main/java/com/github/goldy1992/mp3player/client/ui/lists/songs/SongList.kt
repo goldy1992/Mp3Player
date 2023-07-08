@@ -16,12 +16,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
 

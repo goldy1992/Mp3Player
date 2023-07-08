@@ -271,7 +271,7 @@ class DefaultMediaBrowser
     override suspend fun playFromPlaylist(playlistId: String, itemIndex: Int) {
         Log.v(logTag(), "playFromPlaylist() invoked with id $playlistId")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
-       // mediaBrowser?.getChildren(playlistId)
+       mediaBrowser?.getItem(playlistId)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {

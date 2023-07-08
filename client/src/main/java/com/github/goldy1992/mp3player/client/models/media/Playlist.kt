@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 data class Playlist
     constructor(
         override val id : String = Constants.UNKNOWN,
-        val state : State = State.NOT_LOADED,
+        override val state : State = State.NOT_LOADED,
         val songs: List<Song> = emptyList(),
         val duration : Long = 0L
     ) : MediaEntity {

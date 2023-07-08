@@ -1,5 +1,10 @@
 package com.github.goldy1992.mp3player.client.models
 
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.State
+
 object PlaylistCopier {
 
     fun populateAlbum(album: Album, playlist: Playlist) : Album {
@@ -9,7 +14,8 @@ object PlaylistCopier {
             artist = album.artist,
             recordingYear = album.recordingYear,
             releaseYear = album.releaseYear,
-            playlist = playlist
+            playlist = playlist,
+            artworkUri = album.artworkUri
         )
     }
 
@@ -24,6 +30,5 @@ object PlaylistCopier {
             playlist = playlist,
             state = State.LOADED,
         )
-
     }
 }

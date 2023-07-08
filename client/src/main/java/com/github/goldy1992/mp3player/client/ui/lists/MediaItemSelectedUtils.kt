@@ -3,9 +3,9 @@ package com.github.goldy1992.mp3player.client.ui.lists
 import android.net.Uri
 import android.util.Log
 import androidx.navigation.NavController
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import java.util.EnumMap

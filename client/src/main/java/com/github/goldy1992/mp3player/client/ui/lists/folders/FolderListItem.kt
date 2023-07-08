@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folder
 
 @OptIn(
     ExperimentalFoundationApi::class

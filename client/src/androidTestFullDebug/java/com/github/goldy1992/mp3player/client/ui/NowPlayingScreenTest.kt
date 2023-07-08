@@ -6,7 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel

@@ -3,36 +3,28 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbums
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolders
-import com.github.goldy1992.mp3player.client.models.SearchResult
-import com.github.goldy1992.mp3player.client.models.Album
-import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
-import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
-import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
-import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Queue
-import com.github.goldy1992.mp3player.client.models.RepeatMode
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
-import com.github.goldy1992.mp3player.client.models.Song
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createMediaItem
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createPlaylist
-import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createRootChildren
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createSong
 import com.github.goldy1992.mp3player.client.data.sources.MediaDataSource
-import com.github.goldy1992.mp3player.client.models.Albums
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Folders
-import com.github.goldy1992.mp3player.client.models.SearchResults
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.Queue
+import com.github.goldy1992.mp3player.client.models.RepeatMode
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.SearchResult
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getLibraryParams
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.getRepeatMode
@@ -96,7 +88,8 @@ class DefaultMediaRepository
         return mediaDataSource.onChildrenChanged().map {
             ChildrenChangedEvent(
                 parentId = it.parentId,
-                itemCount = it.itemCount
+                itemCount = it.itemCount,
+                extras = LibraryParamsParser.parse(it.params)
             )
         }
     }

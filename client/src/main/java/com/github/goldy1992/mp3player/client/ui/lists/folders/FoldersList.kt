@@ -15,13 +15,13 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Folders
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folders
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.buttons.LoadingIndicator
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 

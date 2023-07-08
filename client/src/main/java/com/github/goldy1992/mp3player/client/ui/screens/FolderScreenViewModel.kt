@@ -3,9 +3,8 @@ package com.github.goldy1992.mp3player.client.ui.screens
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.models.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.models.Playlist
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist

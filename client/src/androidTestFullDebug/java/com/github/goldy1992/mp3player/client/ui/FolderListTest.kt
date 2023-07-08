@@ -8,10 +8,10 @@ import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Folders
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folders
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
-import com.github.goldy1992.mp3player.client.models.State
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test

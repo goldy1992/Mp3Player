@@ -1,10 +1,10 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
 data class Folders constructor(
     override val id: String = MediaItemType.FOLDERS.name,
-    val state: State = State.NOT_LOADED,
+    override val state: State = State.NOT_LOADED,
     val folders: List<Folder> = emptyList()
 ) : MediaEntity {
     override val type: MediaItemType = MediaItemType.FOLDERS

@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
@@ -6,7 +6,7 @@ import java.util.EnumMap
 
 class Root(
     override val id: String = Constants.UNKNOWN,
-    val state: State = State.NOT_LOADED,
+    override val state: State = State.NOT_LOADED,
     val childMap : EnumMap<MediaItemType, MediaEntity> = EnumMap(MediaItemType::class.java)
 ) : MediaEntity {
     override val type: MediaItemType = MediaItemType.ROOT

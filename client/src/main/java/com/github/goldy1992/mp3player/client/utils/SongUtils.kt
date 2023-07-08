@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.utils
 
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.LogTagger
 import org.apache.commons.lang3.StringUtils
 

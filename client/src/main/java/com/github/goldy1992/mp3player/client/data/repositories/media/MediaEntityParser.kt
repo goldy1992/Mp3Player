@@ -2,14 +2,14 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 
 import android.util.Log
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.models.Album
-import com.github.goldy1992.mp3player.client.models.Albums
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Folders
-import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.media.Albums
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folders
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.LogTagger
 
 

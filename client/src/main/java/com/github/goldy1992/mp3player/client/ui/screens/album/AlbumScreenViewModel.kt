@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.models.Album
+import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SetShuffleEnabled
@@ -46,12 +46,14 @@ constructor(savedStateHandle: SavedStateHandle,
         Log.d(logTag(), "AlbumScreenViewModel init, decoded album uri: $albumArtUri")
     }
 
-    private val _album : MutableStateFlow<Album> = MutableStateFlow(Album(
+    private val _album : MutableStateFlow<Album> = MutableStateFlow(
+        Album(
         id = albumId,
         title = albumTitle,
         artist = albumArtist,
         artworkUri = albumArtUri,
-    ))
+    )
+    )
     // The UI collects from this StateFlow to get its state updates
     val albumState : StateFlow<Album> = _album
 

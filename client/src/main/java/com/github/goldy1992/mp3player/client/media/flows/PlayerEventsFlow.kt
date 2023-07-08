@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class PlayerEventsFlow
 
 private constructor(scope: CoroutineScope,
-                     private val controllerFuture : ListenableFuture<out Player>,
+                     private val controllerFuture : ListenableFuture<Player>,
                      @MainDispatcher private val mainDispatcher : CoroutineDispatcher,
                      onCollect : suspend (Player.Events) -> Unit)
     : FlowBase<Player.Events>(scope, onCollect) {
@@ -25,7 +25,7 @@ private constructor(scope: CoroutineScope,
     companion object {
         fun create(
             scope: CoroutineScope,
-            controllerFuture : ListenableFuture<out Player>,
+            controllerFuture : ListenableFuture<Player>,
             @MainDispatcher mainDispatcher : CoroutineDispatcher,
             onCollect : suspend (Player.Events) -> Unit) : PlayerEventsFlow {
             val playerEventsFlow = PlayerEventsFlow(scope, controllerFuture, mainDispatcher,  onCollect)

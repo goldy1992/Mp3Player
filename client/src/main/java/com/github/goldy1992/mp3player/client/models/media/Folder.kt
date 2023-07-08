@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 import android.net.Uri
 import com.github.goldy1992.mp3player.commons.Constants
@@ -12,8 +12,8 @@ class Folder constructor(
     val encodedPath : String = Constants.UNKNOWN,
     val uri: Uri = Uri.EMPTY,
     val playlist: Playlist = Playlist(),
-    val state: State = State.NOT_LOADED,
-    val isRecursive : Boolean = false
+    val isRecursive : Boolean = false,
+    override val state: State = State.NOT_LOADED
 ) : MediaEntity {
     override val type: MediaItemType = MediaItemType.FOLDER
 }

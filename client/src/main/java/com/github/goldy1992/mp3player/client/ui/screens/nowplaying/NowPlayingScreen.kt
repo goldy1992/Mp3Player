@@ -24,7 +24,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton

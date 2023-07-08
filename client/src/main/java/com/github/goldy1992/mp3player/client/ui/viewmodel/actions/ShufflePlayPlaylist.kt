@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.viewmodel.actions
 
 import android.os.Bundle
-import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType

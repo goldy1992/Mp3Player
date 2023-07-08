@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
 

@@ -9,10 +9,10 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Song
-import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.models.State
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test

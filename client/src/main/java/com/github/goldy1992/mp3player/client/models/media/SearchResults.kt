@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 data class SearchResults(
     val state : State = State.NOT_LOADED,

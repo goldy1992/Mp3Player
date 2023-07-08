@@ -3,13 +3,15 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.setStateNoPermissions
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.models.Albums
-import com.github.goldy1992.mp3player.client.models.Folders
-import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.Albums
+import com.github.goldy1992.mp3player.client.models.media.Folders
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.State
+import com.github.goldy1992.mp3player.client.ui.utils.ExtrasUtils.hasPermissions
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
@@ -98,58 +100,35 @@ class LibraryScreenViewModel
                         }
 
                         albums.value.id -> {
-                            _albums.value =
+                            _albums.value = if (hasPermissions(it.extras)) {
                                 mediaRepository.getChildren(albums.value, 0, it.itemCount)
+                            } else {
+                                setStateNoPermissions(albums.value)
+                            }
                         }
 
                         folders.value.id -> {
-                            _folders.value =
+                            _folders.value = if (hasPermissions(it.extras)) {
                                 mediaRepository.getChildren(folders.value, 0, it.itemCount)
+                            } else {
+                                setStateNoPermissions(folders.value)
+                            }
                         }
 
                         songs.value.id -> {
-                            _songs.value = mediaRepository.getChildren(songs.value, 0, it.itemCount)
+                            _songs.value = if (hasPermissions(it.extras)) {
+                                mediaRepository.getChildren(songs.value, 0, it.itemCount)
+                            } else {
+                                setStateNoPermissions(songs.value)
+                            }
                         }
+
 
                         else -> {
                             Log.w(logTag(), "Received unknown id notification: ${it.parentId}")
                         }
                     }
                 }
-//                    else {
-//
-//                        val children = mediaRepository.getChildren(it.parentId, 0, it.itemCount)
-//                        val mediaItemType = idToMediaItemTypeMap[it.parentId] ?: MediaItemType.NONE
-//
-//                        if (isEmpty(children)) {
-//                            if (!hasPermissions(params = it.params!!)) {
-//                                when (mediaItemType) {
-//                                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_PERMISSIONS)
-//                                    MediaItemType.SONGS -> _songs.value = Playlist(State.NO_PERMISSIONS)
-//                                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_PERMISSIONS)
-//                                    MediaItemType.ROOT -> _rootChildren.value = RootChildren.NO_PERMISSIONS
-//                                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//
-//                                }
-//                            } else {
-//                                when (mediaItemType) {
-//                                    MediaItemType.ALBUMS -> _albums.value = Albums(State.NO_RESULTS)
-//                                    MediaItemType.SONGS -> _songs.value = Playlist(State.NO_RESULTS)
-//                                    MediaItemType.FOLDERS -> _folders.value = Folders(State.NO_RESULTS)
-//                                    MediaItemType.ROOT -> _rootChildren.value = RootChildren.NO_RESULTS
-//                                    else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//                                }
-//                            }
-//                        } else {
-//                            when (mediaItemType) {
-//                                MediaItemType.ALBUMS -> _albums.value = createAlbums(State.LOADED, children)
-//                                MediaItemType.SONGS -> _songs.value = createPlaylist(State.LOADED, children, id = MediaItemType.SONGS.name)
-//                                MediaItemType.FOLDERS -> _folders.value = createFolders(State.LOADED, children)
-//                                MediaItemType.ROOT -> _rootChildren.value = createRootItems(State.LOADED, children)
-//                                else -> Log.w(logTag(), "mediaRepository.onChildrenChanged() collect: Unsupported MediaItemType: $mediaItemType loaded.")
-//                            }
-//                        }
-
         }
     }
 

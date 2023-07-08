@@ -8,10 +8,10 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
-import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel

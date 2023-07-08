@@ -34,11 +34,11 @@ import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
-import com.github.goldy1992.mp3player.client.models.Album
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.SearchResults
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent

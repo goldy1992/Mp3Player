@@ -3,22 +3,23 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 import android.net.Uri
 import android.util.Log
 import androidx.media3.common.MediaItem
-import com.github.goldy1992.mp3player.client.models.Album
-import com.github.goldy1992.mp3player.client.models.Albums
-import com.github.goldy1992.mp3player.client.models.Folder
-import com.github.goldy1992.mp3player.client.models.Folders
-import com.github.goldy1992.mp3player.client.models.MediaEntity
-import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.media.Albums
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Folders
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateAlbum
 import com.github.goldy1992.mp3player.client.models.PlaylistCopier.populateFolder
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.Song
-import com.github.goldy1992.mp3player.client.models.State
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
+import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import java.util.EnumMap
 
-object MediaEntityUtils {
+object MediaEntityUtils : LogTagger {
 
     fun createRootChildren(root: Root, mediaItems : List<MediaItem>) : Root {
         return if (mediaItems.isEmpty()) {
@@ -50,7 +51,7 @@ object MediaEntityUtils {
             }
              Root(
                 id = root.id,
-                 state=State.LOADED,
+                 state= State.LOADED,
                 childMap = EnumMap(rootChildMap)
             )
         }
@@ -60,7 +61,7 @@ object MediaEntityUtils {
     fun createAlbums(currentAlbum: Albums, mediaItems : List<MediaItem>) : Albums {
         val albums : List<Album> = mediaItems.map { createAlbum(it) }.toList()
         val state = if (albums.isEmpty()) State.NO_RESULTS else State.LOADED
-        return Albums(currentAlbum.id, state, albums)
+        return Albums(currentAlbum.id, albums, state)
     }
 
     fun createAlbum(currentAlbum: Album, albumChildren : List<MediaItem>) : Album {
@@ -89,11 +90,12 @@ object MediaEntityUtils {
 
     fun createPlaylist(
         playlist: Playlist,
-        songs: List<MediaItem>,
+        mediaItems: List<MediaItem>,
     ) : Playlist {
-        val songs = songs.map { createSong(it) }
+        val songs = mediaItems.map { createSong(it) }
         val duration = songs.sumOf { it.duration }
         val state = if (songs.isEmpty()) State.NO_RESULTS else State.LOADED
+
         return Playlist(
             id = playlist.id,
             state = state,
@@ -146,5 +148,48 @@ object MediaEntityUtils {
         val state = if (foldersList.isEmpty()) State.NO_RESULTS else State.LOADED
         return Folders(folders.id, state, foldersList
         )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : MediaEntity> setStateNoPermissions(mediaEntity: T) : T  {
+        if (mediaEntity is Root) {
+            return Root(
+                id = mediaEntity.id,
+                childMap = mediaEntity.childMap,
+                state = State.NO_PERMISSIONS
+            ) as T
+        }
+
+        if (mediaEntity is Folders) {
+            return Folders(
+                id = mediaEntity.id,
+                folders = mediaEntity.folders,
+                state = State.NO_PERMISSIONS
+            ) as T
+        }
+
+        if (mediaEntity is Albums) {
+            return Albums(
+                id = mediaEntity.id,
+                albums = mediaEntity.albums,
+                state = State.NO_PERMISSIONS
+            ) as T
+        }
+
+        if (mediaEntity is Playlist) {
+            return Playlist(
+                id = mediaEntity.id,
+                songs = mediaEntity.songs,
+                duration = mediaEntity.duration,
+                state = State.NO_PERMISSIONS
+            ) as T
+        }
+
+        Log.w(logTag(), "setStateNoPermissions() invoked with unsupported MediaEntity: ${mediaEntity.javaClass}, returning the original object!")
+        return mediaEntity
+    }
+
+    override fun logTag(): String {
+        return "MediaEntityUtils"
     }
 }

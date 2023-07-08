@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.models
+package com.github.goldy1992.mp3player.client.models.media
 
 import android.net.Uri
 import com.github.goldy1992.mp3player.commons.Constants
@@ -13,7 +13,7 @@ data class Album
         val releaseYear : String = Constants.UNKNOWN,
         val playlist: Playlist = Playlist(state= State.NO_RESULTS),
         val artworkUri : Uri = Uri.EMPTY,
-        val state : State = State.NO_RESULTS
+        override val state: State = State.NOT_LOADED
     ) : MediaEntity {
     override val type: MediaItemType = MediaItemType.ALBUM
 }

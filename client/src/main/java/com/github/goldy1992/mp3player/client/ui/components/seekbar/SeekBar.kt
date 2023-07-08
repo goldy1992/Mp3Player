@@ -21,7 +21,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition

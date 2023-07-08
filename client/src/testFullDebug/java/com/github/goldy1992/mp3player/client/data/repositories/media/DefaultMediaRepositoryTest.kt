@@ -18,13 +18,13 @@ import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
 import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
 import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.models.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.Queue
 import com.github.goldy1992.mp3player.client.models.RepeatMode
-import com.github.goldy1992.mp3player.client.models.Root
-import com.github.goldy1992.mp3player.client.models.SearchResults
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
 import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder

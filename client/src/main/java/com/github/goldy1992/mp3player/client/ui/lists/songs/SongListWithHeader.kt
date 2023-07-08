@@ -9,8 +9,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.Playlist
-import com.github.goldy1992.mp3player.client.models.Song
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 
 @ExperimentalCoilApi
