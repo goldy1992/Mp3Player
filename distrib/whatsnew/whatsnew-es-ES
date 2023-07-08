@@ -1,0 +1,7 @@
+Agregado ajuste para seleccionar idioma; acutalmente está disponsible en inglés y español.
+
+Acerca de la app opción en los ajustes.
+
+Corregido bug visual en algunos dispositivos, el album art no usaba todo el espacio disponbile.
+
+Hecho un refactor del código interno para mejorar el process del desarrollo.

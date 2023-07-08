@@ -1,1 +1,7 @@
-Added customisable permissions on the Settings Screen.
+Added Settings option to be able to select language; currently English and Spanish are supported.
+
+About Menu Item has been added in the Settings Menu.
+
+Fixed visual bug displaying albums on some devices.
+
+Internal code refactor to help speed up the development process.
