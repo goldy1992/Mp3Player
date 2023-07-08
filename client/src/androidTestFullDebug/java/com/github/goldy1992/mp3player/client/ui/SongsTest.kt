@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui
 
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -10,10 +9,10 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.ui.states.State
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -52,12 +51,12 @@ class SongsTest {
         val songsListContentDescr = context.getString(R.string.songs_list)
 
         val songList : List<Song> = listOf(song1, song2)
-        val songs = Songs(state = State.LOADED,
+        val playlist = Playlist(state = State.LOADED,
         songs = songList
         )
 
         composeTestRule.setContent {
-            SongList(songs = songs,
+            SongList(playlist = playlist,
                 isPlayingProvider = { false },
                 currentSongProvider = { Song()  },
                 onSongSelected = {_,_ ->},

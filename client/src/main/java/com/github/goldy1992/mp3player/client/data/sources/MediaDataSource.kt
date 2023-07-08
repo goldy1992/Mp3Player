@@ -7,11 +7,11 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 
@@ -39,11 +39,11 @@ interface MediaDataSource {
 
     fun playbackParameters() : Flow<PlaybackParameters>
 
-    fun playbackPosition() : Flow<PlaybackPositionEvent>
+    fun playbackPosition() : Flow<OnPlaybackPositionChangedEvent>
 
     fun playbackSpeed() : Flow<Float>
 
-    fun queue() : Flow<QueueState>
+    fun queue() : Flow<OnQueueChangedEventHolder>
 
     fun repeatMode() : Flow<@Player.RepeatMode Int>
 
@@ -67,11 +67,11 @@ interface MediaDataSource {
 
     suspend fun play(mediaItem : MediaItem)
 
-    suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata)
+    suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistId : String)
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)
 
-    suspend fun prepareFromMediaId(mediaItem: MediaItem)
+    suspend fun prepareFromMediaId(mediaId : String)
 
     suspend fun search(query: String, extras: Bundle)
 

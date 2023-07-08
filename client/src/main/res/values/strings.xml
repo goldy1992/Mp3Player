@@ -1,4 +1,6 @@
 <resources>
+    <string name="about">About</string>
+    <string name="about_description">This app has been a personal project that started way back in October 2017. Used as an introduction to android development, it started out as a simple application to play a music file on your android device. It has evolved into a simple but fully functional local music player and library. The evolution of the app tries to align with the ever-changing Android Development best practices and is built on-top of a fully automated CI/CD Pipeline.</string>
     <string name="album">Album</string>
     <string name="albums">Albums</string>
     <string name="allow_audio_playback">Allow Audio Playback</string>
@@ -20,6 +22,7 @@
     <string name="folder_icon">Folder Icon</string>
     <string name="folder_list">Folder List</string>
     <string name="help">Help</string>
+    <string name="language">Language</string>
     <string name="loading">Loading</string>
     <string name="library">Library</string>
     <string name="navigation_drawer_menu_icon">Navigation Drawer Menu Icon</string>
@@ -44,6 +47,7 @@
     <string name="search_hint">Search media</string>
     <string name="search_results_column">Search Results Column</string>
     <string name="search_text_field">Search Text Field</string>
+    <string name="select_language">Select Language</string>
     <string name="settings">Settings</string>
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>

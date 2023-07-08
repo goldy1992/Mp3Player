@@ -20,13 +20,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.media3.common.MediaMetadata
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
 import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
-import com.github.goldy1992.mp3player.commons.MetadataUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -34,7 +33,7 @@ private const val LOG_TAG = "SeekBar"
 
 @Composable
 fun SeekBar(isPlayingProvider: () -> Boolean = {true},
-            metadataProvider: () -> MediaMetadata = {MediaMetadata.EMPTY},
+            currentSongProvider: () -> Song = { Song.DEFAULT},
             playbackSpeedProvider : () ->  Float = {1.0f},
             playbackPositionProvider: () -> PlaybackPositionEvent = {PlaybackPositionEvent.DEFAULT},
             seekTo: (value: Long) -> Unit = {},
@@ -42,10 +41,10 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
 
     Log.v(LOG_TAG, "SeekBar() recomposed")
     val isPlaying = isPlayingProvider()
-    val metadata = metadataProvider()
+    val song = currentSongProvider()
     val playbackSpeed = playbackSpeedProvider()
     val playbackPositionEvent = playbackPositionProvider()
-    val duration = MetadataUtils.getDuration(metadata).toFloat()
+    val duration = song.duration.toFloat()
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
     val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)

@@ -23,7 +23,7 @@ private val coverageExclusions = listOf (
     "**/ui/**", // ui coverage done in Android Tests
     "android/**/*.*",
     "**/dagger/**",
-    "**/databinding/**",
+    "**/repositories/preferences/**", // ui coverage done in Android Tests
     "**/hilt_aggregated_deps/**",
     "**/Hilt_**"
 )

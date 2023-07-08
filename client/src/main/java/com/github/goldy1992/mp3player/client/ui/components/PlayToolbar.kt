@@ -14,7 +14,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.Song
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
@@ -43,8 +43,9 @@ fun PlayToolbar(isPlayingProvider : () -> Boolean = {false},
                 onClickPause = onClickPause)
             SkipToNextButton(onClick = onClickSkipNext)
         }
-        Row(modifier = Modifier.weight(0.2f)
-            .padding(top=12.dp, bottom = 12.dp, end=16.dp, start = 16.dp),
+        Row(modifier = Modifier
+            .weight(0.2f)
+            .padding(top = 12.dp, bottom = 12.dp, end = 16.dp, start = 16.dp),
             horizontalArrangement = Arrangement.End) {
 
             val currentSong = currentSongProvider()

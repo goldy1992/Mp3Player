@@ -9,14 +9,16 @@ data class Settings
         val darkMode : Boolean = false,
         val useSystemDarkMode : Boolean = true,
         val theme : Theme = Theme.BLUE,
-        val dynamicColor : Boolean = false
+        val dynamicColor : Boolean = false,
+        val language : String = "en"
     ) {
 
     enum class Type {
         DARK_MODE,
         USE_SYSTEM_DARK_MODE,
         THEME,
-        DYNAMIC_COLOR
+        DYNAMIC_COLOR,
+        LANGUAGE
     }
 
     companion object {

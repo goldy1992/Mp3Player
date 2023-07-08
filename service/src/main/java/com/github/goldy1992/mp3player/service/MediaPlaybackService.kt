@@ -27,6 +27,9 @@ open class MediaPlaybackService : MediaLibraryService(),
         LogTagger {
 
     @Inject
+    lateinit var componentClassMapper: ComponentClassMapper
+
+    @Inject
     lateinit var mediaSessionCreator: MediaSessionCreator
 
     @Inject
@@ -35,6 +38,7 @@ open class MediaPlaybackService : MediaLibraryService(),
 
     private var mediaSession: MediaLibrarySession? = null
 
+    @ServiceCoroutineScope
     @Inject
     lateinit var scope: CoroutineScope
 
@@ -82,13 +86,21 @@ open class MediaPlaybackService : MediaLibraryService(),
         }
     }
 
+    override fun onUpdateNotification(session: MediaSession, startInForegroundRequired: Boolean) {
+        Log.d(logTag(), "onUpdateNotification() $session startInForeground $startInForegroundRequired")
+        super.onUpdateNotification(session, startInForegroundRequired)
+    }
+
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
         Log.v(logTag(), "onGetSession() invoked")
        return mediaSession
     }
 
     override fun stopService(name: Intent?): Boolean {
-        Log.v(logTag(), "stopService() invoked with intent data: ${name?.data}, action: ${name?.action}")
+        Log.v(
+            logTag(),
+            "stopService() invoked with intent data: ${name?.data}, action: ${name?.action}"
+        )
         savePlayerState()
         return super.stopService(name)
     }

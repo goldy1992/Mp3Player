@@ -6,17 +6,23 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.session.MediaLibraryService
+import androidx.media3.session.SessionToken
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MediaBrowserTestImpl() : IMediaBrowser {
+    override fun init(sessionToken: SessionToken, scope: CoroutineScope) {
+        TODO("Not yet implemented")
+    }
+
     override fun audioData(): Flow<AudioSample> {
         return flow {}
     }
@@ -57,7 +63,7 @@ class MediaBrowserTestImpl() : IMediaBrowser {
         return flow {}
     }
 
-    override fun playbackPosition(): Flow<PlaybackPositionEvent> {
+    override fun playbackPosition(): Flow<OnPlaybackPositionChangedEvent> {
         return flow {}
     }
 
@@ -65,7 +71,7 @@ class MediaBrowserTestImpl() : IMediaBrowser {
         return flow {}
     }
 
-    override fun queue(): Flow<QueueState> {
+    override fun queue(): Flow<OnQueueChangedEventHolder> {
         return flow {}
     }
 
@@ -117,18 +123,24 @@ class MediaBrowserTestImpl() : IMediaBrowser {
     override suspend fun playFromPlaylist(
         items: List<MediaItem>,
         itemIndex: Int,
-        playlistMetadata: MediaMetadata
+        playlistId: String
     ) {
-        
+
     }
+
+    override suspend fun playFromPlaylist(playlistId: String, itemIndex: Int) {
+
+    }
+
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
         
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
-        
+    override suspend fun prepareFromMediaId(mediaId: String) {
+
     }
+
 
     override suspend fun search(query: String, extras: Bundle) {
         

@@ -18,3 +18,16 @@ annotation class MainDispatcher
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class MainImmediateDispatcher
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class ActivityCoroutineScope
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class ServiceCoroutineScope
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class SingletonCoroutineScope
+

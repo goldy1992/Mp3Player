@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.service.dagger.modules.service
 
 import android.content.ContentResolver
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.filter.FolderSearchResultsFilter
 import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
@@ -29,7 +30,7 @@ class CustomContentSearchersModule {
                              resultsParser: SongResultsParser,
                              mediaItemTypeIds: MediaItemTypeIds,
                              songDao: SongDao,
-                             scope: CoroutineScope
+                             @ServiceCoroutineScope scope: CoroutineScope
                              ) : SongSearcher {
         return SongSearcher(contentResolver, resultsParser, mediaItemTypeIds, songDao, scope)
     }
@@ -41,7 +42,7 @@ class CustomContentSearchersModule {
                                folderResultsFilter : FolderSearchResultsFilter,
                                mediaItemTypeIds: MediaItemTypeIds,
                                folderDao: FolderDao,
-                               scope: CoroutineScope
+                               @ServiceCoroutineScope scope: CoroutineScope
     ) : FolderSearcher {
         return FolderSearcher(contentResolver,
                 resultsParser,
@@ -57,7 +58,7 @@ class CustomContentSearchersModule {
                               resultsParser: AlbumsResultsParser,
                               mediaItemTypeIds: MediaItemTypeIds,
                               albumDao: AlbumDao,
-                              scope: CoroutineScope
+                              @ServiceCoroutineScope scope: CoroutineScope
     ) : AlbumSearcher {
         return AlbumSearcher(contentResolver,
             resultsParser,

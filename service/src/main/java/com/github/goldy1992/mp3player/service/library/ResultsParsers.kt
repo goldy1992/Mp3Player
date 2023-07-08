@@ -5,7 +5,7 @@ import com.github.goldy1992.mp3player.service.library.content.parser.FolderResul
 import com.github.goldy1992.mp3player.service.library.content.parser.ResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import dagger.hilt.android.scopes.ServiceScoped
-import java.util.*
+import java.util.EnumMap
 import javax.inject.Inject
 
 @ServiceScoped

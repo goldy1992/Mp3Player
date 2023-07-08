@@ -4,27 +4,36 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
 import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
-import com.github.goldy1992.mp3player.commons.*
+import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
+import com.github.goldy1992.mp3player.commons.ComponentClassMapper
+import com.github.goldy1992.mp3player.commons.DefaultDispatcher
+import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.github.goldy1992.mp3player.commons.PermissionsUtils.getAppPermissions
+import com.github.goldy1992.mp3player.commons.Screen
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
  * The Main Activity
  */
-@AndroidEntryPoint(ComponentActivity::class)
-open class MainActivity : Hilt_MainActivity(), LogTagger {
+@AndroidEntryPoint
+open class MainActivity : AppCompatActivity(), LogTagger {
 
     @Inject
     lateinit var componentClassMapper : ComponentClassMapper
@@ -32,9 +41,13 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
     @Inject
     lateinit var permissionsRepository: IPermissionsRepository
 
+    @Inject
+    lateinit var sessionToken: SessionToken
+
     /**
      *
      */
+    @ActivityCoroutineScope
     @Inject
     lateinit var scope: CoroutineScope
 
@@ -69,6 +82,7 @@ open class MainActivity : Hilt_MainActivity(), LogTagger {
         super.onCreate(savedInstanceState)
         Log.v(logTag(), "onCreate() call to super.onCreate() complete")
 
+        this.mediaBrowser.init(sessionToken, scope)
 
         // If app has already been created set the UI to initialise at the main screen.
         val appAlreadyCreated = savedInstanceState != null

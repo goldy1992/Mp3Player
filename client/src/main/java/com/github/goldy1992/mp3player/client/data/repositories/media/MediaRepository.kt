@@ -2,16 +2,20 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import androidx.media3.common.PlaybackParameters
-import androidx.media3.common.Player
-import androidx.media3.session.MediaLibraryService
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import androidx.annotation.IntRange
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.Queue
+import com.github.goldy1992.mp3player.client.models.RepeatMode
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 
@@ -19,9 +23,9 @@ interface MediaRepository {
 
     fun audioData() : Flow<AudioSample>
 
-    fun currentMediaItem() : Flow<MediaItem>
+    fun currentSong() : Flow<Song>
 
-    fun currentPlaylistMetadata() : Flow<MediaMetadata>
+    fun currentPlaylistId() : Flow<String>
 
     fun currentSearchQuery() : Flow<String>
 
@@ -29,55 +33,62 @@ interface MediaRepository {
 
     fun isShuffleModeEnabled() : Flow<Boolean>
 
-    fun metadata() : Flow<MediaMetadata>
+    fun onChildrenChanged() : Flow<ChildrenChangedEvent>
 
-    fun onChildrenChanged() : Flow<OnChildrenChangedEventHolder>
+    fun onCustomCommand() : Flow<CustomCommandEvent>
 
-    fun onCustomCommand() : Flow<SessionCommandEventHolder>
+    fun onSearchResultsChanged() : Flow<SearchResultsChangedEvent>
 
-    fun onSearchResultsChanged() : Flow<OnSearchResultsChangedEventHolder>
-
-    fun playbackParameters() : Flow<PlaybackParameters>
+    fun playbackParameters() : Flow<PlaybackParametersEvent>
 
     fun playbackPosition() : Flow<PlaybackPositionEvent>
 
     fun playbackSpeed() : Flow<Float>
 
-    fun queue() : Flow<QueueState>
+    fun queue() : Flow<Queue>
 
-    fun repeatMode() : Flow<@Player.RepeatMode Int>
+    fun repeatMode() : Flow<RepeatMode>
 
     suspend fun changePlaybackSpeed(speed : Float)
 
-    suspend fun getChildren(parentId : String,
-                            @androidx.annotation.IntRange(from = 0) page : Int = 0,
-                            @androidx.annotation.IntRange(from = 1) pageSize : Int = 20,
-                            params : MediaLibraryService.LibraryParams = MediaLibraryService.LibraryParams.Builder().build()
-    ) : List<MediaItem>
+    suspend fun <T : MediaEntity> getChildren(
+        parent: T,
+        @IntRange(from = 0) page: Int = 0,
+        @IntRange(from = 1) pageSize: Int = 20,
+        params: Bundle = Bundle(),
+    ) : T
 
-    suspend fun getLibraryRoot() : MediaItem
+    suspend fun getLibraryRoot() : Root
+
+    suspend fun getPlaylist(playlistId : String,
+                            @IntRange(from = 0) page : Int = 0,
+                            @IntRange(from = 1) pageSize : Int = 20,
+                            params: Bundle = Bundle()) : Playlist
 
     suspend fun getCurrentPlaybackPosition(): Long
 
-    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : List<MediaItem>
+    suspend fun getSearchResults(query: String, page : Int = 0, pageSize : Int = 20) : SearchResults
 
     suspend fun pause()
 
     suspend fun play()
 
-    suspend fun play(mediaItem : MediaItem)
+    suspend fun play(song: Song)
 
-    suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata)
+
+    suspend fun playAlbum(album: Album, startIndex : Int)
+
+    suspend fun playPlaylist(playlist: Playlist, startIndex: Int)
 
     suspend fun playFromUri(uri: Uri?, extras: Bundle?)
 
-    suspend fun prepareFromMediaId(mediaItem: MediaItem)
+    suspend fun prepareFromId(mediaId : String)
 
     suspend fun search(query: String, extras: Bundle)
 
     suspend fun seekTo(position : Long)
 
-    suspend fun setRepeatMode(@Player.RepeatMode repeatMode: Int)
+    suspend fun setRepeatMode(repeatMode: RepeatMode)
 
     suspend fun setShuffleMode(shuffleModeEnabled : Boolean)
 

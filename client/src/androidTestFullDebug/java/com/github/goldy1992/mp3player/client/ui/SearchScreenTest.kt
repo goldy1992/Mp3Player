@@ -8,10 +8,15 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.SearchResult
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import org.junit.Assert.*
@@ -47,6 +52,7 @@ class SearchScreenTest {
     /**
      * Tests that the query is updated correctly when we perform text input.
      */
+    @OptIn(ExperimentalTestApi::class)
     @Test
     fun testSearchBarOnValueChange() {
         composeTestRule.setContent {
@@ -57,7 +63,8 @@ class SearchScreenTest {
         }
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
 
-        composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextInput("ab")
+        composeTestRule.onNodeWithContentDescription(searchTextFieldName).performTextReplacement("ab")
+        composeTestRule.waitUntilExactlyOneExists(hasText("ab"))
         composeTestRule.onNodeWithContentDescription(searchTextFieldName).assert(hasText("ab"))
     }
 
@@ -67,17 +74,16 @@ class SearchScreenTest {
     @OptIn(ExperimentalFoundationApi::class)
     @Test
     fun testSearchResultsDisplayedCorrectly() {
+        val searchQuery = "query"
         val expectedLibId= "sdfsdf"
         val songTitle = "songTitle"
-        val songItem = MediaItemBuilder("a")
-            .setLibraryId(expectedLibId)
-            .setMediaItemType(MediaItemType.SONG)
-            .setDuration(10000L)
-            .setTitle(songTitle)
-            .build()
+        val songDuration = 10000L
+        val song = Song(id = expectedLibId, title = songTitle, duration = songDuration)
+        val songSearchResult = SearchResult(id = searchQuery, type = MediaItemType.SONG, value = song)
 
         val folderName = "/c/folder1"
         val libId = "3fk4"
+
 
         val folderItem = MediaItemBuilder("a")
             .setMediaItemType(MediaItemType.FOLDER)
@@ -86,9 +92,14 @@ class SearchScreenTest {
             .setDirectoryFile(File(folderName))
             .build()
 
-        testMediaRepository.searchResults = listOf(songItem, folderItem)
+        val folder = Folder(id = "a", name = folderName)
+        val folderSearchResult = SearchResult(id = searchQuery, type = MediaItemType.FOLDER, value = folder)
+
+        testMediaRepository.searchResults = SearchResults(
+            State.LOADED,  listOf(songSearchResult, folderSearchResult))
+
         // push a change of state of change to search results
-        testMediaRepository.searchResultsChangedState.value = OnSearchResultsChangedEventHolder("newQuery", 2)
+        testMediaRepository.searchResultsChangedState.value = SearchResultsChangedEvent(searchQuery, 2)
         val searchResultsColumn = context.resources.getString(R.string.search_results_column)
 
         composeTestRule.setContent {

@@ -8,11 +8,11 @@ import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -78,7 +78,7 @@ class DefaultMediaDataSource
         return mediaBrowser.playbackParameters()
     }
 
-    override fun playbackPosition(): Flow<PlaybackPositionEvent> {
+    override fun playbackPosition(): Flow<OnPlaybackPositionChangedEvent> {
         return mediaBrowser.playbackPosition()
     }
 
@@ -86,7 +86,7 @@ class DefaultMediaDataSource
         return mediaBrowser.playbackSpeed()
     }
 
-    override fun queue(): Flow<QueueState> {
+    override fun queue(): Flow<OnQueueChangedEventHolder> {
         return mediaBrowser.queue()
     }
 
@@ -135,16 +135,16 @@ class DefaultMediaDataSource
         mediaBrowser.play(mediaItem)
     }
 
-    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
-        mediaBrowser.playFromPlaylist(items, itemIndex, playlistMetadata)
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistId : String) {
+        mediaBrowser.playFromPlaylist(items, itemIndex, playlistId)
     }
 
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
         mediaBrowser.playFromUri(uri, extras)
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
-        mediaBrowser.prepareFromMediaId(mediaItem)
+    override suspend fun prepareFromMediaId(mediaId: String) {
+        mediaBrowser.prepareFromMediaId(mediaId)
     }
 
     override suspend fun search(query: String, extras: Bundle) {

@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
+import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,22 +25,10 @@ class VisualizerViewModel
 @Inject
 constructor(
     private val audioDataProcessor: AudioDataProcessor,
-    private val mediaRepository: MediaRepository,
-) : LogTagger, ViewModel() {
-
-    // isPlaying
-    private val _isPlayingState = MutableStateFlow(false)
-    val isPlaying : StateFlow<Boolean> = _isPlayingState
-
-    init {
-        viewModelScope.launch {
-            mediaRepository
-                .isPlaying()
-                .collect {
-                    _isPlayingState.value = it
-                }
-        }
-    }
+    override val mediaRepository: MediaRepository,
+) : Pause, Play, SkipToNext, SkipToPrevious, ViewModel() {
+    override val scope = viewModelScope
+    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
 
     // Backing property to avoid state updates from other classes
     private val _audioData = MutableStateFlow(emptyList<Float>())
@@ -48,37 +38,19 @@ constructor(
 
     init {
         viewModelScope.launch {
-            mediaRepository.audioData()
-            .shareIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                replay = 1
-            )
-            .collect { audioData ->
-                if (isPlaying.value) {
-                    Log.i(logTag(), "collecting audio data")
-                    _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
-                    Log.i(logTag(), "finished collecting audio data")
-                }
+            mediaRepository
+                .audioData()
+                .collect { audioData ->
+                    Log.d(logTag(), "collecting audio data")
+                    if (isPlaying.state().value) {
+                        _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
+                        Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
+                    } else {
+                        Log.v(logTag(), "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
+                    }
             }
         }
 
-    }
-
-    fun play() {
-        viewModelScope.launch { mediaRepository.play() }
-    }
-
-    fun pause() {
-        viewModelScope.launch { mediaRepository.pause() }
-    }
-
-    fun skipToNext() {
-        viewModelScope.launch { mediaRepository.skipToNext() }
-    }
-
-    fun skipToPrevious() {
-        viewModelScope.launch { mediaRepository.skipToPrevious() }
     }
 
     override fun logTag(): String {

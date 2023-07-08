@@ -21,10 +21,11 @@ data class UserPreferences(
     val darkMode: Boolean = true,
     val systemDarkMode : Boolean = false,
     val theme: String = "None",
-    val useDynamicColor: Boolean = false
+    val useDynamicColor: Boolean = false,
+    val language : String = "en"
 )  {
     companion object {
-        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true)
+        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true, language = "en")
     }
 }
 
@@ -41,6 +42,7 @@ open class UserPreferencesRepository
         val DARK_MODE = booleanPreferencesKey("dark_mode")
         val USE_SYSTEM_DARK_MODE = booleanPreferencesKey("system_dark_mode")
         val USE_DYNAMIC_COLOR = booleanPreferencesKey("use_dynamic_color")
+        val LANGUAGE = stringPreferencesKey("language")
     }
 
     /**
@@ -65,7 +67,9 @@ open class UserPreferencesRepository
             // default to System dark mode if no preferences are stored!
             val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
             val useDynamicColor : Boolean = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: true
-            val userPreferences = UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor)
+            val language : String = preferences[PreferencesKeys.LANGUAGE] ?: "en"
+            val userPreferences = UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor, language)
+
             Log.d(logTag(), "userPreferencesFlow: preferences mapped to $userPreferences")
             userPreferences
         }
@@ -98,28 +102,9 @@ open class UserPreferencesRepository
         }
     }
 
-    override fun getTheme() : Flow<Theme> {
-        return userPreferencesFlow.map { preferences ->
-            val currentTheme = preferences.theme
-            Theme.valueOf(currentTheme)
-        }
-    }
-
-    override fun getDarkMode() : Flow<Boolean> {
-       return userPreferencesFlow.map { preferences ->
-           preferences.darkMode
-        }
-    }
-
-    override fun getSystemDarkMode() : Flow<Boolean> {
-        return userPreferencesFlow.map {
-            preferences -> preferences.systemDarkMode
-        }
-    }
-
-    override fun getUseDynamicColor(): Flow<Boolean> {
-        return userPreferencesFlow.map {
-                preferences -> preferences.useDynamicColor
+    override suspend fun updateLanguage(language: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LANGUAGE] = language
         }
     }
 

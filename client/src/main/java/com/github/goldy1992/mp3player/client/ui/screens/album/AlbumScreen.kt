@@ -42,7 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.github.goldy1992.mp3player.client.data.Album
+import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
@@ -67,9 +67,9 @@ fun AlbumScreen(
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
 
-    val isPlaying by viewModel.isPlaying.collectAsState()
-    val isShuffleModeEnabled by viewModel.shuffleModeEnabled.collectAsState()
-    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val isShuffleModeEnabled by viewModel.shuffleEnabled.state().collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
     val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
 
@@ -89,7 +89,7 @@ fun AlbumScreen(
         ShuffleButton(
             modifier = Modifier.size(40.dp),
             shuffleEnabledProvider = { isShuffleModeEnabled },
-            onClick = { viewModel.setShuffleMode(!isShuffleModeEnabled)}
+            onClick = { viewModel.setShuffleEnabled(isShuffleModeEnabled)}
         )
     }
     val onAlbumSongSelected : (Int) -> Unit = { itemIndex ->
@@ -108,7 +108,7 @@ fun AlbumScreen(
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val albumSongs = album.songs.songs
+    val albumSongs = album.playlist.songs
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         bottomBar = bottomBar,
@@ -176,21 +176,21 @@ private fun AlbumHeaderItem(
     ) {
         val album = albumProvider()
         Card {
-            AlbumArtAsync(uri = album.albumArt, contentDescription = album.albumTitle, modifier = Modifier.size(200.dp))
+            AlbumArtAsync(uri = album.artworkUri, contentDescription = album.title, modifier = Modifier.size(200.dp))
         }
 
         Column(
             Modifier.padding(7.dp),
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = album.albumArtist,
+                text = album.artist,
                 style = MaterialTheme.typography.labelLarge
             )
             val singularSong = "song"
             val pluralSongs = "songs"
-            val numOfSongs = album.songs.songs.size
+            val numOfSongs = album.playlist.songs.size
             val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
-            val duration = TimerUtils.formatTime(album.totalDuration)
+            val duration = TimerUtils.formatTime(album.playlist.duration)
             val summary = "$numOfSongs $songDescr | $duration"
             Text(
                 text = summary,
@@ -203,7 +203,8 @@ private fun AlbumHeaderItem(
                 verticalAlignment = Alignment.CenterVertically) {
                 shuffleButton()
                 Spacer(modifier = Modifier.width(12.dp))
-                Divider(modifier = Modifier.fillMaxHeight()
+                Divider(modifier = Modifier
+                    .fillMaxHeight()
                     .width(1.dp),
                     thickness = 1.dp)
                 Spacer(modifier = Modifier.width(12.dp))
@@ -220,7 +221,7 @@ private fun AlbumHeaderItem(
 @Preview
 @Composable
 fun AlbumAppBar(modifier: Modifier = Modifier,
-                albumProvider: () -> Album = {Album() },
+                albumProvider: () -> Album = { Album() },
                 scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
                 scope: CoroutineScope = rememberCoroutineScope(),
                 navController: NavController = rememberAnimatedNavController()) {
@@ -228,7 +229,7 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
     LargeTopAppBar(
         modifier = modifier,
         title = {
-            Text(album.albumTitle)
+            Text(album.title)
         },
         navigationIcon = {
                 IconButton(onClick = {

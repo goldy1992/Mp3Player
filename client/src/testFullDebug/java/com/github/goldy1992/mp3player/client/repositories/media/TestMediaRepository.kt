@@ -2,18 +2,20 @@ package com.github.goldy1992.mp3player.client.repositories.media
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import androidx.media3.common.PlaybackParameters
-import androidx.media3.common.Player
-import androidx.media3.common.Player.RepeatMode
-import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.OnSearchResultsChangedEventHolder
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.ChildrenChangedEvent
+import com.github.goldy1992.mp3player.client.models.CustomCommandEvent
+import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.models.PlaybackParametersEvent
+import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.Queue
+import com.github.goldy1992.mp3player.client.models.RepeatMode
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.client.models.media.SearchResults
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.AudioSample
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,14 +32,15 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    val currentMediaItemState = MutableStateFlow(MediaItem.EMPTY)
-    override fun currentMediaItem(): Flow<MediaItem> {
-        return currentMediaItemState
+    val currentSongState = MutableStateFlow(Song.DEFAULT)
+    override fun currentSong(): Flow<Song> {
+        return currentSongState
     }
 
-    override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
+    override fun currentPlaylistId(): Flow<String> {
         TODO("Not yet implemented")
     }
+
 
     val currentSearchQuery = MutableStateFlow("")
     override fun currentSearchQuery(): Flow<String> {
@@ -54,81 +57,77 @@ class TestMediaRepository
         return isShuffleModeEnabledState
     }
 
-    val metadataState : MutableStateFlow<MediaMetadata> = MutableStateFlow(MediaMetadata.EMPTY)
-    override fun metadata(): Flow<MediaMetadata> {
-        return metadataState
-    }
-
-    val onChildrenChangedState = MutableStateFlow<OnChildrenChangedEventHolder>(
-        OnChildrenChangedEventHolder.DEFAULT)
-    override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        return onChildrenChangedState
-    }
-
-    override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
+    override fun onChildrenChanged(): Flow<ChildrenChangedEvent> {
         TODO("Not yet implemented")
     }
 
-    val searchResultsChangedState = MutableStateFlow(OnSearchResultsChangedEventHolder.DEFAULT)
-    override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
-        return searchResultsChangedState
-    }
-
-    override fun playbackParameters(): Flow<PlaybackParameters> {
+    override fun onCustomCommand(): Flow<CustomCommandEvent> {
         TODO("Not yet implemented")
     }
 
-    val playbackPositionEventState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
+    override fun onSearchResultsChanged(): Flow<SearchResultsChangedEvent> {
+        TODO("Not yet implemented")
+    }
+
+    override fun playbackParameters(): Flow<PlaybackParametersEvent> {
+        TODO("Not yet implemented")
+    }
+
     override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        return playbackPositionEventState
+        TODO("Not yet implemented")
     }
+
 
     override fun playbackSpeed(): Flow<Float> {
         TODO("Not yet implemented")
     }
 
-    val queueState = MutableStateFlow(QueueState.EMPTY)
-    override fun queue(): Flow<QueueState> {
-        return queueState
+    override fun queue(): Flow<Queue> {
+        TODO("Not yet implemented")
     }
 
-    val repeatModeState = MutableStateFlow<@RepeatMode Int>(Player.REPEAT_MODE_OFF)
-    override fun repeatMode(): Flow<Int> {
-        return repeatModeState
+    override fun repeatMode(): Flow<com.github.goldy1992.mp3player.client.models.RepeatMode> {
+        TODO("Not yet implemented")
     }
+
 
     override suspend fun changePlaybackSpeed(speed: Float) {
 
     }
 
-    val getChildrenState = MutableStateFlow<List<MediaItem>>(emptyList())
-    override suspend fun getChildren(
-        parentId: String,
+    override suspend fun <T : MediaEntity> getChildren(
+        parent: T,
         page: Int,
         pageSize: Int,
-        params: MediaLibraryService.LibraryParams
-    ): List<MediaItem> {
-        return getChildrenState.value
+        params: Bundle
+    ): T {
+        TODO("Not yet implemented")
     }
 
-    val libraryRootState = MutableStateFlow(MediaItem.EMPTY)
-    override suspend fun getLibraryRoot(): MediaItem {
+
+
+    val libraryRootState = MutableStateFlow(Root.NOT_LOADED)
+    override suspend fun getLibraryRoot(): Root {
         return libraryRootState.value
+    }
+
+    override suspend fun getPlaylist(
+        playlistId: String,
+        page: Int,
+        pageSize: Int,
+        params: Bundle
+    ): Playlist {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getCurrentPlaybackPosition(): Long {
         TODO("Not yet implemented")
     }
 
-    val searchResultsState = MutableStateFlow<List<MediaItem>>(emptyList())
-    var searchResults : List<MediaItem> = emptyList()
-    override suspend fun getSearchResults(
-        query: String,
-        page: Int,
-        pageSize: Int
-    ): List<MediaItem> {
-        return searchResults
+    override suspend fun getSearchResults(query: String, page: Int, pageSize: Int): SearchResults {
+        TODO("Not yet implemented")
     }
+
 
     override suspend fun pause() {
         TODO("Not yet implemented")
@@ -138,21 +137,27 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    override suspend fun play(mediaItem: MediaItem) {    }
-    override suspend fun playFromPlaylist(
-        items: List<MediaItem>,
-        itemIndex: Int,
-        playlistMetadata: MediaMetadata
-    ) {
+    override suspend fun play(song: Song) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun playAlbum(album: Album, startIndex: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun playPlaylist(playlist: Playlist, startIndex: Int) {
+        TODO("Not yet implemented")
+    }
+
+
     override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
 
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun prepareFromId(mediaId: String) {
         TODO("Not yet implemented")
     }
+
 
     override suspend fun search(query: String, extras: Bundle) {
         this.currentSearchQuery.value = query
@@ -162,9 +167,11 @@ class TestMediaRepository
         TODO("Not yet implemented")
     }
 
-    override suspend fun setRepeatMode(repeatMode: Int) {
+    override suspend fun setRepeatMode(repeatMode: RepeatMode) {
         TODO("Not yet implemented")
     }
+
+
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
         TODO("Not yet implemented")

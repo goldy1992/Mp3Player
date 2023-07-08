@@ -11,12 +11,16 @@ import android.os.Build
 import android.os.Build.VERSION_CODES.S
 import android.os.Build.VERSION_CODES.TIRAMISU
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -25,7 +29,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,6 +46,9 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.Language
+import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -52,6 +62,7 @@ private const val logTag = "SettingsScreen"
 /**
  * The Settings Screen
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
@@ -64,10 +75,17 @@ fun SettingsScreen(
     val permissions by viewModel.permissionState.collectAsState()
 
     val settingsOnClickMap = EnumMap<Settings.Type, Any>(Settings.Type::class.java)
-    settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean -> viewModel.setDarkMode(newDarkMode)}
+    settingsOnClickMap[Settings.Type.DARK_MODE] = { newDarkMode : Boolean ->
+        viewModel.setDarkMode(newDarkMode)
+    }
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
     settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
     settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
+    settingsOnClickMap[Settings.Type.LANGUAGE] = { language : String ->
+        Log.d(logTag, "settingsOnClickMap() setting language to $language")
+        viewModel.setLanguage(language)
+    }
+
 
     val isLargeScreen = windowSize == WindowSize.Expanded
 
@@ -246,6 +264,11 @@ fun SettingsScreenContent(
             )
         }
         item {
+            LanguageMenuItem(
+                currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en",
+            )
+        }
+        item {
             Divider()
         }
         item {
@@ -258,8 +281,12 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
+            AboutMenuItem(darkMode = settings.darkMode)
+        }
+        item {
             VersionMenuItem(versionUtils = versionUtils)
         }
+
     }
 
 }
@@ -356,22 +383,59 @@ private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
 @Composable
 private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalContext.current)) {
     ListItem(
-        leadingContent = {},
+        leadingContent = { Spacer(modifier = Modifier.size(24.dp))},
         headlineContent = {Text(stringResource(id = R.string.version)) },
         supportingContent = { Text(versionUtils.getAppVersion(), style= MaterialTheme.typography.bodySmall) }
     )
 }
 
+@Preview
 @Composable
-private fun AboutMenuItem(onClick: () -> Unit) {
+private fun AboutMenuItem(
+    darkMode : Boolean = false) {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        AboutDialog(darkMode = darkMode) {
+            openDialog = false
+        }
+    }
     ListItem(
         modifier = Modifier.clickable {
-            onClick()
+            openDialog = true
         },
-        leadingContent = { },
+        leadingContent = { Spacer(modifier = Modifier.size(24.dp))},
         headlineContent = {
-                Text("About") // TODO: Translate and link to about page!
+            val about = stringResource(id = R.string.about)
+            Text(about) 
         },
     )
 }
+
+@Composable
+private fun LanguageMenuItem(currentLanguage: String = "en") {
+    Log.d(logTag, "LanguageMenuItem() invoked with currentLanguage: $currentLanguage")
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        LanguageSelectionDialog(
+            currentLanguage = currentLanguage,
+            onDismiss =  {
+                openDialog = false
+            }
+        )
+    }
+    val languageText = stringResource(id = R.string.language)
+    ListItem(
+        modifier = Modifier.clickable {
+            openDialog = true
+        },
+        leadingContent = { Icon(Icons.Default.Language, contentDescription = languageText)},
+        headlineContent = {
+            Text(text = languageText)
+        },
+        supportingContent = {
+            Text(text = Language.valueOf(currentLanguage.uppercase()).writtenName)
+        }
+    )
+}
+
 

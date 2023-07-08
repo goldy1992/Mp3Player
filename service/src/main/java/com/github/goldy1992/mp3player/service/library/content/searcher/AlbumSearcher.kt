@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import com.github.goldy1992.mp3player.commons.MediaItemType
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import com.github.goldy1992.mp3player.service.library.content.Projections
 import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResultsParser
@@ -19,7 +20,7 @@ open class AlbumSearcher
                 resultsParser: AlbumsResultsParser,
                 private val mediaItemTypeIds: MediaItemTypeIds,
                 albumDao: AlbumDao,
-                scope: CoroutineScope)
+                @ServiceCoroutineScope scope: CoroutineScope)
     : ContentResolverSearcher<Album>(
         contentResolver,
         resultsParser,

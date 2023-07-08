@@ -1,12 +1,16 @@
 package com.github.goldy1992.mp3player.service.library
 
+import android.os.Bundle
 import android.util.Log
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.LibraryParams
+import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import com.github.goldy1992.mp3player.commons.Normaliser.normalise
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.service.RootAuthenticator
 import com.github.goldy1992.mp3player.service.library.content.ContentManagerResult
@@ -20,15 +24,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.commons.collections4.CollectionUtils
-import java.util.*
+import java.util.EnumMap
 import javax.inject.Inject
 
+@UnstableApi
 @ServiceScoped
 class MediaContentManager @Inject constructor(private val permissionRepository: IPermissionsRepository,
                                               private val contentRetrievers: ContentRetrievers,
                                               private val contentSearchers: ContentSearchers,
                                               rootAuthenticator: RootAuthenticator,
-                                              scope : CoroutineScope,
+                                              @ServiceCoroutineScope scope : CoroutineScope,
 ) : ContentManager {
 
     private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())
@@ -174,7 +179,10 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                 }
             }
             Log.d(logTag(), "build() calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
-            mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder().build())
+            val extras = Bundle()
+            extras.putBoolean(HAS_PERMISSIONS, true)
+            mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder()
+                .setExtras(extras).build())
         }
         nodeMap[node.id] = node
     }

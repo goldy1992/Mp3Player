@@ -7,8 +7,6 @@ import com.github.goldy1992.mp3player.service.library.content.parser.AlbumsResul
 import com.github.goldy1992.mp3player.service.library.content.parser.FolderResultsParser
 import com.github.goldy1992.mp3player.service.library.content.parser.SongResultsParser
 import com.github.goldy1992.mp3player.service.library.content.retrievers.AlbumsRetriever
-import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrievers
-import com.github.goldy1992.mp3player.service.library.content.retrievers.ContentRetrieversDefaultImpl
 import com.github.goldy1992.mp3player.service.library.content.retrievers.FoldersRetriever
 import com.github.goldy1992.mp3player.service.library.content.retrievers.FoldersRetrieverAutomationImpl
 import com.github.goldy1992.mp3player.service.library.content.retrievers.RootRetriever

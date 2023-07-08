@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.service.library.content.filter
 import androidx.media3.common.MediaItem
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import java.io.File
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class SongsFromFolderResultsFilter @Inject constructor() : ResultsFilter {

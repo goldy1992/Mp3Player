@@ -10,7 +10,6 @@ import com.github.goldy1992.mp3player.commons.Constants.ROOT_ITEM_TYPE
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import java.util.*
-import javax.inject.Inject
 
 class RootRetriever
 

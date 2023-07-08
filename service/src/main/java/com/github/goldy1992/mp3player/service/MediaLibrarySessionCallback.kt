@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.HAS_PERMISSIONS
 import com.github.goldy1992.mp3player.commons.IoDispatcher
 import com.github.goldy1992.mp3player.commons.LogTagger
+import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.player.ChangeSpeedProvider
 import com.google.common.collect.ImmutableList
@@ -34,14 +35,14 @@ class MediaLibrarySessionCallback
     constructor(private val contentManager: ContentManager,
                 private val changeSpeedProvider: ChangeSpeedProvider,
                 private val rootAuthenticator: RootAuthenticator,
-                private val scope : CoroutineScope,
+                @ServiceCoroutineScope private val scope : CoroutineScope,
                 @IoDispatcher private val ioDispatcher: CoroutineDispatcher) : MediaLibrarySession.Callback, LogTagger {
 
     override fun onConnect(
         session: MediaSession,
         controller: MediaSession.ControllerInfo
     ): ConnectionResult {
-        Log.v(logTag(), "onConnect() invoked")
+        Log.v(logTag(), "onConnect() invoked with mediaSession ${session.player} and controller ${controller.uid}")
         val connectionResult = super.onConnect(session, controller)
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
@@ -62,10 +63,21 @@ class MediaLibrarySessionCallback
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {
-        Log.v(logTag(), "onPostConnect() invoked")
-        super.onPostConnect(session, controller)
         Log.v(logTag(), "onPostConnect() calling Player.prepare() for MediaSession Player: ${session.player}")
+    }
+
+    override fun onPlayerCommandRequest(
+        session: MediaSession,
+        controller: MediaSession.ControllerInfo,
+        playerCommand: Int
+    ): Int {
+        Log.d(logTag(), "player command requested: $playerCommand")
+        /* Bug on some Android devices when notification is removed when playback is paused! This causes
+             stop() to be called in some unwanted instances, meaning it should be ensured that
+             [Player#prepare()] is called beforehand
+         */
         session.player.prepare()
+        return super.onPlayerCommandRequest(session, controller, playerCommand)
     }
 
     override fun onGetItem(
@@ -111,6 +123,7 @@ class MediaLibrarySessionCallback
                 .build()
             Log.d(logTag(), "onSubscribe() notifying children changed for browser $browser")
             session.notifyChildrenChanged(browser, parentId, numberOfResults, returnParams)
+            Log.d(logTag(), "session notified")
         }
         return Futures.immediateFuture(LibraryResult.ofVoid())
     }
@@ -215,6 +228,11 @@ class MediaLibrarySessionCallback
             searchJob.join()
         }
         return Futures.immediateFuture(LibraryResult.ofItemList(searchResults, params))
+    }
+
+    override fun onDisconnected(session: MediaSession, controller: MediaSession.ControllerInfo) {
+        Log.v(logTag(), "onDisconnected invoked with session: $session")
+        super.onDisconnected(session, controller)
     }
 
     override fun logTag(): String {

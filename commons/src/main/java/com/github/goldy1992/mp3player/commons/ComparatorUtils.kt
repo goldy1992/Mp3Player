@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.commons
 
 
 import androidx.media3.common.MediaItem
-import java.util.*
+import java.util.Locale
 
 class ComparatorUtils {
 

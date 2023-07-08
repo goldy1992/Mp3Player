@@ -13,23 +13,37 @@ import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
-import com.github.goldy1992.mp3player.client.ui.states.QueueState
-import com.github.goldy1992.mp3player.client.ui.states.eventholders.*
-import com.github.goldy1992.mp3player.client.utils.AudioDataUtils.getAudioSample
+import androidx.media3.session.MediaLibraryService.LibraryParams
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
+import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
+import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
+import com.github.goldy1992.mp3player.client.media.flows.CurrentPlaylistMetadataFlow
+import com.github.goldy1992.mp3player.client.media.flows.IsPlayingFlow
+import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
+import com.github.goldy1992.mp3player.client.media.flows.OnSearchResultsChangedFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlaybackParametersFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlaybackPositionFlow
+import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
+import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
+import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
+import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
-import com.github.goldy1992.mp3player.client.utils.QueueUtils.getQueue
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
-import com.github.goldy1992.mp3player.commons.LoggingUtils.getPlayerEventsLogMessage
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.*
 import org.apache.commons.lang3.StringUtils.isEmpty
 import androidx.annotation.OptIn as AndroidXOptIn
@@ -41,401 +55,138 @@ class DefaultMediaBrowser
 
     constructor(
         @ApplicationContext private val context: Context,
-        sessionToken: SessionToken,
-        private val scope : CoroutineScope,
-        @MainDispatcher private val mainDispatcher : CoroutineDispatcher) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
+        @MainDispatcher private val mainDispatcher : CoroutineDispatcher
+    ) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
 
-    private val mediaBrowserFuture: ListenableFuture<MediaBrowser> = MediaBrowser
-        .Builder(context, sessionToken)
-        .setListener(this)
-        .buildAsync()
+    private lateinit var scope : CoroutineScope
+    private val _mediaBrowserLFMutableStateFlow: MutableStateFlow<ListenableFuture<MediaBrowser>?> =
+        MutableStateFlow(null)
 
-    private val _onCustomCommandFlow : Flow<SessionCommandEventHolder> = callbackFlow {
-        val messageListener = object : MediaBrowser.Listener {
-            override fun onCustomCommand(
-                controller: MediaController,
-                command: SessionCommand,
-                args: Bundle
-            ): ListenableFuture<SessionResult> {
-                Log.v(logTag(), "onCustomCommand() invoked")
-                trySend(SessionCommandEventHolder(command, args))
-                return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
+    @Suppress("UNCHECKED_CAST")
+    override fun init(sessionToken: SessionToken, scope : CoroutineScope) {
+        Log.v(logTag(), "init() invoked")
+        this.scope = scope
+        _mediaBrowserLFMutableStateFlow.value = MediaBrowser
+            .Builder(context, sessionToken)
+            .setListener(this)
+            .buildAsync()
+
+        scope.launch {
+            Log.d(logTag(), "scope.launch")
+            _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
+                val playerf = it as ListenableFuture<Player>
+                Log.d(logTag(), "collecting from mediaBrowserLFSF")
+                AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
+                PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }
+                CurrentMediaItemFlow.create(scope, _metadataMutableStateFlow, playerf, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
+                CurrentPlaylistMetadataFlow.create(scope, it, mainDispatcher) { v -> _currentPlaylistMetadataMutableStateFlow.value = v }
+                IsPlayingFlow.create(scope, it, mainDispatcher) { v -> _isPlayingMutableStateFlow.value = v }
+                MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }
+                OnChildrenChangedFlow.create(scope, addListener, removeListener ) { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
+                OnCustomCommandFlow.create(scope, addListener, removeListener) { c -> _customCommandMutableStateFlow.emit(c) }
+                OnSearchResultsChangedFlow.create(scope, addListener, removeListener) { v -> _onSearchResultsChangedMutableStateFlow.value = v }
+                PlaybackParametersFlow.create(scope, it, mainDispatcher){v-> _playbackParametersMutableStateFlow.value = v}
+                PlaybackPositionFlow.create(scope, it, mainDispatcher) { v-> _playbackPositionMutableStateFlow.value = v }
+                QueueFlow.create(it, mainDispatcher, scope) { v -> _queueMutableStateFlow.value = v}
+                RepeatModeFlow.create(scope, it, mainDispatcher) { v -> _repeatModeMutableStateFlow.value = v}
+                ShuffleModeFlow.create(scope, it, mainDispatcher) { v -> _shuffleModeMutableStateFlow.value = v}
+                Log.d(logTag(), "finished mediaBrowserLFSF.collect")
             }
         }
-        listeners.add(messageListener)
-        awaitClose {
-            listeners.remove(messageListener)
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    }
 
-    private val _metadataFlow : Flow<MediaMetadata> = callbackFlow {
-        Log.v(logTag(), "metadataFlow invoked, awaiting MediaController")
-        val controller = mediaBrowserFuture.await()
-        Log.v(logTag(), "metadataFlow got MediaController")
-        var currentMediaMetadata : MediaMetadata
-        withContext(mainDispatcher) {
-            currentMediaMetadata = controller.mediaMetadata
-        }
-        trySend(currentMediaMetadata)
-        val messageListener = object : Player.Listener {
-            override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                Log.v(logTag(), "onMediaMetadataChanged() invoked with MediaMetaData: $mediaMetadata")
-                trySend(mediaMetadata)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
-
-    private val audioDataFlow: Flow<AudioSample> = _onCustomCommandFlow
-        .filter {
-            Log.v(logTag(), "audioDataFlow() filter invoked")
-            Constants.AUDIO_DATA == it.command.customAction
-        }.map {
-            Log.v(logTag(), "audioDataFlow() map invoked")
-            getAudioSample(it)
-        }.shareIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
-
+    private val _audioDataMutableStateFlow = MutableStateFlow(AudioSample.NONE)
     override fun audioData(): Flow<AudioSample> {
-        return audioDataFlow
+        return _audioDataMutableStateFlow.asStateFlow()
     }
 
-    private val _currentMediaItemFlow : Flow<MediaItem> = _metadataFlow.map {
-        Log.v(logTag(), "currentMediaItemFlow map invoked")
-        val mediaBrowser : MediaBrowser = mediaBrowserFuture.await()
-        var mediaItem: MediaItem?
-
-        runBlocking(mainDispatcher) {
-            mediaItem = mediaBrowser.currentMediaItem
-        }
-        if (mediaItem == null) {
-            Log.w(logTag(), "currentMediaItemFlow currentMediaItem is NULL")
-        }
-        mediaItem
-    }
-    .filterNotNull()
-    .shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    private val _currentMediaItemFlowMutableStateFlow = MutableStateFlow(MediaItem.EMPTY)
     override fun currentMediaItem(): Flow<MediaItem> {
-        return _currentMediaItemFlow
+        return _currentMediaItemFlowMutableStateFlow.asStateFlow()
     }
 
-    private val _currentPlaylistMetadataFlow : Flow<MediaMetadata> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        runBlocking(mainDispatcher) {
-            trySend(controller.playlistMetadata)
-        }
-        val messageListener = object  : Player.Listener {
-            override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
-                Log.v(logTag(), "onPlaylistMetadataChanged() invoked with playlistId: ${mediaMetadata.extras?.getString(PLAYLIST_ID) ?: Constants.UNKNOWN}")
-                trySend(mediaMetadata)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }
-    .shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    private val _currentPlaylistMetadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
     override fun currentPlaylistMetadata(): Flow<MediaMetadata> {
-        return _currentPlaylistMetadataFlow
+        return _currentPlaylistMetadataMutableStateFlow.asStateFlow()
     }
 
-    private val _isPlayingFlow : Flow<Boolean> = callbackFlow {
-        Log.v(logTag(), "isPlayingFlow invoked, awaiting MediaController")
-        val controller = mediaBrowserFuture.await()
-        Log.v(logTag(), "isPlayingFlow got MediaController")
-        var isPlaying : Boolean
-        withContext(mainDispatcher) {
-            isPlaying = controller.isPlaying
-        }
-        trySend(isPlaying)
-        val messageListener = object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                Log.v(logTag(), "onIsPlayingChanged() invoked, isPlaying: $isPlaying")
-                trySend(isPlaying)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope= scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
-
+    private val _isPlayingMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override fun isPlaying(): Flow<Boolean> {
-        return _isPlayingFlow
+        return _isPlayingMutableStateFlow.asStateFlow()
     }
 
-    private val _shuffleModeFlow : Flow<Boolean> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
-                Log.v(logTag(), "onShuffleModeEnabledChanged() invoked with value: $shuffleModeEnabled")
-                trySend(shuffleModeEnabled)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    private val _shuffleModeMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override fun isShuffleModeEnabled(): Flow<Boolean> {
-        return _shuffleModeFlow
+        return _shuffleModeMutableStateFlow.asStateFlow()
     }
 
+    private val _metadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
     override fun metadata(): Flow<MediaMetadata> {
-        return _metadataFlow
+        return _metadataMutableStateFlow.asStateFlow()
     }
 
-    private val _onChildrenChangedFlow : Flow<OnChildrenChangedEventHolder> = callbackFlow {
-        val messageListener = object : MediaBrowser.Listener {
-            override fun onChildrenChanged(
-                browser: MediaBrowser,
-                parentId: String,
-                itemCount: Int,
-                params: MediaLibraryService.LibraryParams?
-            ) {
-                Log.v(logTag(), "onChildrenChangedFlow() invoked - parent: $parentId, itemCount: $itemCount, params $params")
-                val x = OnChildrenChangedEventHolder(parentId, itemCount, params)
-                trySend(x)
-            }
-        }
-        listeners.add(messageListener)
-        awaitClose {
-            listeners.remove(messageListener) }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    // use a SharedFlow for onChildrenChanged
+    private val _onChildrenChangedMutableSharedFlow = MutableSharedFlow<OnChildrenChangedEventHolder>(replay = 1)
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
-        return _onChildrenChangedFlow
+        return _onChildrenChangedMutableSharedFlow.asSharedFlow()
     }
 
+    private val _customCommandMutableStateFlow = MutableSharedFlow<SessionCommandEventHolder>()
     override fun onCustomCommand(): Flow<SessionCommandEventHolder> {
-        return _onCustomCommandFlow
+        return _customCommandMutableStateFlow.asSharedFlow()
     }
 
-    private val _onSearchResultChangedFlow : Flow<OnSearchResultsChangedEventHolder> = callbackFlow {
-        val messageListener = object : MediaBrowser.Listener {
-            override fun onSearchResultChanged(
-                browser: MediaBrowser,
-                query: String,
-                itemCount: Int,
-                params: MediaLibraryService.LibraryParams?
-            ) {
-                trySend(OnSearchResultsChangedEventHolder(query, itemCount, params))
-            }
-        }
-        listeners.add(messageListener)
-        awaitClose {
-            listeners.remove(messageListener)
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+
+    private val _playerEventMSF = MutableSharedFlow<Player.Events>()
+    private val _onSearchResultsChangedMutableStateFlow = MutableStateFlow(
+        OnSearchResultsChangedEventHolder.DEFAULT)
+
     override fun onSearchResultsChanged(): Flow<OnSearchResultsChangedEventHolder> {
-        return _onSearchResultChangedFlow
+        return _onSearchResultsChangedMutableStateFlow.asStateFlow()
     }
 
-    private val _playbackParametersFlow : Flow<PlaybackParameters> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
-                trySend(playbackParameters)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
+    private val _playbackParametersMutableStateFlow = MutableStateFlow(PlaybackParameters.DEFAULT)
     override fun playbackParameters(): Flow<PlaybackParameters> {
-        return _playbackParametersFlow
+        return _playbackParametersMutableStateFlow.asStateFlow()
     }
 
-    val playbackPositionEvents : @Player.Event IntArray = intArrayOf(
-        Player.EVENT_POSITION_DISCONTINUITY,
-        Player.EVENT_IS_PLAYING_CHANGED,
-        Player.EVENT_PLAYBACK_PARAMETERS_CHANGED
-    )
-
-    private val _playbackPositionFlow : Flow<PlaybackPositionEvent> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        withContext(mainDispatcher) {
-            trySend(
-                PlaybackPositionEvent(
-                    controller.isPlaying,
-                    controller.currentPosition,
-                    TimerUtils.getSystemTime()
-                )
-            )
-        }
-        val messageListener = object : Player.Listener {
-            override fun onEvents(player: Player, events: Player.Events) {
-                Log.v(logTag(), "onEvents() invoked.")
-                if (events.containsAny( *playbackPositionEvents )) {
-                    val currentPosition = player.currentPosition
-                    val isPlaying = player.isPlaying
-                    Log.d(logTag(), "onEvents() playbackPosition changed due to ${getPlayerEventsLogMessage(events)} with position $currentPosition, isPlaying: $isPlaying")
-                    trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
-                }
-            }
-            override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters) {
-                val isPlaying = controller.isPlaying
-                val currentPosition = controller.currentPosition
-                trySend(PlaybackPositionEvent(isPlaying, currentPosition, TimerUtils.getSystemTime()))
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
-    override fun playbackPosition(): Flow<PlaybackPositionEvent> {
-        return _playbackPositionFlow
+    private val _playbackPositionMutableStateFlow = MutableStateFlow(OnPlaybackPositionChangedEvent.DEFAULT)
+    override fun playbackPosition(): Flow<OnPlaybackPositionChangedEvent> {
+        return _playbackPositionMutableStateFlow.asStateFlow()
     }
 
-    private val _playbackSpeedFlow : Flow<Float> = _playbackParametersFlow
+    private val _playbackSpeedFlow : Flow<Float> = _playbackParametersMutableStateFlow
         .map {
             it.speed
-        }.shareIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
+        }
+
     override fun playbackSpeed(): Flow<Float> {
         return _playbackSpeedFlow
     }
 
-    private val events : @Player.Event IntArray = intArrayOf(
-        Player.EVENT_MEDIA_ITEM_TRANSITION,
-        Player.EVENT_TIMELINE_CHANGED,
-        Player.EVENT_TRACKS_CHANGED,
-        Player.EVENT_MEDIA_METADATA_CHANGED
-    )
-    private val _queueFlow : Flow<QueueState> = callbackFlow {
-        Log.v(logTag(), "QueueFlow callbackFlow invoked, awaiting MediaController")
-        val controller = mediaBrowserFuture.await()
-        Log.v(logTag(), "QueueFlow callbackFlow finished awaiting MediaController")
-        var queue: QueueState
-        withContext(mainDispatcher) {
-            queue = getQueue( controller)
-        }
-        Log.d(logTag(), "QueueFlow finished initialising with queue $queue")
-        trySend(queue)
-        val messageListener = object : Player.Listener {
-            override fun onEvents(player: Player, event: Player.Events) {
-                Log.d(logTag(), "QueueFlow.onEvents() invoked")
-                val e = getPlayerEventsLogMessage(event)
-                if (event.containsAny( *events )) {
-                    Log.d(logTag(), "QueueFlow.onEvents() sending queue envents $events")
-                    trySend(getQueue(player))
-                }
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
-
-    override fun queue(): Flow<QueueState> {
-        return _queueFlow
+    private val _queueMutableStateFlow = MutableStateFlow(OnQueueChangedEventHolder.EMPTY)
+    override fun queue(): Flow<OnQueueChangedEventHolder> {
+        return _queueMutableStateFlow.asStateFlow()
     }
 
-    private val _repeatModeFlow : Flow<@Player.RepeatMode Int> = callbackFlow {
-        val controller = mediaBrowserFuture.await()
-        val messageListener = object : Player.Listener {
-            override fun onRepeatModeChanged(@Player.RepeatMode repeatMode: Int) {
-                trySend(repeatMode)
-            }
-        }
-        controller.addListener(messageListener)
-        awaitClose {
-            scope.launch(mainDispatcher) {
-                controller.removeListener(messageListener)
-            }
-        }
-    }.shareIn(
-        scope = scope,
-        started = SharingStarted.WhileSubscribed(),
-        replay = 1
-    )
-    override fun repeatMode(): Flow<Int> {
-        return _repeatModeFlow
+    private val _repeatModeMutableStateFlow: MutableStateFlow<@Player.RepeatMode Int> = MutableStateFlow(Player.REPEAT_MODE_OFF)
+    override fun repeatMode(): Flow<@Player.RepeatMode Int> {
+        return _repeatModeMutableStateFlow.asStateFlow()
     }
 
     override suspend fun changePlaybackSpeed(speed: Float) {
         val extras = Bundle()
         extras.putFloat(CHANGE_PLAYBACK_SPEED, speed)
         val changePlaybackSpeedCommand = SessionCommand(CHANGE_PLAYBACK_SPEED, extras)
-        mediaBrowserFuture.await().sendCustomCommand(changePlaybackSpeedCommand, extras).await()
+        _mediaBrowserLFMutableStateFlow.value?.await()?.sendCustomCommand(changePlaybackSpeedCommand, extras)?.await()
 
     }
 
     override suspend fun getCurrentPlaybackPosition(): Long {
         var toReturn : Long
-        val mediaBrowser = mediaBrowserFuture.await()
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
         runBlocking(mainDispatcher) {
-            toReturn = mediaBrowser.currentPosition
+            toReturn = mediaBrowser?.currentPosition ?: 0L
         }
         return toReturn
     }
@@ -444,13 +195,15 @@ class DefaultMediaBrowser
         parentId: String,
         page: Int,
         pageSize: Int,
-        params: MediaLibraryService.LibraryParams
+        params: LibraryParams
     ): List<MediaItem> {
         return if (pageSize < 1) {
             emptyList()
         } else {
             val children: LibraryResult<ImmutableList<MediaItem>> =
-                mediaBrowserFuture.await().getChildren(parentId, page, pageSize, params).await()
+                _mediaBrowserLFMutableStateFlow.value?.await()?.getChildren(parentId, page, pageSize, params)?.await()?: LibraryResult.ofItemList(
+                    listOf(), LibraryParams.Builder().build()
+                )
             return children.value?.toList() ?: emptyList()
         }
     }
@@ -459,10 +212,10 @@ class DefaultMediaBrowser
     override suspend fun getLibraryRoot(): MediaItem {
         val args = Bundle()
         args.putString(PACKAGE_NAME_KEY, PACKAGE_NAME)
-        val params = MediaLibraryService.LibraryParams.Builder()
+        val params = LibraryParams.Builder()
             .setExtras(args).build()
-        val result = mediaBrowserFuture.await().getLibraryRoot(params).await()
-        return result.value ?: MediaItem.EMPTY
+        val result = _mediaBrowserLFMutableStateFlow.value?.await()?.getLibraryRoot(params)?.await()
+        return result?.value ?: MediaItem.EMPTY
     }
 
     override suspend fun getSearchResults(
@@ -473,62 +226,73 @@ class DefaultMediaBrowser
         Log.v(logTag(), "getSearchResults() invoked with query: $query, page: $page, pageSize: $pageSize")
         if (isEmpty(query)) {
             Log.w(logTag(), "getSearchResults() called with empty query")
-            return ImmutableList.of()
+            return listOf()
         }
         val result : LibraryResult<ImmutableList<MediaItem>> =
-            mediaBrowserFuture.await().getSearchResult(query, page, pageSize, getDefaultLibraryParams()).await()
-        return result.value ?: ImmutableList.of()
+            _mediaBrowserLFMutableStateFlow.value?.await()?.getSearchResult(query, page, pageSize, getDefaultLibraryParams())?.await()?: LibraryResult.ofItemList(
+                listOf(), LibraryParams.Builder().build()
+            )
+        return result.value ?: listOf()
     }
 
     override suspend fun pause() {
-        mediaBrowserFuture.await().pause()
+        _mediaBrowserLFMutableStateFlow.value?.await()?.pause()
     }
 
     override suspend fun play() {
         Log.v(logTag(), "play() invoked, awaiting mediaBrowser")
-        val mediaBrowser = mediaBrowserFuture.await()
-        Log.v(logTag(), "play() mediaBrowser retrieved")
-        LoggingUtils.logPlaybackState(mediaBrowser.playbackState, logTag())
-        mediaBrowser.play()
-        Log.i(logTag(), "play() invocation complete")
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
+        Log.d(logTag(), "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}, playbackState: ${LoggingUtils.logPlaybackState(mediaBrowser?.playbackState ?: 0, logTag())}")
+        mediaBrowser?.play()
+        Log.v(logTag(), "play() invocation complete")
     }
 
     override suspend fun play(mediaItem: MediaItem) {
-        val mediaBrowser = mediaBrowserFuture.await()
-        mediaBrowser.addMediaItem(mediaItem)
-        mediaBrowser.prepare()
-        mediaBrowser.play()
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
+        mediaBrowser?.addMediaItem(mediaItem)
+        mediaBrowser?.prepare()
+        mediaBrowser?.play()
 
     }
 
-    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistMetadata: MediaMetadata) {
-        Log.v(logTag(), "playFromPlaylist() invoked with MediaMetadata: $playlistMetadata")
-        val mediaBrowser = mediaBrowserFuture.await()
-        mediaBrowser.setMediaItems(items, itemIndex, 0L)
+    override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistId: String) {
+        Log.v(logTag(), "playFromPlaylist() invoked with MediaMetadata: $playlistId")
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
+        mediaBrowser?.setMediaItems(items, itemIndex, 0L)
 
-        Log.d(logTag(), "playFromPlaylist() setting playlist metadata to ${playlistMetadata.extras?.getString(PLAYLIST_ID)}")
-        mediaBrowser.play()
-        mediaBrowser.playlistMetadata = playlistMetadata
+        Log.d(logTag(), "playFromPlaylist() setting playlist metadata to ${playlistId}")
+        mediaBrowser?.play()
+        val extras = Bundle()
+        extras.putString(PLAYLIST_ID, playlistId)
+        mediaBrowser?.playlistMetadata = MediaMetadata.Builder().setExtras(extras).build()
 
         Log.v(logTag(), "playFromPlaylist() invocation complete")
     }
 
-    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
-        val mediaItem = MediaItem.Builder().setUri(uri).build()
-        mediaBrowserFuture.await().addMediaItem(mediaItem)
+    override suspend fun playFromPlaylist(playlistId: String, itemIndex: Int) {
+        Log.v(logTag(), "playFromPlaylist() invoked with id $playlistId")
+        val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
+       mediaBrowser?.getItem(playlistId)
     }
 
-    override suspend fun prepareFromMediaId(mediaItem: MediaItem) {
+    override suspend fun playFromUri(uri: Uri?, extras: Bundle?) {
+        val mediaItem = MediaItem.Builder().setUri(uri).build()
+        _mediaBrowserLFMutableStateFlow.value?.await()?.addMediaItem(mediaItem)
+    }
+
+
+    override suspend fun prepareFromMediaId(mediaId: String) {
         // call from application looper
-        val mediaController = mediaBrowserFuture.await()
-        mediaController.addMediaItem(mediaItem)
-        mediaController.prepare()
+        val mediaController = _mediaBrowserLFMutableStateFlow.value?.await()
+        val mediaItem = mediaController?.getItem(mediaId)?.await()?.value ?: MediaItem.EMPTY
+        mediaController?.addMediaItem(mediaItem)
+        mediaController?.prepare()
     }
 
     @AndroidXOptIn(UnstableApi::class)
     override suspend fun search(query: String, extras: Bundle) {
-        mediaBrowserFuture.await()
-            .search(query, MediaLibraryService
+        _mediaBrowserLFMutableStateFlow.value?.await()
+            ?.search(query, MediaLibraryService
                 .LibraryParams
                 .Builder()
                 .setExtras(extras)
@@ -536,50 +300,54 @@ class DefaultMediaBrowser
     }
 
     override suspend fun seekTo(position: Long) {
-        mediaBrowserFuture.await().seekTo(position)
+        _mediaBrowserLFMutableStateFlow.value?.await()?.seekTo(position)
     }
 
     override suspend fun setRepeatMode(repeatMode: Int) {
-        mediaBrowserFuture.await().repeatMode = repeatMode
+        _mediaBrowserLFMutableStateFlow.value?.await()?.repeatMode = repeatMode
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
         Log.v(logTag(), "setShuffleMode() invoked with value: $shuffleModeEnabled")
-        mediaBrowserFuture.await().shuffleModeEnabled = shuffleModeEnabled
+        _mediaBrowserLFMutableStateFlow.value?.await()?.shuffleModeEnabled = shuffleModeEnabled
     }
 
     override suspend fun skipToNext() {
-        mediaBrowserFuture.await().seekToNextMediaItem()
+        _mediaBrowserLFMutableStateFlow.value?.await()?.seekToNextMediaItem()
     }
 
     override suspend fun skipToPrevious() {
-        mediaBrowserFuture.await().seekToPreviousMediaItem()
+        _mediaBrowserLFMutableStateFlow.value?.await()?.seekToPreviousMediaItem()
     }
 
     override suspend fun stop() {
-        mediaBrowserFuture.await().stop()
+        Log.d(logTag(), "stop inoked")
+        _mediaBrowserLFMutableStateFlow.value?.await()?.stop()
     }
 
     override suspend fun subscribe(id: String) {
         Log.v(logTag(), "subscribe() invoked with id: $id")
-        mediaBrowserFuture.await().subscribe(id, MediaLibraryService.LibraryParams.Builder().build())
+        _mediaBrowserLFMutableStateFlow.value?.await()?.subscribe(id, LibraryParams.Builder().build())
     }
 
     override fun release() {
         Log.v(logTag(), "release() invoked, releasing MediaBrowser future")
-        MediaBrowser.releaseFuture(mediaBrowserFuture)
+        if (_mediaBrowserLFMutableStateFlow.value != null)
+            MediaBrowser.releaseFuture(_mediaBrowserLFMutableStateFlow.value!!)
         Log.v(logTag(), "release() finished releasing MediaBrowser future")
     }
 
     // The set of all listeners which are made by the Callback Flows
     private val listeners : MutableSet<MediaBrowser.Listener> = mutableSetOf()
+    private val addListener : (MediaBrowser.Listener) -> Boolean = { listeners.add(it) }
+    private val removeListener : (MediaBrowser.Listener) -> Boolean = { listeners.add(it) }
 
     @SuppressLint("Range")
     override fun onChildrenChanged(
         browser: MediaBrowser,
         parentId: String,
         @IntRange(from = 0.toLong()) itemCount: Int,
-        params: MediaLibraryService.LibraryParams?
+        params: LibraryParams?
     ) {
         Log.i(logTag(), "onChildrenChanged() invoked with parent: $parentId, itemCount: $itemCount, params $params")
         listeners.forEach { listener -> listener.onChildrenChanged(browser, parentId, itemCount, params) }
@@ -590,12 +358,13 @@ class DefaultMediaBrowser
         browser: MediaBrowser,
         query: String,
         @IntRange(from = 0.toLong()) itemCount: Int,
-        params: MediaLibraryService.LibraryParams?
+        params: LibraryParams?
     ) {
         listeners.forEach { listener -> listener.onSearchResultChanged(browser, query, itemCount, params) }
     }
 
     override fun onDisconnected(controller: MediaController) {
+        Log.d(logTag(), "OnDisconnected invoked")
         listeners.forEach { listener -> listener.onDisconnected(controller) }
     }
 
@@ -626,7 +395,7 @@ class DefaultMediaBrowser
     }
 
     override fun logTag(): String {
-        return "DefaultMediaBrowser"
+        return "DefaultMediaBrowser2"
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -47,7 +48,8 @@ class SettingsScreenViewModel
                         darkMode = it.darkMode,
                         useSystemDarkMode = it.systemDarkMode,
                         //theme = Theme(it.theme),
-                        dynamicColor = it.useDynamicColor
+                        dynamicColor = it.useDynamicColor,
+                        language = it.language
                     )
                 }
         }
@@ -67,6 +69,11 @@ class SettingsScreenViewModel
 
     fun setUseDynamicColor(useDynamicColor : Boolean) {
         viewModelScope.launch { userPreferencesRepository.updateUseDynamicColor(useDynamicColor) }
+    }
+
+    fun setLanguage(language : String) {
+        Log.d(logTag(), "Updating language to $language")
+        viewModelScope.launch { userPreferencesRepository.updateLanguage(language) }
     }
 
 

@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.service
 
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.annotation.VisibleForTesting
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
@@ -13,6 +12,7 @@ import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import javax.inject.Inject
+import androidx.annotation.OptIn as AndroidXOptIn
 
 @AndroidXOptIn(UnstableApi::class)
 class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {

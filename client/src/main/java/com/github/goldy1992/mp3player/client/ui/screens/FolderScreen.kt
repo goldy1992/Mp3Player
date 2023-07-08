@@ -20,15 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.data.Folder
-import com.github.goldy1992.mp3player.client.data.Song
-import com.github.goldy1992.mp3player.client.data.Songs
+import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
-import com.github.goldy1992.mp3player.client.ui.states.State
 import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -47,13 +47,13 @@ fun FolderScreen(
     viewModel: FolderScreenViewModel = viewModel()
 ) {
     val scope = rememberCoroutineScope()
-    val isPlaying by viewModel.isPlaying.collectAsState()
-    val currentSong by viewModel.currentMediaItem.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    val onSongSelected : (Int, Songs) -> Unit = { itemIndex, songs -> viewModel.playPlaylist(folder.songs, itemIndex) }
+    val onSongSelected : (Int, Playlist) -> Unit = { itemIndex, _ -> viewModel.playPlaylist(folder.playlist, itemIndex) }
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
@@ -153,13 +153,13 @@ private fun SmallFolderScreen(
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
-                                folderProvider : () -> Folder = { Folder()},
+                                folderProvider : () -> Folder = { Folder() },
                                 isPlayingProvider : () -> Boolean = { false},
-                                currentSong : () -> Song = {Song()},
-                                onSongSelected : (Int, Songs) -> Unit = {_,_->}) {
+                                currentSong : () -> Song = { Song() },
+                                onSongSelected : (Int, Playlist) -> Unit = { _, _->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
-        val folderSongs = folder.songs
+        val folderSongs = folder.playlist
         when (folderSongs.state) {
             State.LOADING -> {
                 Surface(
@@ -172,7 +172,7 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
             State.LOADED -> {
                 Log.d(LOG_TAG, "FolderScreenContent() folder songs state LOADED, size: ${folderSongs.songs.size}")
                 LoadedSongsListWithHeader(
-                    songs = folderSongs,
+                    playlist = folderSongs,
                     isPlayingProvider = isPlayingProvider,
                     currentSong = currentSong(),
                     onSongSelected = onSongSelected,
@@ -264,13 +264,15 @@ private fun HeaderItem(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
             verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Outlined.Timer, contentDescription = "")
+
             Text(
                 modifier = Modifier.padding(start = 4.dp, end = 4.dp),
-                text = TimerUtils.formatTime(folder.totalDuration),
+                text = TimerUtils.formatTime(folder.playlist.duration),
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+
         }
         Divider(Modifier.padding(start = 4.dp, end = 4.dp))
     }
@@ -300,7 +302,7 @@ private fun LargeFolderScreen(
 @Composable
 private fun FolderPathDialog(folder: Folder = Folder(),
                              onCopyButtonSelected: () -> Unit = {},
-                            closeDialog : () -> Unit = {}) {
+                             closeDialog : () -> Unit = {}) {
     AlertDialog(
         title = { Text(folder.name + " Path") },
         confirmButton = {

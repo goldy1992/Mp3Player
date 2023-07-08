@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.service.player.equalizer
 import android.media.AudioTrack
 import android.media.AudioTrack.ERROR_BAD_VALUE
 import android.os.Bundle
-import androidx.annotation.OptIn as AndroidXOptIn
 import androidx.media3.common.C
 import androidx.media3.common.Format
 import androidx.media3.common.audio.AudioProcessor
@@ -20,6 +19,7 @@ import java.lang.Long.max
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.inject.Inject
+import androidx.annotation.OptIn as AndroidXOptIn
 
 @AndroidXOptIn(UnstableApi::class)
 @ServiceScoped
