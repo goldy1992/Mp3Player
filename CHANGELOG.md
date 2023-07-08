@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/goldy1992/Mp3Player/compare/v3.3.0...v3.4.0) (2023-07-08)
+
+
+### Features
+
+* **language:** Added language selection and about menu item in the Settings menu ([65a0efc](https://github.com/goldy1992/Mp3Player/commit/65a0efcb1b01dbb9201c021037f8d44d950de6e1))
+
 # [3.3.0](https://github.com/goldy1992/Mp3Player/compare/v3.2.0...v3.3.0) (2023-06-16)
 
 
