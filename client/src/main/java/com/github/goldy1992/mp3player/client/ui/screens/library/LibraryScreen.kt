@@ -2,7 +2,6 @@
 
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
-import android.util.Base64
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -31,13 +30,13 @@ import com.github.goldy1992.mp3player.client.models.media.Folders
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
-import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
@@ -77,31 +76,8 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
             itemIndex, mediaItemList ->
         viewModel.playPlaylist(mediaItemList, itemIndex)
     }
-    val onFolderSelected : (Folder) -> Unit = {
-        val encodedFolderLibraryId = it.encodedLibraryId
-        val encodedFolderPath = it.encodedPath
-        val folderName = it.name
-        Log.d(LOG_TAG, "onFolderSelected() Folder name: $folderName")
-        navController.navigate(
-            Screen.FOLDER.name
-                    + "/" + encodedFolderLibraryId
-                    + "/" + folderName
-                    + "/" + encodedFolderPath)
-    }
-
-    val onAlbumSelected : (Album) -> Unit = {
-        val albumId = it.id
-        val albumTitle = it.title
-        val albumArtist = it.artist
-        val albumArtUriBase64 = Base64.encodeToString(it.artworkUri.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${it.artworkUri}")
-        navController.navigate(
-            Screen.ALBUM.name
-                    + "/" + albumId
-                    + "/" + albumTitle
-                    + "/" + albumArtist
-                    + "/" + albumArtUriBase64)
-    }
+    val onFolderSelected : (Folder) -> Unit = { NavigationUtils.navigate(navController, it) }
+    val onAlbumSelected : (Album) -> Unit = { NavigationUtils.navigate(navController, it) }
 
     val onItemSelectedMap : EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
     onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
@@ -377,6 +353,7 @@ fun TabBarPages(
                         isPlayingProvider = isPlayingProvider,
                         currentSongProvider = { currentMediaItemProvider() }) {
                             itemIndex : Int, mediaItemList : Playlist ->
+                            @Suppress("UNCHECKED_CAST")
                             val callable = onItemSelectedMap[MediaItemType.SONGS] as? (Int, Playlist) -> Unit
                             if (callable != null) {
                                 callable(itemIndex, mediaItemList)

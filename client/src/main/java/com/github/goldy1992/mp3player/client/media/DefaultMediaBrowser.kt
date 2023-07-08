@@ -15,8 +15,9 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.*
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
+import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnSearchResultsChangedEventHolder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
@@ -32,7 +33,6 @@ import com.github.goldy1992.mp3player.client.media.flows.PlayerEventsFlow
 import com.github.goldy1992.mp3player.client.media.flows.QueueFlow
 import com.github.goldy1992.mp3player.client.media.flows.RepeatModeFlow
 import com.github.goldy1992.mp3player.client.media.flows.ShuffleModeFlow
-import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getDefaultLibraryParams
 import com.github.goldy1992.mp3player.commons.*
 import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
@@ -62,6 +62,7 @@ class DefaultMediaBrowser
     private val _mediaBrowserLFMutableStateFlow: MutableStateFlow<ListenableFuture<MediaBrowser>?> =
         MutableStateFlow(null)
 
+    @Suppress("UNCHECKED_CAST")
     override fun init(sessionToken: SessionToken, scope : CoroutineScope) {
         Log.v(logTag(), "init() invoked")
         this.scope = scope

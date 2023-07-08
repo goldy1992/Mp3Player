@@ -39,13 +39,13 @@ import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.SearchResults
 import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.ui.NavigationUtils
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumSearchResultItem
 import com.github.goldy1992.mp3player.client.ui.lists.buildOnSelectedMap
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
-import com.github.goldy1992.mp3player.client.ui.lists.onFolderSelected
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
@@ -58,7 +58,6 @@ private const val logTag = "SearchScreen"
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
-
 @Composable
 fun SearchScreen(
     navController: NavController = rememberAnimatedNavController(),
@@ -74,14 +73,13 @@ fun SearchScreen(
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
-            onFolderSelected = onFolderSelected(navController),
+            onAlbumSelected = { album -> NavigationUtils.navigate(navController, album)  },
+            onFolderSelected = { folder -> NavigationUtils.navigate(navController, folder) },
             onSongsSelected = {
                 itemIndex : Int, mediaItemList : Playlist ->
                     viewModel.playPlaylist(mediaItemList, itemIndex)
             },
-            onSongSelected = {
-                song -> viewModel.play(song)
-            }
+            onSongSelected = { song -> viewModel.play(song) }
         )
     }
 
@@ -108,14 +106,15 @@ fun SearchScreen(
     Log.i(logTag, "created top bar")
 
     val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(isPlayingProvider = { isPlaying },
+        PlayToolbar(
+            isPlayingProvider = { isPlaying },
             onClickSkipNext = { viewModel.skipToNext() },
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickPause = { viewModel.pause() },
             onClickPlay = { viewModel.play() },
             onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)},
             currentSongProvider = { currentSong }
-           )
+       )
     }
 
 
@@ -144,8 +143,6 @@ fun SearchScreen(
         }
 
     }
-
-
 }
 
 @Composable
