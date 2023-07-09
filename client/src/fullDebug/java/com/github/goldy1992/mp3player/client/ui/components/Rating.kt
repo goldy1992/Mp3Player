@@ -6,7 +6,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 val rating_text = listOf(
@@ -39,6 +39,13 @@ val rating_text = listOf(
     "I love it!"
 )
 
+data class PressedState(
+    val isPressed: Boolean = false,
+    val numberPressed : Int = 1
+) {
+
+}
+
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -48,8 +55,18 @@ fun Rating() {
         verticalArrangement = Arrangement.Center) {
 
         Row(horizontalArrangement = Arrangement.Center) {
+
+            var pressedState by remember { mutableStateOf(PressedState(false, 0))
+            }
             for (i in 1..5) {
-                RatingStar(isSelected  = currentRating >= i) { currentRating = i }
+                val interactionSource = remember { MutableInteractionSource() }
+                val pressed by interactionSource.collectIsPressedAsState()
+
+                LaunchedEffect(pressed) {
+                    pressedState = PressedState(pressed, i)
+                }
+
+                RatingStar(isSelected  = currentRating >= i, isPressed = (pressedState.isPressed && pressedState.numberPressed >= i),  interactionSource = interactionSource) { currentRating = i }
             }
         }
         Text("")
@@ -60,15 +77,16 @@ fun Rating() {
 @Composable
 fun RatingStar(
     modifier: Modifier = Modifier,
+    interactionSource: MutableInteractionSource = MutableInteractionSource(),
     isSelected : Boolean= false,
+    isPressed: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-         val interactionSource = remember { MutableInteractionSource() }
-        val pressed by interactionSource.collectIsPressedAsState()
+
         val color: Color by animateColorAsState(if (isSelected) Color.Yellow else Color.Gray)
         val size by animateDpAsState(
-            targetValue = if (pressed) 100.dp else 48.dp,
-            animationSpec = if (pressed) tween(100) else spring(Spring.DampingRatioHighBouncy, stiffness = 500f)
+            targetValue = if (isPressed) 100.dp else 48.dp,
+            animationSpec = if (isPressed) tween(100) else spring(Spring.DampingRatioHighBouncy, stiffness = 500f)
 
         )
 
