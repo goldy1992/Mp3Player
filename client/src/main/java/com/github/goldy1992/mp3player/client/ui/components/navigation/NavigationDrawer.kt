@@ -10,8 +10,13 @@ import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.RatingDialog
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -30,7 +37,8 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                             context : Context = LocalContext.current) {
 
     ModalDrawerSheet {
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(12.dp))
+
         Text(
             text = context.getString(R.string.app_title),
             style = MaterialTheme.typography.titleSmall,
@@ -38,7 +46,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(Modifier.height(24.dp))
-     
+
         val library = stringResource(id = R.string.library)
         NavigationDrawerItem(
             modifier = Modifier.padding(horizontal = 12.dp),
@@ -111,12 +119,16 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                     style = MaterialTheme.typography.labelLarge
                 )
             },
-            icon = { Icon(Icons.Filled.Equalizer,
-                contentDescription = "Equalizer",
-                modifier = Modifier.size(24.dp)) },
+            icon = {
+                Icon(
+                    Icons.Filled.Equalizer,
+                    contentDescription = "Equalizer",
+                    modifier = Modifier.size(24.dp)
+                )
+            },
             selected = currentScreen == Screen.VISUALIZER,
             badge = {
-               Text(text = "Beta", style = MaterialTheme.typography.labelLarge)
+                Text(text = "Beta", style = MaterialTheme.typography.labelLarge)
             },
             onClick = {
                 if (currentScreen != Screen.VISUALIZER)
@@ -131,6 +143,37 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             //   startIndent = 28.dp,
             color = MaterialTheme.colorScheme.outline
         )
+
+        var openRatingDialog by remember { mutableStateOf(false) }
+        if (openRatingDialog) {
+            RatingDialog(darkMode = false) {
+                openRatingDialog = false
+            }
+        }
+        NavigationDrawerItem(modifier = Modifier
+            .padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = "Review",
+                    style = MaterialTheme.typography.labelLarge
+                )
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Star,
+                    contentDescription = "Equalizer",
+                    //    modifier = Modifier.size(24.dp)
+                )
+            },
+            selected = false,
+
+            onClick = {
+                if (!openRatingDialog) {
+                    openRatingDialog = true
+                }
+            }
+        )
     }
 }
+
 
