@@ -16,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -199,6 +200,7 @@ fun SettingsScreenContent(
 
     val context = LocalContext.current
     val settings = settingsProvider()
+    val isDarkMode = if (settings.useSystemDarkMode) isSystemInDarkTheme() else settings.darkMode
     LazyColumn(modifier = modifier) {
         item {
             SubHeader(title = stringResource(id = R.string.display))
@@ -281,7 +283,7 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
-            AboutMenuItem(darkMode = settings.darkMode)
+            AboutMenuItem(darkMode = isDarkMode)
         }
         item {
             VersionMenuItem(versionUtils = versionUtils)
