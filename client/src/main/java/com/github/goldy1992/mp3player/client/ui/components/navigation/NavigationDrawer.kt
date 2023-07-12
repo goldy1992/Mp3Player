@@ -146,7 +146,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
 
         var openRatingDialog by remember { mutableStateOf(false) }
         if (openRatingDialog) {
-            RatingDialog(darkMode = false) {
+            RatingDialog {
                 openRatingDialog = false
             }
         }

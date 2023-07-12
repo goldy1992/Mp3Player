@@ -1,19 +1,20 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
@@ -33,13 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+private const val LOG_TAG = "Rating"
 
 val rating_text = listOf(
     "We need to talk",
-    "Passable",
+    "Usable",
     "Not bad",
-    "I like it",
-    "I love it!"
+    "Like it",
+    "Love it!"
 )
 
 data class PressedState(
@@ -52,8 +54,10 @@ data class PressedState(
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun Rating() {
-    var currentRating by remember { mutableStateOf(1) }
+fun Rating(currentRating : Int = 1,
+           setRating: (Int) -> Unit = {_->}) {
+
+    Log.d(LOG_TAG, "Rating invoked with value $currentRating")
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
 
@@ -69,13 +73,12 @@ fun Rating() {
                     pressedState = PressedState(pressed, i)
                 }
 
-                RatingStar(isSelected  = currentRating >= i, size = 50.dp, isPressed = (pressedState.isPressed && pressedState.numberPressed >= i),  interactionSource = interactionSource) { currentRating = i }
+                RatingStar(isSelected  = currentRating >= i, size = 50.dp, isPressed = (pressedState.isPressed && pressedState.numberPressed >= i),  interactionSource = interactionSource) { setRating(i) }
             }
         }
-        Spacer(Modifier.height(20.dp))
-        if (currentRating > 0) {
-            Text(text = rating_text[currentRating - 1], modifier = Modifier.animateContentSize(), style = MaterialTheme.typography.bodyMedium, color  = MaterialTheme.colorScheme.onSurface)
-        }
+        val textToDisplay = if (currentRating > 0) rating_text[currentRating - 1] else ""
+        Log.d(LOG_TAG, "displaying text: $textToDisplay")
+        Text(text = textToDisplay, modifier = Modifier.padding().animateContentSize(), style = MaterialTheme.typography.bodyMedium,)// color  = MaterialTheme.colorScheme.onSurface)
     }
 }
 

@@ -119,6 +119,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.window)
     implementation(libs.coil.compose)
+    implementation(libs.google.play.review)
+    implementation(libs.google.play.review.ktx)
     implementation(libs.hilt.android.core)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutines.core)
