@@ -23,25 +23,24 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.icons.GithubIcon
 import com.github.goldy1992.mp3player.client.ui.utils.EmailUtils
 
-private const val BUG_REPORT_URL = "https://github.com/goldy1992/Mp3Player/issues/new?assignees=goldy1992&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D+-+Summary+of+Bug"
-
+private const val FEATURE_REQUEST_URL = "https://github.com/goldy1992/Mp3Player/issues/new?assignees=goldy1992&labels=feature&projects=&template=feature_request.md&title=[FEATURE]+-+Short+description+of+idea"
 @Preview
 @Composable
-fun ReportABugDialog(
+fun FeatureRequestDialog(
     darkMode : Boolean = false,
     closeDialog : () -> Unit = {}
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
-    val reportBugText = stringResource(id = R.string.report_bug)
+    val featureRequestText = stringResource(id = R.string.request_feature)
     AlertDialog(
-        title = { Text(reportBugText) },
+        title = { Text(featureRequestText) },
         confirmButton = {
             TextButton(
                 onClick = {
                     closeDialog()}
             ) {
-                Text("Done")
+                Text(stringResource(id = R.string.done))
             }
         },
         text = {
@@ -49,7 +48,7 @@ fun ReportABugDialog(
 
                 ListItem(
                     modifier = Modifier.clickable {
-                        uriHandler.openUri(BUG_REPORT_URL)
+                        uriHandler.openUri(FEATURE_REQUEST_URL)
                     },
                     leadingContent = { GithubIcon(modifier = Modifier.size(24.dp), isDarkMode = darkMode)},
                     headlineContent = {

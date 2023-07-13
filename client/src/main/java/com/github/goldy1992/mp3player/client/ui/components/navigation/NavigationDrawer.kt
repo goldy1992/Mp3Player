@@ -88,28 +88,6 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                 }
             })
 
-        val settings = stringResource(id = R.string.settings)
-        NavigationDrawerItem(
-            modifier = Modifier.padding(horizontal = 12.dp),
-            label = {
-                Text(
-                    text = settings,
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            icon = {
-                Icon(
-                    Icons.Filled.Settings,
-                    contentDescription = settings,
-                    modifier = Modifier.size(24.dp)
-                )
-            },
-            selected = currentScreen == Screen.SETTINGS,
-            onClick = {
-                if (currentScreen != Screen.SETTINGS) {
-                    navController.navigate(Screen.SETTINGS.name)
-                }
-            })
         NavigationDrawerItem(
             modifier = Modifier
                 .padding(horizontal = 12.dp),
@@ -173,6 +151,29 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                 }
             }
         )
+
+        val settings = stringResource(id = R.string.settings)
+        NavigationDrawerItem(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            label = {
+                Text(
+                    text = settings,
+                    style = MaterialTheme.typography.labelLarge
+                )
+            },
+            icon = {
+                Icon(
+                    Icons.Filled.Settings,
+                    contentDescription = settings,
+                    modifier = Modifier.size(24.dp)
+                )
+            },
+            selected = currentScreen == Screen.SETTINGS,
+            onClick = {
+                if (currentScreen != Screen.SETTINGS) {
+                    navController.navigate(Screen.SETTINGS.name)
+                }
+            })
     }
 }
 

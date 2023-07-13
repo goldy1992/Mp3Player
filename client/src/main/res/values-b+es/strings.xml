@@ -11,13 +11,16 @@
     <string name="back">Volver</string>
     <string name="bottom_app_bar">App Bar as Fondo</string>
     <string name="clear_search">Borrar</string>
+    <string name="contribute">Contribuir</string>
     <string name="current_position">Posición Actual</string>
     <string name="dark_mode">Modo Oscuro</string>
     <string name="dark_mode_icon">Ícono del Modo Oscuro</string>
     <string name="dark_mode_switch">Cambio del Modo Oscuro</string>
     <string name="display">Pantalla</string>
+    <string name="done">Confirmar</string>
     <string name="duration">Duración</string>
     <string name="dynamic_color">Usar Colores Dínamicos</string>
+    <string name="feedback">Dejar Comentarios</string>
     <string name="folder">Carpeta</string>
     <string name="folders">Carpetas</string>
     <string name="folder_icon">Ícono de Carpeta</string>
@@ -43,6 +46,7 @@
     <string name="repeat_none">No Repetir</string>
     <string name="repeat_one">Repetir Uno</string>
     <string name="report_bug">Reportar Bug</string>
+    <string name="request_feature">Solicitud de funciones</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="root">Root</string>
     <string name="search">Búsqueda</string>

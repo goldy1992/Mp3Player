@@ -10,13 +10,16 @@
     <string name="back">Back</string>
     <string name="bottom_app_bar">Bottom App Bar</string>
     <string name="clear_search">Clear</string>
+    <string name="contribute">Contribute</string>
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="dark_mode_icon">System Dark Mode Icon</string>
     <string name="dark_mode_switch">Dark Mode Switch</string>
+    <string name="done">Done</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="dynamic_color">Use Dynamic Colors</string>
+    <string name="feedback">Leave Feedback</string>
     <string name="folder">Folder</string>
     <string name="folders">Folders</string>
     <string name="folder_icon">Folder Icon</string>
@@ -42,6 +45,7 @@
     <string name="repeat_none">Repeat None</string>
     <string name="repeat_one">Repeat One</string>
     <string name="report_bug">Report a Bug</string>
+    <string name="request_feature">Request a Feature</string>
     <string name="reset_speed">Reset Playback Speed</string>
     <string name="root">Root</string>
     <string name="search">Search</string>

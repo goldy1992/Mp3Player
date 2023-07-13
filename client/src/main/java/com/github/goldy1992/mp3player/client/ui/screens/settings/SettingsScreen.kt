@@ -48,6 +48,7 @@ import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.FeatureRequestDialog
 import com.github.goldy1992.mp3player.client.ui.components.Language
 import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
@@ -276,13 +277,31 @@ fun SettingsScreenContent(
         }
 
         item {
+            Divider()
+        }
 
+        item {
+            SubHeader(title = stringResource(id = R.string.contribute))
         }
 
         item {
             ReportBugMenuItem(
                 darkMode = isDarkMode,
             )
+        }
+        item {
+            FeatureRequestMenuItem(
+                darkMode = isDarkMode,
+            )
+        }
+        item {
+            FeedbackMenuItem(
+                darkMode = isDarkMode,
+            )
+        }
+
+        item {
+            Divider()
         }
 
         item {
@@ -390,6 +409,52 @@ private fun ReportBugMenuItem(
         headlineContent = {
             Column {
                 Text(reportBugText)
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun FeatureRequestMenuItem(
+    darkMode: Boolean = false
+) {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        FeatureRequestDialog(darkMode = darkMode
+        ) {
+            openDialog = false
+        }
+    }
+
+    val featureRequestText = stringResource(id = R.string.request_feature)
+    ListItem(
+        modifier = Modifier.clickable {
+            openDialog = true
+        },
+        leadingContent = { Icon(Icons.Filled.Lightbulb, contentDescription = featureRequestText) },
+        headlineContent = {
+            Column {
+                Text(featureRequestText)
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun FeedbackMenuItem(
+    darkMode: Boolean = false
+) {
+    val feedbackText = stringResource(id = R.string.feedback)
+    ListItem(
+        modifier = Modifier.clickable {
+            // call email utils
+        },
+        leadingContent = { Icon(Icons.Filled.Comment, contentDescription = feedbackText) },
+        headlineContent = {
+            Column {
+                Text(feedbackText)
             }
         },
     )
