@@ -42,6 +42,7 @@
     <string name="repeat_all">Repetir Todo</string>
     <string name="repeat_none">No Repetir</string>
     <string name="repeat_one">Repetir Uno</string>
+    <string name="report_bug">Reportar Bug</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
     <string name="root">Root</string>
     <string name="search">Búsqueda</string>
@@ -49,6 +50,7 @@
     <string name="search_results_column">Columna de los resultados de búsqueda</string>
     <string name="search_text_field">Cuadro de Texto de Búsqueda</string>
     <string name="select_language">Eligir Idioma</string>
+    <string name="send_email">Enviar Email</string>
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>

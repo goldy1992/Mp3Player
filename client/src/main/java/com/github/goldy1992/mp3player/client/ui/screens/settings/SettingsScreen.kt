@@ -50,6 +50,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 import com.github.goldy1992.mp3player.client.ui.components.Language
 import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
+import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -181,7 +182,7 @@ private fun SmallSettingsScreen(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it)
+                        modifier = Modifier.padding(it),
                     )
                 }
             })
@@ -266,22 +267,24 @@ fun SettingsScreenContent(
             )
         }
         item {
+            Divider()
+        }
+        item {
             LanguageMenuItem(
                 currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en",
             )
         }
+
         item {
-            Divider()
+
         }
+
         item {
-            SubHeader(title = stringResource(id = R.string.help))
+            ReportBugMenuItem(
+                darkMode = isDarkMode,
+            )
         }
-        item {
-            SupportAndFeedbackMenuItem(onClick = {  })
-        }
-        item {
-            Divider()
-        }
+
         item {
             AboutMenuItem(darkMode = isDarkMode)
         }
@@ -367,16 +370,26 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 }
 
 @Composable
-private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
-    val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
+private fun ReportBugMenuItem(
+    darkMode: Boolean = false
+) {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        ReportABugDialog(darkMode = darkMode
+            ) {
+            openDialog = false
+        }
+    }
+
+    val reportBugText = stringResource(id = R.string.report_bug)
     ListItem(
         modifier = Modifier.clickable {
-            onClick()
+            openDialog = true
         },
-        leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
+        leadingContent = { Icon(Icons.Filled.BugReport, contentDescription = reportBugText) },
         headlineContent = {
             Column {
-                Text(supportAndFeedback)
+                Text(reportBugText)
             }
         },
     )
