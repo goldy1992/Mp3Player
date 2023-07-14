@@ -7,9 +7,11 @@
     <string name="allow_audio_playback">Permitir Reproducción de Audio</string>
     <string name="allow_image_display">Permitir Mostrar Imágenes</string>
     <string name="allow_notifications">Permitir Notificaciones</string>
+    <string name="app_info">Info de la App</string>
     <string name="app_title">Music Player</string>
     <string name="back">Volver</string>
     <string name="bottom_app_bar">App Bar as Fondo</string>
+    <string name="cancel">Cancelar</string>
     <string name="clear_search">Borrar</string>
     <string name="contribute">Contribuir</string>
     <string name="current_position">Posición Actual</string>
@@ -21,11 +23,13 @@
     <string name="duration">Duración</string>
     <string name="dynamic_color">Usar Colores Dínamicos</string>
     <string name="feedback">Dejar Comentarios</string>
+    <string name="feedback_request">"Nos gustaría escuchar su experiencia de la app. ¿Quiere enviar un email con sus comentarios?"</string>
     <string name="folder">Carpeta</string>
     <string name="folders">Carpetas</string>
     <string name="folder_icon">Ícono de Carpeta</string>
     <string name="folder_list">Lista de Carpetas</string>
     <string name="help">Ayuda</string>
+    <string name="input">Introducción</string>
     <string name="language">Idioma</string>
     <string name="loading">Cargando</string>
     <string name="library">Colección</string>
@@ -48,6 +52,7 @@
     <string name="report_bug">Reportar Bug</string>
     <string name="request_feature">Solicitud de funciones</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
+    <string name="review">Reseña</string>
     <string name="root">Root</string>
     <string name="search">Búsqueda</string>
     <string name="search_hint">Bucar media</string>
@@ -64,6 +69,7 @@
     <string name="songs">Canciones</string>
     <string name="songs_list">Lista de Canciones</string>
     <string name="song_title">Nombre de Canción</string>
+    <string name="submit">Enviar</string>
     <string name="support_and_feedback">Apoyo y Feedback</string>
     <string name="system_dark_mode_icon">Ícono del Modo Oscuro de Sistema</string>
     <string name="system_dark_mode_switch">Cambio del Modo Oscuro de Sistema</string>

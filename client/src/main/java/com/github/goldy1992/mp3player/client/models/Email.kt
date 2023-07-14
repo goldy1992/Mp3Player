@@ -29,7 +29,13 @@ data class Email(
             toAddresses = DEFAULT_TO_ADDRESSES,
             ccAddresses = DEFAULT_CC_ADDRESSES,
             subject = DEFAULT_FEATURE_REQUEST_SUBJECT,
-            type = EmailType.BUG_REPORT
+            type = EmailType.FEATURE_REQUEST
+        )
+        val FEEDBACK = Email(
+            toAddresses = DEFAULT_TO_ADDRESSES,
+            ccAddresses = DEFAULT_CC_ADDRESSES,
+            subject = DEFAULT_FEATURE_REQUEST_SUBJECT,
+            type = EmailType.FEEDBACK
         )
 
     }
@@ -56,5 +62,6 @@ data class Email(
 
 enum class EmailType {
     BUG_REPORT,
-    FEATURE_REQUEST
+    FEATURE_REQUEST,
+    FEEDBACK
 }

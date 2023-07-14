@@ -4,7 +4,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Construction
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -35,6 +37,7 @@ fun FeatureRequestDialog(
     val featureRequestText = stringResource(id = R.string.request_feature)
     AlertDialog(
         title = { Text(featureRequestText) },
+        icon = {Icon(Icons.Default.Construction, contentDescription = null)},
         confirmButton = {
             TextButton(
                 onClick = {
@@ -57,11 +60,11 @@ fun FeatureRequestDialog(
                 Divider()
                 ListItem(
                     modifier = Modifier.clickable {
-                        EmailUtils.sendBugReportEmail(context)
+                        EmailUtils.sendFeatureRequestEmail(context)
                     },
                     leadingContent = {
                         Icon(Icons.Default.Email,
-                            contentDescription = "send email",
+                            contentDescription = stringResource(id = R.string.send_email),
                             modifier = Modifier.size(24.dp)
                         )
                     },

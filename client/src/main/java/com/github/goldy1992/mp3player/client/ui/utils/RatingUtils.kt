@@ -9,7 +9,7 @@ import com.google.android.play.core.review.model.ReviewErrorCode
 
 private const val LOG_TAG = "RatingUtils"
 object RatingUtils  {
-    fun submit(context: Context, rating : Int) {
+    fun submit(context: Context) {
         val manager = ReviewManagerFactory.create(context)
 
         val request = manager.requestReviewFlow()

@@ -18,7 +18,7 @@ import com.github.goldy1992.mp3player.client.ui.utils.RatingUtils.submit
 @Composable
 fun RatingDialog(
     onSubmit : () -> Unit = {},
-    closeDialog : () -> Unit = {}
+    closeDialog : (Int?) -> Unit = {_->}
 ) {
     val context = LocalContext.current
     var currentRating by remember { mutableStateOf(5) } // default to 5 stars
@@ -27,8 +27,8 @@ fun RatingDialog(
         confirmButton = {
             TextButton(
                 enabled = currentRating >= 1,
-                onClick = { submit(context, currentRating)
-                            closeDialog()}
+                onClick = {
+                    closeDialog(currentRating)}
             ) {
                 Text("Submit")
             }
@@ -40,10 +40,10 @@ fun RatingDialog(
         },
         textContentColor = MaterialTheme.colorScheme.onSurface,
         dismissButton = {
-            TextButton(onClick = { closeDialog() }) {
+            TextButton(onClick = { closeDialog(null) }) {
                 Text("Cancel")
             }
 
         },
-        onDismissRequest = { closeDialog() })
+        onDismissRequest = { closeDialog(null) })
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
@@ -36,6 +37,7 @@ fun ReportABugDialog(
     val reportBugText = stringResource(id = R.string.report_bug)
     AlertDialog(
         title = { Text(reportBugText) },
+        icon = {Icon(Icons.Default.BugReport, contentDescription = null)},
         confirmButton = {
             TextButton(
                 onClick = {
@@ -62,7 +64,7 @@ fun ReportABugDialog(
                     },
                     leadingContent = {
                         Icon(Icons.Default.Email,
-                            contentDescription = "send email",
+                            contentDescription = stringResource(id = R.string.send_email),
                             modifier = Modifier.size(24.dp)
                         )
                     },

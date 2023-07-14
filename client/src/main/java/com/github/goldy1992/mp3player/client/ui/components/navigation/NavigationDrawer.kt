@@ -122,35 +122,7 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             color = MaterialTheme.colorScheme.outline
         )
 
-        var openRatingDialog by remember { mutableStateOf(false) }
-        if (openRatingDialog) {
-            RatingDialog {
-                openRatingDialog = false
-            }
-        }
-        NavigationDrawerItem(modifier = Modifier
-            .padding(horizontal = 12.dp),
-            label = {
-                Text(
-                    text = "Review",
-                    style = MaterialTheme.typography.labelLarge
-                )
-            },
-            icon = {
-                Icon(
-                    Icons.Filled.Star,
-                    contentDescription = "Equalizer",
-                    //    modifier = Modifier.size(24.dp)
-                )
-            },
-            selected = false,
-
-            onClick = {
-                if (!openRatingDialog) {
-                    openRatingDialog = true
-                }
-            }
-        )
+        ReviewNavigationItem()
 
         val settings = stringResource(id = R.string.settings)
         NavigationDrawerItem(

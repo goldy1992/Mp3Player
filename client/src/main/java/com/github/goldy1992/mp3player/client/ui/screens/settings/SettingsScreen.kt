@@ -49,10 +49,12 @@ import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 import com.github.goldy1992.mp3player.client.ui.components.FeatureRequestDialog
+import com.github.goldy1992.mp3player.client.ui.components.FeedbackDialog
 import com.github.goldy1992.mp3player.client.ui.components.Language
 import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.utils.EmailUtils
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -271,6 +273,9 @@ fun SettingsScreenContent(
             Divider()
         }
         item {
+            SubHeader(title = stringResource(id = R.string.input))
+        }
+        item {
             LanguageMenuItem(
                 currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en",
             )
@@ -302,6 +307,10 @@ fun SettingsScreenContent(
 
         item {
             Divider()
+        }
+
+        item {
+            SubHeader(title  = stringResource(id = R.string.app_info))
         }
 
         item {
@@ -432,7 +441,7 @@ private fun FeatureRequestMenuItem(
         modifier = Modifier.clickable {
             openDialog = true
         },
-        leadingContent = { Icon(Icons.Filled.Lightbulb, contentDescription = featureRequestText) },
+        leadingContent = { Icon(Icons.Filled.Construction, contentDescription = featureRequestText) },
         headlineContent = {
             Column {
                 Text(featureRequestText)
@@ -446,10 +455,18 @@ private fun FeatureRequestMenuItem(
 private fun FeedbackMenuItem(
     darkMode: Boolean = false
 ) {
+    var openFeedbackDialog by remember { mutableStateOf(false) }
+
+    if (openFeedbackDialog) {
+        FeedbackDialog() {
+            openFeedbackDialog = false
+        }
+    }
+
     val feedbackText = stringResource(id = R.string.feedback)
     ListItem(
         modifier = Modifier.clickable {
-            // call email utils
+            openFeedbackDialog = true
         },
         leadingContent = { Icon(Icons.Filled.Comment, contentDescription = feedbackText) },
         headlineContent = {

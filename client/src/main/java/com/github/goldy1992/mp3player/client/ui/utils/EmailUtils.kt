@@ -31,6 +31,14 @@ object EmailUtils : LogTagger {
         }
     }
 
+    fun sendFeedbackEmail(context : Context) {
+        val appCompatActivity = context.getActivity()
+        if (appCompatActivity != null) {
+            val featureRequestEmail = Email.FEEDBACK
+            sendEmail(featureRequestEmail, context)
+        }
+    }
+
     private fun sendEmail(email: Email, context: Context) {
             Log.v(logTag(), "sendEmail() invoked with subject: ${email.subject}, toAddresses: ${email.toAddresses} and ccAddresses: ${email.ccAddresses}")
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
