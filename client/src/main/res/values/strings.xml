@@ -76,4 +76,8 @@
     <string name="use_system_dark_mode">Use System Dark Mode</string>
     <string name="version">Version</string>
 
+
+    <!-- Content Descriptions -->
+    <string name="settings_screen_list_description">Settings Screen List</string>
+
 </resources>

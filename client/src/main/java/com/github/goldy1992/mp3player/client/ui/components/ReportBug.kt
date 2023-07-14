@@ -43,7 +43,7 @@ fun ReportABugDialog(
                 onClick = {
                     closeDialog()}
             ) {
-                Text("Done")
+                Text(stringResource(id = R.string.done))
             }
         },
         text = {
@@ -69,7 +69,7 @@ fun ReportABugDialog(
                         )
                     },
                     headlineContent = {
-                        Text(text = "Send email",  maxLines = 1)
+                        Text(text = stringResource(id = R.string.send_email),  maxLines = 1)
                     })
             }
         },

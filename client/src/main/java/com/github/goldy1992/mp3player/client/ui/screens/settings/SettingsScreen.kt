@@ -203,9 +203,12 @@ fun SettingsScreenContent(
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
     val context = LocalContext.current
+    val listDescription = stringResource(id = R.string.settings_screen_list_description)
     val settings = settingsProvider()
     val isDarkMode = if (settings.useSystemDarkMode) isSystemInDarkTheme() else settings.darkMode
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier.semantics {
+        contentDescription = listDescription
+    }) {
         item {
             SubHeader(title = stringResource(id = R.string.display))
         }
