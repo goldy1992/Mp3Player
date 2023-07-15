@@ -29,7 +29,6 @@ private const val BUG_REPORT_URL = "https://github.com/goldy1992/Mp3Player/issue
 @Preview
 @Composable
 fun ReportABugDialog(
-    darkMode : Boolean = false,
     closeDialog : () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -53,7 +52,7 @@ fun ReportABugDialog(
                     modifier = Modifier.clickable {
                         uriHandler.openUri(BUG_REPORT_URL)
                     },
-                    leadingContent = { GithubIcon(modifier = Modifier.size(24.dp), isDarkMode = darkMode)},
+                    leadingContent = { GithubIcon(modifier = Modifier.size(24.dp))},
                     headlineContent = {
                     Text(text = "GitHub",  maxLines = 1)
                 })

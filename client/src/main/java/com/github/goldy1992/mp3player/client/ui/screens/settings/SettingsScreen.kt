@@ -16,7 +16,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.ui.LocalIsDarkMode
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
@@ -54,7 +54,6 @@ import com.github.goldy1992.mp3player.client.ui.components.Language
 import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.utils.EmailUtils
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -205,7 +204,6 @@ fun SettingsScreenContent(
     val context = LocalContext.current
     val listDescription = stringResource(id = R.string.settings_screen_list_description)
     val settings = settingsProvider()
-    val isDarkMode = if (settings.useSystemDarkMode) isSystemInDarkTheme() else settings.darkMode
     LazyColumn(modifier = modifier.semantics {
         contentDescription = listDescription
     }) {
@@ -221,7 +219,7 @@ fun SettingsScreenContent(
         item {
             DarkModeMenuItem(
                 useSystemDarkMode = settings.useSystemDarkMode,
-                isDarkMode = settings.darkMode,
+                isdarkModePreferencesValue = settings.darkMode,
                 onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
             )
         }
@@ -293,19 +291,13 @@ fun SettingsScreenContent(
         }
 
         item {
-            ReportBugMenuItem(
-                darkMode = isDarkMode,
-            )
+            ReportBugMenuItem()
         }
         item {
-            FeatureRequestMenuItem(
-                darkMode = isDarkMode,
-            )
+            FeatureRequestMenuItem()
         }
         item {
-            FeedbackMenuItem(
-                darkMode = isDarkMode,
-            )
+            FeedbackMenuItem()
         }
 
         item {
@@ -317,7 +309,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            AboutMenuItem(darkMode = isDarkMode)
+            AboutMenuItem()
         }
         item {
             VersionMenuItem(versionUtils = versionUtils)
@@ -383,16 +375,16 @@ private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
 }
 
 @Composable
-private fun DarkModeMenuItem(isDarkMode : Boolean,
-                            useSystemDarkMode: Boolean,
-                            onUpdate: (newValue: Boolean) -> Unit) {
+private fun DarkModeMenuItem(isdarkModePreferencesValue : Boolean,
+                             useSystemDarkMode: Boolean,
+                             onUpdate: (newValue: Boolean) -> Unit) {
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
         headlineContent = { Text(text = stringResource(id = R.string.dark_mode)) },
         trailingContent = {
             Switch(
-                checked = isDarkMode,
+                checked = isdarkModePreferencesValue,
                 enabled = !useSystemDarkMode,
                 onCheckedChange = { isChecked -> onUpdate(isChecked) },
                 modifier = Modifier.semantics { contentDescription = switchDescription })
@@ -401,13 +393,10 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 }
 
 @Composable
-private fun ReportBugMenuItem(
-    darkMode: Boolean = false
-) {
+private fun ReportBugMenuItem() {
     var openDialog by remember { mutableStateOf(false) }
     if (openDialog) {
-        ReportABugDialog(darkMode = darkMode
-            ) {
+        ReportABugDialog {
             openDialog = false
         }
     }
@@ -428,13 +417,10 @@ private fun ReportBugMenuItem(
 
 @Preview
 @Composable
-private fun FeatureRequestMenuItem(
-    darkMode: Boolean = false
-) {
+private fun FeatureRequestMenuItem() {
     var openDialog by remember { mutableStateOf(false) }
     if (openDialog) {
-        FeatureRequestDialog(darkMode = darkMode
-        ) {
+        FeatureRequestDialog {
             openDialog = false
         }
     }
@@ -455,9 +441,7 @@ private fun FeatureRequestMenuItem(
 
 @Preview
 @Composable
-private fun FeedbackMenuItem(
-    darkMode: Boolean = false
-) {
+private fun FeedbackMenuItem() {
     var openFeedbackDialog by remember { mutableStateOf(false) }
 
     if (openFeedbackDialog) {
@@ -491,11 +475,10 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
 
 @Preview
 @Composable
-private fun AboutMenuItem(
-    darkMode : Boolean = false) {
+private fun AboutMenuItem() {
     var openDialog by remember { mutableStateOf(false) }
     if (openDialog) {
-        AboutDialog(darkMode = darkMode) {
+        AboutDialog {
             openDialog = false
         }
     }

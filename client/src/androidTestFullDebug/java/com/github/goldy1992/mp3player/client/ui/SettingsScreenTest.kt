@@ -9,7 +9,6 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
@@ -20,6 +19,7 @@ import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
+import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 
 import org.junit.Before
 import org.junit.Rule
@@ -109,6 +109,50 @@ class SettingsScreenTest {
 
         composeTestRule.onNodeWithText(doneText).performClick()
         composeTestRule.onNodeWithText("GitHub").assertDoesNotExist()
+    }
+
+    /**
+     * Tests that the [ReportABugDialog] is displayed when the Report a Bug Setting is clicked
+     */
+    @Test
+    fun testFeatureRequestFlow() {
+        val lazyListDescription = context.getString(R.string.settings_screen_list_description)
+        val requestFeatureText = context.getString(R.string.request_feature)
+        val doneText = context.getString(R.string.done)
+        composeTestRule.setContent {
+            SettingsScreen(
+                viewModel = viewModel)
+        }
+        composeTestRule.onNodeWithContentDescription(lazyListDescription).performScrollToNode (
+            hasText(requestFeatureText)
+        )
+        composeTestRule.onNodeWithContentDescription(requestFeatureText).performClick()
+        composeTestRule.onNodeWithText("GitHub").assertExists()
+
+        composeTestRule.onNodeWithText(doneText).performClick()
+        composeTestRule.onNodeWithText("GitHub").assertDoesNotExist()
+    }
+
+    /**
+     * Tests that the [AboutDialog] is displayed correctly when selected from the Settings Menu
+     */
+    @Test
+    fun testDisplayAboutDialog() {
+        val lazyListDescription = context.getString(R.string.settings_screen_list_description)
+        val aboutMenuItemTitle = context.getString(R.string.about)
+        val aboutDialogText = context.getString(R.string.about_description)
+        val closeButtonDescription = context.getString(R.string.close)
+        composeTestRule.setContent {
+            SettingsScreen(
+                viewModel = viewModel)
+        }
+        composeTestRule.onNodeWithContentDescription(lazyListDescription).performScrollToNode (
+            hasText(aboutMenuItemTitle)
+        )
+        composeTestRule.onNodeWithText(aboutMenuItemTitle).performClick()
+        composeTestRule.onNodeWithText(aboutDialogText).assertExists()
+        composeTestRule.onNodeWithContentDescription(closeButtonDescription).performClick()
+        composeTestRule.onNodeWithText(aboutDialogText).assertDoesNotExist()
     }
 
 }

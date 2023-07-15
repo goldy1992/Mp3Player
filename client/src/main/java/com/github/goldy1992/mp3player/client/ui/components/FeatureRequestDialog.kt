@@ -29,7 +29,6 @@ private const val FEATURE_REQUEST_URL = "https://github.com/goldy1992/Mp3Player/
 @Preview
 @Composable
 fun FeatureRequestDialog(
-    darkMode : Boolean = false,
     closeDialog : () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -53,7 +52,7 @@ fun FeatureRequestDialog(
                     modifier = Modifier.clickable {
                         uriHandler.openUri(FEATURE_REQUEST_URL)
                     },
-                    leadingContent = { GithubIcon(modifier = Modifier.size(24.dp), isDarkMode = darkMode)},
+                    leadingContent = { GithubIcon(modifier = Modifier.size(24.dp))},
                     headlineContent = {
                     Text(text = "GitHub",  maxLines = 1)
                 })

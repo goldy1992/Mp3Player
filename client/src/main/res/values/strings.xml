@@ -12,6 +12,7 @@
     <string name="bottom_app_bar">Bottom App Bar</string>
     <string name="cancel">Cancel</string>
     <string name="clear_search">Clear</string>
+    <string name="close">Close</string>
     <string name="contribute">Contribute</string>
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
@@ -79,5 +80,7 @@
 
     <!-- Content Descriptions -->
     <string name="settings_screen_list_description">Settings Screen List</string>
+    <string name="github_dark_mode_icon_description">Github Dark Mode Icon Description</string>
+    <string name="github_light_mode_icon_description">Github Light Mode Icon Description</string>
 
 </resources>

@@ -10,8 +10,10 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -74,18 +76,12 @@ val orangeAppDarkTheme = darkColors(
     onError = white
 )
 
+internal val LocalIsDarkMode = staticCompositionLocalOf { false }
 
 @Composable
 fun AppTheme(userPreferencesRepository: IUserPreferencesRepository,
              content: @Composable () -> Unit) {
-    MaterialTheme(
-        colorScheme = getColorScheme(userPreferencesRepository),
-        content = content
-    )
-}
 
-@Composable
-private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository) : ColorScheme {
     val context : Context = LocalContext.current
     val systemInDarkTheme = isSystemInDarkTheme()
     val userPreferences by userPreferencesRepository.userPreferencesFlow().collectAsState(initial = UserPreferences.DEFAULT)
@@ -100,6 +96,17 @@ private fun getColorScheme(userPreferencesRepository: IUserPreferencesRepository
         useDarkThemePref
     }
 
+    MaterialTheme(
+        colorScheme = getColorScheme(context, useDarkTheme, useDynamicColor),
+        content = {
+            CompositionLocalProvider(LocalIsDarkMode provides useDarkTheme) {
+                content()
+            }
+        }
+    )
+}
+
+private fun getColorScheme(context: Context, useDarkTheme: Boolean, useDynamicColor: Boolean) : ColorScheme {
     return if (VersionUtils.isAndroid12OrHigher()) {
         getColorSchemeAndroid12OrHigher(context, useDarkTheme, useDynamicColor)
     } else {

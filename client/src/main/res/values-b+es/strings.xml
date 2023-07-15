@@ -13,6 +13,7 @@
     <string name="bottom_app_bar">App Bar as Fondo</string>
     <string name="cancel">Cancelar</string>
     <string name="clear_search">Borrar</string>
+    <string name="close">Cerrar</string>
     <string name="contribute">Contribuir</string>
     <string name="current_position">Posición Actual</string>
     <string name="dark_mode">Modo Oscuro</string>
@@ -79,5 +80,7 @@
 
     <!-- Content Descriptions -->
     <string name="settings_screen_list_description">Lista de los ajustes</string>
+    <string name="github_dark_mode_icon_description">Descripción del ícono GitHub modo oscuro</string>
+    <string name="github_light_mode_icon_description">Descripción del ícono GitHub modo luminoso</string>
 
 </resources>
