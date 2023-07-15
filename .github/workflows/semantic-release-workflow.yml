@@ -3,14 +3,6 @@ run-name: Semantic Release
 on:
   workflow_dispatch:
   workflow_call:
-    outputs:
-      performed_release:
-        description: "A flag output from semantic release to notify whether a new release version \
-        has been created."
-        value: ${{ jobs.semantic-release.outputs.performed_release }}
-      release_commit_ref:
-        description: "A git commit hash of the release commit to master."
-        value: ${{ jobs.semantic-release.outputs.release_commit_ref }}
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
         required: true
