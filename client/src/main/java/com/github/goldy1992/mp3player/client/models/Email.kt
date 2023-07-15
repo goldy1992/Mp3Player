@@ -4,7 +4,9 @@ private const val TO_EMAIL_ADDRESS = "goldy131992@gmail.com"
 private const val DEFAULT_BUG_REPORT_SUBJECT = "MP3 Player Bug Report - Please Give a Bug Description"
 private const val DEFAULT_FEATURE_REQUEST_SUBJECT = "MP3 Player Feature Request - Please summarise your idea"
 
-
+/**
+ * Represents an email to be sent from the app.
+ */
 data class Email(
     val toAddresses : Array<String> = emptyArray(),
     val ccAddresses : Array<String> = emptyArray(),
@@ -57,6 +59,10 @@ data class Email(
         result = 31 * result + ccAddresses.contentHashCode()
         result = 31 * result + subject.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "subject: ${subject}; type: ${type.name}; toAddresses: ${toAddresses.joinToString()}; ccAddresses: ${ccAddresses.joinToString()}"
     }
 }
 

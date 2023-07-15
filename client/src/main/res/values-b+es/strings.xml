@@ -46,6 +46,7 @@
     <string name="permissions">Permisos</string>
     <string name="play">Play</string>
     <string name="play_album">Play Álbum</string>
+    <string name="rating_dialog_title">"Cómo va su experiencia?"</string>
     <string name="read_external_storage">Leer Almacenamiento Externo </string>
     <string name="repeat_all">Repetir Todo</string>
     <string name="repeat_none">No Repetir</string>

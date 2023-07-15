@@ -10,27 +10,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.github.goldy1992.mp3player.client.ui.utils.RatingUtils.submit
+import com.github.goldy1992.mp3player.client.R
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun RatingDialog(
-    onSubmit : () -> Unit = {},
     closeDialog : (Int?) -> Unit = {_->}
 ) {
-    val context = LocalContext.current
     var currentRating by remember { mutableStateOf(5) } // default to 5 stars
     AlertDialog(
-        title = { Text("How is it?")},
+        title = { Text(stringResource(id = R.string.rating_dialog_title))},
         confirmButton = {
             TextButton(
                 enabled = currentRating >= 1,
                 onClick = {
                     closeDialog(currentRating)}
             ) {
-                Text("Submit")
+                Text(stringResource(id = R.string.submit))
             }
         },
         text = {

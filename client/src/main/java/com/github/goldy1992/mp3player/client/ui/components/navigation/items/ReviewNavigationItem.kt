@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.navigation
+package com.github.goldy1992.mp3player.client.ui.components.navigation.items
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -58,7 +58,6 @@ fun ReviewNavigationItem() {
             Icon(
                 Icons.Filled.Star,
                 contentDescription = "Equalizer",
-                //    modifier = Modifier.size(24.dp)
             )
         },
         selected = false,
