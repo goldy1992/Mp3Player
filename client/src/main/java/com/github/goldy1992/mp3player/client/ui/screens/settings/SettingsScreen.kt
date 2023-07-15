@@ -47,8 +47,11 @@ import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.FeatureRequestDialog
+import com.github.goldy1992.mp3player.client.ui.components.FeedbackDialog
 import com.github.goldy1992.mp3player.client.ui.components.Language
 import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDialog
+import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
@@ -180,7 +183,7 @@ private fun SmallSettingsScreen(
                         settingsProvider = settingsProvider,
                         permissionsProvider = permissionsProvider,
                         settingsOnClickMap = settingsOnClickMap,
-                        modifier = Modifier.padding(it)
+                        modifier = Modifier.padding(it),
                     )
                 }
             })
@@ -198,8 +201,11 @@ fun SettingsScreenContent(
     versionUtils: VersionUtils = VersionUtils(LocalContext.current)) {
 
     val context = LocalContext.current
+    val listDescription = stringResource(id = R.string.settings_screen_list_description)
     val settings = settingsProvider()
-    LazyColumn(modifier = modifier) {
+    LazyColumn(modifier = modifier.semantics {
+        contentDescription = listDescription
+    }) {
         item {
             SubHeader(title = stringResource(id = R.string.display))
         }
@@ -212,7 +218,7 @@ fun SettingsScreenContent(
         item {
             DarkModeMenuItem(
                 useSystemDarkMode = settings.useSystemDarkMode,
-                isDarkMode = settings.darkMode,
+                isdarkModePreferencesValue = settings.darkMode,
                 onUpdate = settingsOnClickMap[Settings.Type.DARK_MODE] as (Boolean) -> Unit
             )
         }
@@ -264,24 +270,45 @@ fun SettingsScreenContent(
             )
         }
         item {
+            Divider()
+        }
+        item {
+            SubHeader(title = stringResource(id = R.string.input))
+        }
+        item {
             LanguageMenuItem(
                 currentLanguage = AppCompatDelegate.getApplicationLocales()[0]?.language ?: "en",
             )
         }
+
         item {
             Divider()
         }
+
         item {
-            SubHeader(title = stringResource(id = R.string.help))
+            SubHeader(title = stringResource(id = R.string.contribute))
+        }
+
+        item {
+            ReportBugMenuItem()
         }
         item {
-            SupportAndFeedbackMenuItem(onClick = {  })
+            FeatureRequestMenuItem()
         }
+        item {
+            FeedbackMenuItem()
+        }
+
         item {
             Divider()
         }
+
         item {
-            AboutMenuItem(darkMode = settings.darkMode)
+            SubHeader(title  = stringResource(id = R.string.app_info))
+        }
+
+        item {
+            AboutMenuItem()
         }
         item {
             VersionMenuItem(versionUtils = versionUtils)
@@ -347,16 +374,16 @@ private fun SystemDarkModeMenuItem(useSystemDarkMode : Boolean,
 }
 
 @Composable
-private fun DarkModeMenuItem(isDarkMode : Boolean,
-                            useSystemDarkMode: Boolean,
-                            onUpdate: (newValue: Boolean) -> Unit) {
+private fun DarkModeMenuItem(isdarkModePreferencesValue : Boolean,
+                             useSystemDarkMode: Boolean,
+                             onUpdate: (newValue: Boolean) -> Unit) {
     val switchDescription = stringResource(id = R.string.dark_mode_switch)
     ListItem(modifier = Modifier.fillMaxWidth(),
         leadingContent = { Icon(Icons.Default.DarkMode, contentDescription = stringResource(id = R.string.dark_mode_icon)) },
         headlineContent = { Text(text = stringResource(id = R.string.dark_mode)) },
         trailingContent = {
             Switch(
-                checked = isDarkMode,
+                checked = isdarkModePreferencesValue,
                 enabled = !useSystemDarkMode,
                 onCheckedChange = { isChecked -> onUpdate(isChecked) },
                 modifier = Modifier.semantics { contentDescription = switchDescription })
@@ -365,16 +392,72 @@ private fun DarkModeMenuItem(isDarkMode : Boolean,
 }
 
 @Composable
-private fun SupportAndFeedbackMenuItem(onClick: () -> Unit) {
-    val supportAndFeedback = stringResource(id = R.string.support_and_feedback)
+private fun ReportBugMenuItem() {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        ReportABugDialog {
+            openDialog = false
+        }
+    }
+
+    val reportBugText = stringResource(id = R.string.report_bug)
     ListItem(
         modifier = Modifier.clickable {
-            onClick()
+            openDialog = true
         },
-        leadingContent = { Icon(Icons.Filled.Help, contentDescription = supportAndFeedback) },
+        leadingContent = { Icon(Icons.Filled.BugReport, contentDescription = reportBugText) },
         headlineContent = {
             Column {
-                Text(supportAndFeedback)
+                Text(reportBugText)
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun FeatureRequestMenuItem() {
+    var openDialog by remember { mutableStateOf(false) }
+    if (openDialog) {
+        FeatureRequestDialog {
+            openDialog = false
+        }
+    }
+
+    val featureRequestText = stringResource(id = R.string.request_feature)
+    ListItem(
+        modifier = Modifier.clickable {
+            openDialog = true
+        },
+        leadingContent = { Icon(Icons.Filled.Construction, contentDescription = featureRequestText) },
+        headlineContent = {
+            Column {
+                Text(featureRequestText)
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun FeedbackMenuItem() {
+    var openFeedbackDialog by remember { mutableStateOf(false) }
+
+    if (openFeedbackDialog) {
+        FeedbackDialog() {
+            openFeedbackDialog = false
+        }
+    }
+
+    val feedbackText = stringResource(id = R.string.feedback)
+    ListItem(
+        modifier = Modifier.clickable {
+            openFeedbackDialog = true
+        },
+        leadingContent = { Icon(Icons.Filled.Comment, contentDescription = feedbackText) },
+        headlineContent = {
+            Column {
+                Text(feedbackText)
             }
         },
     )
@@ -391,11 +474,10 @@ private fun VersionMenuItem(versionUtils : VersionUtils = VersionUtils(LocalCont
 
 @Preview
 @Composable
-private fun AboutMenuItem(
-    darkMode : Boolean = false) {
+private fun AboutMenuItem() {
     var openDialog by remember { mutableStateOf(false) }
     if (openDialog) {
-        AboutDialog(darkMode = darkMode) {
+        AboutDialog {
             openDialog = false
         }
     }

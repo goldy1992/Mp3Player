@@ -6,22 +6,30 @@
     <string name="allow_audio_playback">Allow Audio Playback</string>
     <string name="allow_image_display">Allow Image Display</string>
     <string name="allow_notifications">Allow Notifications</string>
+    <string name="app_info">App Info</string>
     <string name="app_title">Music Player</string>
     <string name="back">Back</string>
     <string name="bottom_app_bar">Bottom App Bar</string>
+    <string name="cancel">Cancel</string>
     <string name="clear_search">Clear</string>
+    <string name="close">Close</string>
+    <string name="contribute">Contribute</string>
     <string name="current_position">Current Position</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="dark_mode_icon">System Dark Mode Icon</string>
     <string name="dark_mode_switch">Dark Mode Switch</string>
+    <string name="done">Done</string>
     <string name="display">Display</string>
     <string name="duration">Duration</string>
     <string name="dynamic_color">Use Dynamic Colors</string>
+    <string name="feedback">Leave Feedback</string>
+    <string name="feedback_request">"We'd love to hear about your experience using the app. Would you like to send an email with your comments? "</string>
     <string name="folder">Folder</string>
     <string name="folders">Folders</string>
     <string name="folder_icon">Folder Icon</string>
     <string name="folder_list">Folder List</string>
     <string name="help">Help</string>
+    <string name="input">Input</string>
     <string name="language">Language</string>
     <string name="loading">Loading</string>
     <string name="library">Library</string>
@@ -37,17 +45,22 @@
     <string name="permissions">Permissions</string>
     <string name="play">Play</string>
     <string name="play_album">Play Album</string>
+    <string name="rating_dialog_title">"How is it?"</string>
     <string name="read_external_storage">Read External Storage</string>
     <string name="repeat_all">Repeat All</string>
     <string name="repeat_none">Repeat None</string>
     <string name="repeat_one">Repeat One</string>
+    <string name="report_bug">Report a Bug</string>
+    <string name="request_feature">Request a Feature</string>
     <string name="reset_speed">Reset Playback Speed</string>
+    <string name="review">Review</string>
     <string name="root">Root</string>
     <string name="search">Search</string>
     <string name="search_hint">Search media</string>
     <string name="search_results_column">Search Results Column</string>
     <string name="search_text_field">Search Text Field</string>
     <string name="select_language">Select Language</string>
+    <string name="send_email">Send Email</string>
     <string name="settings">Settings</string>
     <string name="shuffle_off">Shuffle Off</string>
     <string name="shuffle_on">Shuffle On</string>
@@ -57,11 +70,18 @@
     <string name="songs">Songs</string>
     <string name="songs_list">Songs List</string>
     <string name="song_title">Song Title</string>
+    <string name="submit">Submit</string>
     <string name="support_and_feedback">Support and Feedback</string>
     <string name="system_dark_mode_icon">System Dark Mode Icon</string>
     <string name="system_dark_mode_switch">System Dark Mode Switch</string>
     <string name="update_permissions">Update Permissions</string>
     <string name="use_system_dark_mode">Use System Dark Mode</string>
     <string name="version">Version</string>
+
+
+    <!-- Content Descriptions -->
+    <string name="settings_screen_list_description">Settings Screen List</string>
+    <string name="github_dark_mode_icon_description">Github Dark Mode Icon Description</string>
+    <string name="github_light_mode_icon_description">Github Light Mode Icon Description</string>
 
 </resources>

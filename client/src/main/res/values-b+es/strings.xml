@@ -7,22 +7,30 @@
     <string name="allow_audio_playback">Permitir Reproducción de Audio</string>
     <string name="allow_image_display">Permitir Mostrar Imágenes</string>
     <string name="allow_notifications">Permitir Notificaciones</string>
+    <string name="app_info">Info de la App</string>
     <string name="app_title">Music Player</string>
     <string name="back">Volver</string>
     <string name="bottom_app_bar">App Bar as Fondo</string>
+    <string name="cancel">Cancelar</string>
     <string name="clear_search">Borrar</string>
+    <string name="close">Cerrar</string>
+    <string name="contribute">Contribuir</string>
     <string name="current_position">Posición Actual</string>
     <string name="dark_mode">Modo Oscuro</string>
     <string name="dark_mode_icon">Ícono del Modo Oscuro</string>
     <string name="dark_mode_switch">Cambio del Modo Oscuro</string>
     <string name="display">Pantalla</string>
+    <string name="done">Confirmar</string>
     <string name="duration">Duración</string>
     <string name="dynamic_color">Usar Colores Dínamicos</string>
+    <string name="feedback">Dejar Comentarios</string>
+    <string name="feedback_request">"Nos gustaría escuchar su experiencia de la app. ¿Quiere enviar un email con sus comentarios?"</string>
     <string name="folder">Carpeta</string>
     <string name="folders">Carpetas</string>
     <string name="folder_icon">Ícono de Carpeta</string>
     <string name="folder_list">Lista de Carpetas</string>
     <string name="help">Ayuda</string>
+    <string name="input">Introducción</string>
     <string name="language">Idioma</string>
     <string name="loading">Cargando</string>
     <string name="library">Colección</string>
@@ -38,17 +46,22 @@
     <string name="permissions">Permisos</string>
     <string name="play">Play</string>
     <string name="play_album">Play Álbum</string>
+    <string name="rating_dialog_title">"Cómo va su experiencia?"</string>
     <string name="read_external_storage">Leer Almacenamiento Externo </string>
     <string name="repeat_all">Repetir Todo</string>
     <string name="repeat_none">No Repetir</string>
     <string name="repeat_one">Repetir Uno</string>
+    <string name="report_bug">Reportar Bug</string>
+    <string name="request_feature">Solicitud de funciones</string>
     <string name="reset_speed">Reiniciar la velocidad de reproducción</string>
+    <string name="review">Reseña</string>
     <string name="root">Root</string>
     <string name="search">Búsqueda</string>
     <string name="search_hint">Bucar media</string>
     <string name="search_results_column">Columna de los resultados de búsqueda</string>
     <string name="search_text_field">Cuadro de Texto de Búsqueda</string>
     <string name="select_language">Eligir Idioma</string>
+    <string name="send_email">Enviar Email</string>
     <string name="settings">Ajustes</string>
     <string name="shuffle_off">Modo Aleatorio Apagado</string>
     <string name="shuffle_on">Modo Aleatorio Activado</string>
@@ -58,10 +71,17 @@
     <string name="songs">Canciones</string>
     <string name="songs_list">Lista de Canciones</string>
     <string name="song_title">Nombre de Canción</string>
+    <string name="submit">Enviar</string>
     <string name="support_and_feedback">Apoyo y Feedback</string>
     <string name="system_dark_mode_icon">Ícono del Modo Oscuro de Sistema</string>
     <string name="system_dark_mode_switch">Cambio del Modo Oscuro de Sistema</string>
     <string name="update_permissions">Actualizar Permisos</string>
     <string name="use_system_dark_mode">Usar Modo Oscuro de Sistema</string>
     <string name="version">Versión</string>
+
+    <!-- Content Descriptions -->
+    <string name="settings_screen_list_description">Lista de los ajustes</string>
+    <string name="github_dark_mode_icon_description">Descripción del ícono GitHub modo oscuro</string>
+    <string name="github_light_mode_icon_description">Descripción del ícono GitHub modo luminoso</string>
+
 </resources>
