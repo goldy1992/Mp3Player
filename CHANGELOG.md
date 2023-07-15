@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/goldy1992/Mp3Player/compare/v3.4.0...v3.5.0) (2023-07-15)
+
+
+### Features
+
+* **reporting:** Added Bug Reporting, Feature Requests, Reviews and Feedback ([4573b00](https://github.com/goldy1992/Mp3Player/commit/4573b003f5d90266c8cadcdbec5c157b7b98ff27))
+
 # [3.4.0](https://github.com/goldy1992/Mp3Player/compare/v3.3.0...v3.4.0) (2023-07-08)
 
 
