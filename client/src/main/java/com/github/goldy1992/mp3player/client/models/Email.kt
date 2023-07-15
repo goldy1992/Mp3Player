@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.models
 private const val TO_EMAIL_ADDRESS = "goldy131992@gmail.com"
 private const val DEFAULT_BUG_REPORT_SUBJECT = "MP3 Player Bug Report - Please Give a Bug Description"
 private const val DEFAULT_FEATURE_REQUEST_SUBJECT = "MP3 Player Feature Request - Please summarise your idea"
+private const val DEFAULT_FEEDBACK_SUBJECT = "MP3 Player Feedback"
 
 /**
  * Represents an email to be sent from the app.
@@ -36,7 +37,7 @@ data class Email(
         val FEEDBACK = Email(
             toAddresses = DEFAULT_TO_ADDRESSES,
             ccAddresses = DEFAULT_CC_ADDRESSES,
-            subject = DEFAULT_FEATURE_REQUEST_SUBJECT,
+            subject = DEFAULT_FEEDBACK_SUBJECT,
             type = EmailType.FEEDBACK
         )
 

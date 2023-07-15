@@ -19,15 +19,6 @@ jobs:
     uses: ./.github/workflows/semantic-release-workflow.yml
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
-
-  google-play-release:
-    name: Google Play Release
-    needs: [ semantic-release ] # needs semantic release so that the versions are incremented
-    if: needs.semantic-release.outputs.performed_release == 'true'
-    uses: ./.github/workflows/google-play-release-workflow.yml
-    with:
-      release_commit_ref: needs.semantic-release.outputs.release_commit_ref
-    secrets:
       KEY_STORE_BASE64: ${{ secrets.KEY_STORE_BASE64 }}
       KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}

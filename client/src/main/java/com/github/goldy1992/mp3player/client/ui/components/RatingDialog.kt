@@ -39,7 +39,7 @@ fun RatingDialog(
         textContentColor = MaterialTheme.colorScheme.onSurface,
         dismissButton = {
             TextButton(onClick = { closeDialog(null) }) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel))
             }
 
         },

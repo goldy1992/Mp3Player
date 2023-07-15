@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.LocalIsDarkMode
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
