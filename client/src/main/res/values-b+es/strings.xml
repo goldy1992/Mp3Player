@@ -78,6 +78,7 @@
     <string name="update_permissions">Actualizar Permisos</string>
     <string name="use_system_dark_mode">Usar Modo Oscuro de Sistema</string>
     <string name="version">Versión</string>
+    <string name="visualizer">Visualizer</string>
 
     <!-- Content Descriptions -->
     <string name="settings_screen_list_description">Lista de los ajustes</string>

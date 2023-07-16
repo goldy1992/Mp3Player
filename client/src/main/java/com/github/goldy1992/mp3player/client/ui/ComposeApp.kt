@@ -28,8 +28,10 @@ import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
-import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerScreen
-import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.SingleVisualizerScreen
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.SingleVisualizerScreenViewModel
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionScreen
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -160,9 +162,21 @@ fun ComposeApp(
                         windowSize = windowSize
                     )
                 }
-                composable(Screen.VISUALIZER.name){
-                    val viewModel = hiltViewModel<VisualizerViewModel>()
-                    VisualizerScreen(
+                composable(
+                    route = Screen.SINGLE_VISUALIZER.name + "/{visualizer}",
+                    arguments = listOf(
+                        navArgument("visualizer"){ type = NavType.StringType }
+                    )
+                ) {
+                    val viewModel = hiltViewModel<SingleVisualizerScreenViewModel>()
+                    SingleVisualizerScreen(
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+                composable(Screen.VISUALIZER_COLLECTION.name){
+                    val viewModel = hiltViewModel<VisualizerCollectionViewModel>()
+                    VisualizerCollectionScreen(
                         navController = navController,
                         viewModel = viewModel)
                 }

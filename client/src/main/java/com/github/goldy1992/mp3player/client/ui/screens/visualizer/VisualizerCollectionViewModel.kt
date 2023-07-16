@@ -10,6 +10,7 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.AudioDataViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,40 +19,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * [ViewModel] implementation for the [VisualizerScreen].
+ * [ViewModel] implementation for the [VisualizerCollectionScreen].
  */
 @HiltViewModel
-class VisualizerViewModel
+class VisualizerCollectionViewModel
 @Inject
 constructor(
-    private val audioDataProcessor: AudioDataProcessor,
+    audioDataProcessor: AudioDataProcessor,
     override val mediaRepository: MediaRepository,
 ) : Pause, Play, SkipToNext, SkipToPrevious, ViewModel() {
     override val scope = viewModelScope
+
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-
-    // Backing property to avoid state updates from other classes
-    private val _audioData = MutableStateFlow(emptyList<Float>())
-    // The UI collects from this StateFlow to get its state updates
-    val audioData: StateFlow<List<Float>> = _audioData
-
-
-    init {
-        viewModelScope.launch {
-            mediaRepository
-                .audioData()
-                .collect { audioData ->
-                    Log.d(logTag(), "collecting audio data")
-                    if (isPlaying.state().value) {
-                        _audioData.value = audioDataProcessor.processAudioData(audioData, FrequencyBandTwentyFour()).toList()
-                        Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
-                    } else {
-                        Log.v(logTag(), "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
-                    }
-            }
-        }
-
-    }
+    val audioData = AudioDataViewModelState(mediaRepository, audioDataProcessor, isPlaying.state(), scope)
 
     override fun logTag(): String {
         return "VisualizerViewModel"

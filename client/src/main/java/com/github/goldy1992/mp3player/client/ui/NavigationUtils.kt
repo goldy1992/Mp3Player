@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.MediaEntity
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.Screen
 
@@ -41,6 +42,14 @@ object NavigationUtils : LogTagger{
 
     }
 
+    fun navigate(navController: NavController, visualizerType: VisualizerType) {
+        val visualizerTypeString = visualizerType.name
+        Log.d(logTag(), "navigate() invoked with visualizerType: $visualizerType")
+        navController.navigate(
+            Screen.SINGLE_VISUALIZER.name
+                    + "/" + visualizerTypeString)
+
+    }
     override fun logTag(): String {
         return "NavigationUtils"
     }

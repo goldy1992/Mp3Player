@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.components.navigation.items.EqualizerNavigationIcon
+import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationIcon
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.LibraryNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.ReviewNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SearchNavigationItem
@@ -53,10 +53,10 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
             }
         }
 
-        val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER
-        EqualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
+        val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
+        VisualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
             if (!isEqualizerScreenSelected) {
-                navController.navigate(Screen.VISUALIZER.name)
+                navController.navigate(Screen.VISUALIZER_COLLECTION.name)
             }
         }
 

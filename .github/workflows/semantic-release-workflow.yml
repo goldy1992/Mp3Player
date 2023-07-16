@@ -24,6 +24,8 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
+      SIGNING_KEY_FILE_NAME: signing_key_file.jks
+      SIGNING_KEY_PATH: app/signing_key_file.jks
     environment: release_env
     outputs:
       performed_release: ${{ steps.release.outputs.performed_release }}
