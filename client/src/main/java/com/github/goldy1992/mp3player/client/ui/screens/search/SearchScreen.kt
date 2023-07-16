@@ -39,7 +39,7 @@ import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.SearchResults
 import com.github.goldy1992.mp3player.client.models.media.Song
-import com.github.goldy1992.mp3player.client.ui.NavigationUtils
+import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.client.ui.WindowSize
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent

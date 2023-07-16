@@ -85,4 +85,9 @@
     <string name="github_dark_mode_icon_description">Github Dark Mode Icon Description</string>
     <string name="github_light_mode_icon_description">Github Light Mode Icon Description</string>
 
+
+    <!-- Visualizer names -->
+    <string name="bars">Bars</string>
+    <string name="smooth_line">Smooth Line</string>
+    <string name="fountain">Fountain</string>
 </resources>
