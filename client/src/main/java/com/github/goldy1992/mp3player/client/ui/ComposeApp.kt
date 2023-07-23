@@ -41,7 +41,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 
 private const val LOG_TAG = "ComposeApp"
-private const val transitionTime = 2000
+private const val transitionTime = 600
 
 /**
  * Entry point to the Compose UI.

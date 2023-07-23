@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +29,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerT
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
+import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerUtils.getVisualizerName
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -45,9 +47,10 @@ fun SingleVisualizerScreen(
 ) {
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val audioData by viewModel.audioData.state().collectAsState()
+    val visualizerName = getVisualizerName(viewModel.visualizer, LocalContext.current)
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(viewModel.visualizer.name) },
+            TopAppBar(title = { Text(visualizerName) },
                 navigationIcon = {
                     NavUpButton(navController = navController, scope = scope)
                 })
@@ -79,17 +82,10 @@ fun SingleVisualizerScreen(
 
             when(viewModel.visualizer) {
                 VisualizerType.BAR -> {
-                    val barWidthPx : Float = remember(canvasSize) {
-                        if (audioData.isNotEmpty()) {
-                            (canvasSize.widthPx / audioData.size) -5f
-                        } else {
-                            0f
-                        }
-                    }
                     BarEqualizer(
                         canvasSize = canvasSize,
                         frequencyValues = { audioData },
-                        barWidthPx = barWidthPx
+//                        barWidthPx = barWidthPx
 
                     )
                 }
