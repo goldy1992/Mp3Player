@@ -9,7 +9,7 @@ object VisualizerUtils {
     fun getVisualizerName(type: VisualizerType, context : Context) : String {
         return when (type) {
             VisualizerType.BAR -> context.getString(R.string.bars)
-            VisualizerType.FIREWORK -> context.getString(R.string.fountain)
+            VisualizerType.FOUNTAIN -> context.getString(R.string.fountain)
             VisualizerType.LINE ->  context.getString(R.string.smooth_line)
         }
     }

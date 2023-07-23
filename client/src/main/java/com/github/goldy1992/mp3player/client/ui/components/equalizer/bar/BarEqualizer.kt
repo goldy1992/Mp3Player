@@ -104,7 +104,7 @@ private fun BarEqualizerCanvas(
         modifier = modifier.fillMaxSize()
 
     ) {
-        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
+//        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
 
         for (idx in bars.indices) {
             drawRect(

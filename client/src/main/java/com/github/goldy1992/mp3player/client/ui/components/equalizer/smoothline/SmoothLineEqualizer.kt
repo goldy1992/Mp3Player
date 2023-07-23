@@ -96,7 +96,7 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
         .fillMaxSize()
 
     ) {
-        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
+    //    drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
         val curvePath = Path().apply {
             reset()
             if (coordinates.isNotEmpty()) {

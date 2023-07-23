@@ -70,6 +70,7 @@ fun VisualizerCollectionScreen(
         VisualizerContentCardCollection(
             modifier = Modifier.padding(it),
             audioMagnitudes = {audioMagnitudes},
+            isPlaying = { isPlaying },
             onClickCard = onClickCard
         )
     }
@@ -103,6 +104,7 @@ private fun TopBar(navIcon: @Composable () -> Unit = {}) {
 fun VisualizerContentCardCollection(
     modifier: Modifier = Modifier,
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
+    isPlaying : () -> Boolean = {false},
     onClickCard : (VisualizerType) -> Unit = {_->},
     scope: CoroutineScope = rememberCoroutineScope()) {
 
@@ -152,8 +154,9 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
-                        onClickCard(VisualizerType.FIREWORK)
+                        onClickCard(VisualizerType.FOUNTAIN)
                     },
+                isPlaying = isPlaying,
                 frequencyPhases = audioMagnitudes,
             )
         }

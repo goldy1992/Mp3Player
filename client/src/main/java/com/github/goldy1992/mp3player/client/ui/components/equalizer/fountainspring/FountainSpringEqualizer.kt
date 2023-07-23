@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +28,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-private const val logTag = "FireworksEqualizer"
+private const val logTag = "FountainSpringEqualizer"
 
 private const val MAX_FREQUENCY = 150
 
@@ -35,11 +36,13 @@ private const val MAX_FREQUENCY = 150
 fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                             canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
                             particleWidthPx : Float = 10f,
+                            isPlayingProvider : () -> Boolean = {false},
                             insetPx : Float =70f,
                             frequencyPhasesProvider : () -> List<Float> = { emptyList() },
                             particleColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
                             maxParticlesPerSpring : Int = 15
  ) {
+    val isPlaying = isPlayingProvider()
     val frequencyPhases = frequencyPhasesProvider()
    // Log.i(logTag, "recomposing")
     val spawnPoints : List<Offset> = remember(insetPx, canvasSize, particleWidthPx, frequencyPhases.size) {
@@ -52,10 +55,17 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
    // Log.i(logTag, "spawnPoints: $spawnPoints")
 
     var particles : Map<Int, List<Particle>> by remember(spawnPoints) {
-    //    Log.i(logTag, "new particles map")
+        Log.i(logTag, "new particles map because spawn point")
         val map : MutableMap<Int, List<Particle>> = mutableMapOf()
         spawnPoints.indices.forEach { idx -> map[idx] = listOf() }
         mutableStateOf(map.toMap())
+    }
+    
+    LaunchedEffect(isPlaying) {
+        if (isPlaying) {
+            val currentFrame = awaitFrame()
+            particles = updateParticlesWithCurrentFrame(particles, currentFrame)
+        }
     }
 
     // LaunchedEffect for CREATING new particles
@@ -97,7 +107,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
     LaunchedEffect(particles) {
         this.launch {
            // Log.i(logTag, "launching new while particles in map coroutine")
-            while (particlesInMap(particles)) {
+            while (isPlaying && particlesInMap(particles)) {
            //     Log.i(logTag, "while Particles in map, update particles")
                 val frame = awaitFrame()
                 val entryIterator = particles.entries.iterator()
@@ -142,13 +152,10 @@ private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
 private fun FountainSpringCanvas(
     particles : Map<Int, List<Particle>>,
     modifier: Modifier = Modifier,
-    surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
 ) {
     Canvas( modifier = modifier
         .fillMaxSize()
     ) {
-        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
-
         for (particleLists in particles.values) {
             for (p in particleLists) {
                 drawCircleParticle(p)
@@ -280,5 +287,31 @@ private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
  */
 private fun convertNanoSecondsToRuntimeSpeed(valueNs: Long) : Float {
     return valueNs * 10.0.pow(-8.0).toFloat()
+}
+
+private fun updateParticlesWithCurrentFrame(particles : Map<Int, List<Particle>>, frame : Long) : Map<Int, List<Particle>> {
+    val toReturn = mutableMapOf<Int, List<Particle>>()
+    particles.entries.forEach {
+        val newList = mutableListOf<Particle>()
+        val currentParticleList = it.value
+        for (p in currentParticleList) {
+            newList.add(Particle(
+                 startPosition = p.startPosition,
+                 hMax = p.hMax,
+                 isFalling = p.isFalling,
+                 initialVelocity = p.initialVelocity,
+                 angle = p.angle,
+                 radius =p.radius,
+                 width = p.width,
+                 color = p.color,
+                 x = p.x,
+                 y = p.y,
+                 elapsedTimeDeciSeconds = p.elapsedTimeDeciSeconds,
+                 currentFrameTimeNs = frame
+            ))
+        }
+        toReturn[it.key] = newList
+    }
+    return toReturn
 }
 

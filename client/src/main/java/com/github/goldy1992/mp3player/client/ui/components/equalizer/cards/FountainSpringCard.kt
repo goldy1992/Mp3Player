@@ -11,6 +11,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspr
 @Composable
 fun FountainSpringCard(
     modifier : Modifier = Modifier,
+    isPlaying : () -> Boolean = { false},
     frequencyPhases : () -> List<Float> = {  listOf(100f, 200f, 300f, 150f) }
 ) {
     EqualizerCard(
@@ -20,6 +21,7 @@ fun FountainSpringCard(
         FountainSpringEqualizer(
             frequencyPhasesProvider = frequencyPhases,
             canvasSize = canvasSize,
+            isPlayingProvider = isPlaying,
             insetPx = canvasSize.heightPx * 0.05f,
             modifier = containerModifier)
     }

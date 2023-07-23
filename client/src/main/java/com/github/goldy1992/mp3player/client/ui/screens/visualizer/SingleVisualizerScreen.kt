@@ -2,9 +2,11 @@ package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -84,21 +86,20 @@ fun SingleVisualizerScreen(
                 VisualizerType.BAR -> {
                     BarEqualizer(
                         canvasSize = canvasSize,
-                        frequencyValues = { audioData },
-//                        barWidthPx = barWidthPx
-
+                        frequencyValues = { audioData }
                     )
                 }
                 VisualizerType.LINE -> {
                     SmoothLineEqualizer(
                         frequencyPhasesState = { audioData },
-                        canvasSize = canvasSize
+                        canvasSize = canvasSize,
                     )
                 }
-                VisualizerType.FIREWORK -> {
+                VisualizerType.FOUNTAIN -> {
                     FountainSpringEqualizer(
                         frequencyPhasesProvider = {audioData},
-                        canvasSize = canvasSize
+                        canvasSize = canvasSize,
+                        isPlayingProvider = { isPlaying }
                     )
                 }
                 else -> {
