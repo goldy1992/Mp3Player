@@ -27,7 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringEqualizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringVisualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerUtils.getVisualizerName
 import com.github.goldy1992.mp3player.commons.Screen
@@ -94,7 +94,7 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.FOUNTAIN -> {
-                    FountainSpringEqualizer(
+                    FountainSpringVisualizer(
                         frequencyPhasesProvider = {audioData},
                         canvasSize = canvasSize,
                         isPlayingProvider = { isPlaying }

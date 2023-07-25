@@ -29,7 +29,7 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
-import com.github.goldy1992.mp3player.client.utils.TimerUtils
+import com.github.goldy1992.mp3player.client.utils.TimeUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -267,7 +267,7 @@ private fun HeaderItem(
 
             Text(
                 modifier = Modifier.padding(start = 4.dp, end = 4.dp),
-                text = TimerUtils.formatTime(folder.playlist.duration),
+                text = TimeUtils.formatTime(folder.playlist.duration),
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

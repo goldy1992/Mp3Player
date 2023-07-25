@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring
+package com.github.goldy1992.mp3player.client.models.visualizers.fountainspring
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.ui.geometry.Offset

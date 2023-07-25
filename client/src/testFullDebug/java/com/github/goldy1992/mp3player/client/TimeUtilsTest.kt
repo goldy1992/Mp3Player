@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.client
 
 import android.os.SystemClock
-import com.github.goldy1992.mp3player.client.utils.TimerUtils.convertToSeconds
-import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
+import com.github.goldy1992.mp3player.client.utils.TimeUtils.convertToSeconds
+import com.github.goldy1992.mp3player.client.utils.TimeUtils.formatTime
 import org.junit.Assert
 import org.junit.BeforeClass
 import org.junit.Test
@@ -10,7 +10,7 @@ import org.junit.Test
 /**
  * Test class for the TimerUtils class
  */
-class TimerUtilsTest {
+class TimeUtilsTest {
     @Test
     fun testConvertToSecondsOneSecond() {
         val milliseconds: Long = 1000

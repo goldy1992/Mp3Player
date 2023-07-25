@@ -25,7 +25,7 @@ import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
-import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
+import com.github.goldy1992.mp3player.client.utils.TimeUtils.formatTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

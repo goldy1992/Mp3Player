@@ -48,7 +48,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.utils.SongUtils
-import com.github.goldy1992.mp3player.client.utils.TimerUtils
+import com.github.goldy1992.mp3player.client.utils.TimeUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -190,7 +190,7 @@ private fun AlbumHeaderItem(
             val pluralSongs = "songs"
             val numOfSongs = album.playlist.songs.size
             val songDescr = if (numOfSongs == 1) singularSong else pluralSongs
-            val duration = TimerUtils.formatTime(album.playlist.duration)
+            val duration = TimeUtils.formatTime(album.playlist.duration)
             val summary = "$numOfSongs $songDescr | $duration"
             Text(
                 text = summary,

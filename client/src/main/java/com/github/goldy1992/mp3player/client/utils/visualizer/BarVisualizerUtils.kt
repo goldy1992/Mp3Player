@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.utils
+package com.github.goldy1992.mp3player.client.utils.visualizer
 
 import android.util.Log
 
@@ -18,7 +18,8 @@ fun calculateBarWidthPixels(containerWidth: Float, numOfBars: Int, spaceBetweenB
 
 fun calculateBarSpacingPixels(containerWidthPx: Float, numOfBars: Int, barWidthPx: Float) : Float {
     if (numOfBars <= -1) {
-        Log.w(logTag, "calculateBarSpacingPixels: Invalid number of bars $numOfBars when " +
+        Log.w(
+            logTag, "calculateBarSpacingPixels: Invalid number of bars $numOfBars when " +
                 "calculating spacing, returning 0f")
         return 0f
     }

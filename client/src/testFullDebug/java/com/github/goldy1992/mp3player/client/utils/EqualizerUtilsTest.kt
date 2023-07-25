@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.utils
 
+import com.github.goldy1992.mp3player.client.utils.visualizer.calculateBarSpacingPixels
+import com.github.goldy1992.mp3player.client.utils.visualizer.calculateBarWidthPixels
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
