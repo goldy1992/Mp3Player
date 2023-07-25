@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -20,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
-import org.apache.commons.collections4.CollectionUtils.isNotEmpty
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.pow
@@ -53,18 +49,17 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
             numberOfFrequencies = frequencyPhases.size
         ) }
    // Log.i(logTag, "spawnPoints: $spawnPoints")
-
-    var particles : Map<Int, List<Particle>> by remember(spawnPoints) {
+    var fountain : Fountain by remember(spawnPoints) {
         Log.i(logTag, "new particles map because spawn point")
-        val map : MutableMap<Int, List<Particle>> = mutableMapOf()
-        spawnPoints.indices.forEach { idx -> map[idx] = listOf() }
-        mutableStateOf(map.toMap())
+        val mutableSpringList = mutableListOf<Spring>()
+        spawnPoints.forEachIndexed { idx, spawnOffset -> mutableSpringList.add(Spring(idx, spawnOffset, listOf())) }
+        mutableStateOf(Fountain(mutableSpringList, 0))
     }
-    
+
     LaunchedEffect(isPlaying) {
         if (isPlaying) {
             val currentFrame = awaitFrame()
-            particles = updateParticlesWithCurrentFrame(particles, currentFrame)
+            fountain = Fountain(fountain.springs, currentFrame)
         }
     }
 
@@ -72,16 +67,15 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
     LaunchedEffect(frequencyPhases) {
         this.launch {
         //Log.i(logTag, "frequencyPhases updated, new LaunchedEffect")
-            val entryIterator = particles.entries.iterator()
-            val newMap = mutableMapOf<Int, List<Particle>>()
-            val frame = awaitFrame()
-            while (entryIterator.hasNext()) {
-                val entry = entryIterator.next()
-                val currentParticleList = entry.value
+            val springs = fountain.springs.iterator()
+            val newSprings = mutableListOf<Spring>()
+            while (springs.hasNext()) {
+                val currentSpring = springs.next()
+                val currentParticleList = currentSpring.particles
                 val newParticleList = currentParticleList.toMutableList()
                 if (newParticleList.size < maxParticlesPerSpring) {
-                //  Log.i(logTag, "adding new particle to frequency: ${entry.key}")
-                    val currentFreq = frequencyPhases[entry.key]
+              //    Log.i(logTag, "adding new particle to frequency: ${currentSpring.index}")
+                    val currentFreq = frequencyPhases[currentSpring.index]
                     val fraction = currentFreq / MAX_FREQUENCY
                     val hMax = canvasSize.heightPx * fraction
                 //    Log.i(logTag, "hMax: $hMax")
@@ -89,44 +83,46 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
                     val initialVelocity = calculateInitialVelocityGivenHMax(hMax, angle)
                     newParticleList.add(
                         createParticle(
-                            spawnPoints[entry.key], initialVelocity = initialVelocity,
-                            currentFrame = frame,
+                            currentSpring.offset,
+                            initialVelocity = initialVelocity,
                             hMax = hMax,
                             color = particleColor
                         )
                     )
                 }
-                newMap[entry.key] = newParticleList.toList()
+                newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticleList.toList()))
             }
-            particles = newMap
+
+            fountain = Fountain(newSprings, fountain.currentFrame)
           //  Log.i(logTag, "set new map after creating new particles")
         }
     }
 
     // LaunchedEffect for UPDATING and REMOVING particles.
-    LaunchedEffect(particles) {
+    LaunchedEffect(fountain) {
         this.launch {
            // Log.i(logTag, "launching new while particles in map coroutine")
-            while (isPlaying && particlesInMap(particles)) {
+            while (isPlaying && fountain.hasParticles()) {
            //     Log.i(logTag, "while Particles in map, update particles")
-                val frame = awaitFrame()
-                val entryIterator = particles.entries.iterator()
-                val newMap = mutableMapOf<Int, List<Particle>>()
-                while (entryIterator.hasNext()) {
-                    val entry = entryIterator.next()
-                    val newList : MutableList<Particle> = mutableListOf()
-                    val valueIterator = entry.value.iterator()
-                    while (valueIterator.hasNext()) {
-                        val currentParticle = valueIterator.next()
+                val currentFrame = awaitFrame()
+                val timeDiffSinceLastFrame = currentFrame - fountain.currentFrame
+                val springsIterator = fountain.springs.iterator()
+                val newSprings = mutableListOf<Spring>()
+                while (springsIterator.hasNext()) {
+                    val currentSpring = springsIterator.next()
+                    val newParticles : MutableList<Particle> = mutableListOf()
+                    val particlesIterator = currentSpring.particles.iterator()
+                    while (particlesIterator.hasNext()) {
+                        val currentParticle = particlesIterator.next()
                         if (!shouldRemoveParticle(currentParticle)) {
-                            newList.add(updateParticle(currentParticle, frame))
+                            newParticles.add(updateParticle(currentParticle, timeDiffSinceLastFrame))
                         } else {
                     //        Log.i(logTag, "removing particle of y: ${currentParticle.y}")
                         }
                     }
-                    newMap[entry.key] = newList.toList()
+                    newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticles.toList()))
                 }
-                particles = newMap
+                fountain = Fountain(newSprings.toList(), currentFrame)
            //     Log.i(logTag, "set new map after updating particles")
 
             }
@@ -135,7 +131,7 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
 
     FountainSpringCanvas(
         modifier = modifier,
-        particles = particles
+        fountain = fountain
     )
 }
 
@@ -143,22 +139,20 @@ fun FountainSpringEqualizer(modifier: Modifier = Modifier,
 private fun shouldRemoveParticle(currentParticle: Particle) : Boolean {
     val isFalling = currentParticle.isFalling
     val currentY = currentParticle.y
-    val startY = currentParticle.startPosition.y
-    val removePoint = (startY * 0.9f)
-    return isFalling && (currentY > removePoint)
+    return isFalling && (currentY > currentParticle.removePoint)
 }
 
 @Composable
 private fun FountainSpringCanvas(
-    particles : Map<Int, List<Particle>>,
+    fountain : Fountain,
     modifier: Modifier = Modifier,
 ) {
     Canvas( modifier = modifier
         .fillMaxSize()
     ) {
-        for (particleLists in particles.values) {
-            for (p in particleLists) {
-                drawCircleParticle(p)
+        for (springs in fountain.springs) {
+            for (particle in springs.particles) {
+                drawCircleParticle(particle)
             }
         }
     }
@@ -177,7 +171,6 @@ private fun DrawScope.drawCircleParticle(particle: Particle) {
 private fun createParticle(startOffset: Offset,
                            initialVelocity : Float,
                            hMax: Float,
-                           currentFrame : Long,
                            color : Color) : Particle {
     val startY = startOffset.y
     val startX = startOffset.x
@@ -188,7 +181,6 @@ private fun createParticle(startOffset: Offset,
         y = startY,
         hMax = hMax,
         isFalling = false,
-        currentFrameTimeNs = currentFrame,
         startPosition = Offset(startX, startY),
         initialVelocity = initialVelocity,
         radius = radius.toFloat(),
@@ -198,8 +190,7 @@ private fun createParticle(startOffset: Offset,
 
 private const val g = -9.8f
 
-private fun updateParticle(particle: Particle, currentFrameTime : Long) : Particle {
-    val timeDiffNanoSecs = currentFrameTime - particle.currentFrameTimeNs
+private fun updateParticle(particle: Particle, timeDiffNanoSecs : Long) : Particle {
     val elapsedTimeSecs = particle.elapsedTimeDeciSeconds + convertNanoSecondsToRuntimeSpeed(timeDiffNanoSecs)
     val x = particle.startPosition.x + (particle.initialVelocity * cos(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciSeconds)
     val y = particle.startPosition.y + ((particle.initialVelocity * sin(Math.toRadians(particle.angle)).toFloat() * particle.elapsedTimeDeciSeconds) - ((g * particle.elapsedTimeDeciSeconds * particle.elapsedTimeDeciSeconds) / 2f))
@@ -209,7 +200,6 @@ private fun updateParticle(particle: Particle, currentFrameTime : Long) : Partic
         startPosition = particle.startPosition,
         initialVelocity = particle.initialVelocity,
         isFalling = y > particle.y,
-        currentFrameTimeNs = currentFrameTime,
         x = x,
         y = y,
         elapsedTimeDeciSeconds = elapsedTimeSecs,
@@ -265,21 +255,21 @@ private fun calculateInitialVelocityGivenHMax(hMax : Float, angle : Double) : Fl
 
 }
 
-private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
-    if (particleMap.isEmpty()) {
-      //  Log.i(logTag, "particles map empty, returning false")
-        return false
-    }
-
-    particleMap.entries.forEach { entry ->
-        if (isNotEmpty(entry.value)) {
-      //      Log.i(logTag, "non-empty list present,, returning true")
-            return true
-        }
-    }
- //   Log.i(logTag, "defaulting to particlesInMap: false")
-    return false
-}
+//private fun particlesInMap(particleMap : Map<Int, List<Particle>>) : Boolean {
+//    if (particleMap.isEmpty()) {
+//      //  Log.i(logTag, "particles map empty, returning false")
+//        return false
+//    }
+//
+//    particleMap.entries.forEach { entry ->
+//        if (isNotEmpty(entry.value)) {
+//      //      Log.i(logTag, "non-empty list present,, returning true")
+//            return true
+//        }
+//    }
+// //   Log.i(logTag, "defaulting to particlesInMap: false")
+//    return false
+//}
 
 /**
  * From nano seconds (i.e. 10^-9)
@@ -307,7 +297,6 @@ private fun updateParticlesWithCurrentFrame(particles : Map<Int, List<Particle>>
                  x = p.x,
                  y = p.y,
                  elapsedTimeDeciSeconds = p.elapsedTimeDeciSeconds,
-                 currentFrameTimeNs = frame
             ))
         }
         toReturn[it.key] = newList
