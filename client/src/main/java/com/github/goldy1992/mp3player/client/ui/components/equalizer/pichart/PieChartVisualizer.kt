@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -16,7 +17,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
+import com.github.goldy1992.mp3player.client.ui.LocalIsDarkMode
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils.MAX_FREQUENCY_AMPLITUDE
+
+private const val LOG_TAG = "PieChartVisualizer"
 
 @Preview
 @Composable
@@ -25,64 +29,119 @@ fun PieChartVisualizer(
     frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
     canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
     insetPx : Float = 10f,
-    firstColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    alternateColor : Color = MaterialTheme.colorScheme.primary,
+    baseColor : Color = MaterialTheme.colorScheme.primaryContainer,
 
 
     ) {
-    val rRange = remember(firstColor) { 1 - firstColor.red}
-    val gRange = remember(firstColor) { 1 - firstColor.green}
-    val bRange = remember(firstColor) { 1 - firstColor.blue}
-    val frequenciesValue = frequencyPhasesState()
+    val isDarkMode = LocalIsDarkMode.current
+    val colorRange = remember(baseColor, isDarkMode) {
+        val rRange = if (isDarkMode) 1 - baseColor.red else baseColor.red
+    val gRange =  if (isDarkMode) 1 - baseColor.green else baseColor.green
+    val bRange =  if (isDarkMode) 1 - baseColor.blue else baseColor.blue
+        ColorRange (rRange, gRange, bRange)
+    }
+     val frequenciesValue = frequencyPhasesState()
+    val pieSegments = mutableListOf<PieSegment>()
     val frequencies = frequenciesValue.ifEmpty { (1..24).map { 0f }.toList() }
-    val maxRadius = (maxOf(canvasSize.widthPx, canvasSize.heightPx) / 2f) - (2 * insetPx)
-    val defaultRadius = maxRadius * 0.5f
-    val frequencyRange = maxRadius - defaultRadius
-    val defaultOffset = Offset((canvasSize.widthPx /2), (canvasSize.heightPx /2))
-    val sweepAngle = 360f / (if (frequencies.isNotEmpty()) {frequencies.size } else 15)
+    val maxRadius = remember(canvasSize) {
+        (maxOf(canvasSize.widthPx, canvasSize.heightPx) / 2f) - (2 * insetPx)
+    }
+    val defaultRadius = remember(maxRadius) {
+        maxRadius * 0.5f
+    }
+    val frequencyRange = remember(maxRadius, defaultRadius) {
+        maxRadius - defaultRadius
+    }
+    val defaultOffset = remember(canvasSize) {
+        Offset((canvasSize.widthPx / 2), (canvasSize.heightPx / 2))
+    }
+    val sweepAngle = remember(frequencies.size) {
+        360f / (if (frequencies.isNotEmpty()) {
+            frequencies.size
+        } else 15)
+    }
     var currentAngle = 0f
 
 
-
-
-    val animatedFrequencies = mutableListOf<Pair<Float, Color>>()
     frequencies.forEachIndexed { index, f ->
-        val currentAnimatedValue by animateFloatAsState(targetValue = f, label = "pieChartFrequency[$index]")
+        val currentAnimatedValue by animateFloatAsState(
+            targetValue = f,
+            label = "pieChartFrequency[$index]"
+        )
 
+        val division = currentAnimatedValue / MAX_FREQUENCY_AMPLITUDE
+        val fractionOfAmplification = if (division > 1.0f) 1.0f else if (division < 0f) 0f else division
+        val targetColor = calculateTargetColor(baseColor, colorRange, fractionOfAmplification, isDarkMode)
+        val animatedColor by animateColorAsState(
+            targetValue = targetColor,
+            label = "pieChartColor[$index]"
+        )
 
+        val adjustment = frequencyRange * fractionOfAmplification
+        val width = defaultRadius + adjustment
+        val height = defaultRadius + adjustment
+        val size = Size(width, height)
+        val arcOffset =
+            Offset(defaultOffset.x - (width / 2), defaultOffset.y - (height / 2))
+        pieSegments.add(
+            PieSegment(
+                color = animatedColor,
+                arcOffset = arcOffset,
+                size = size
+            )
+        )
 
-        val targetR = (MaterialTheme.colorScheme.primary.red + (rRange * (f / MAX_FREQUENCY_AMPLITUDE)))
-        val targetG = (MaterialTheme.colorScheme.primary.green + (gRange * (f / MAX_FREQUENCY_AMPLITUDE)))
-        val targetB = (MaterialTheme.colorScheme.primary.blue + (bRange * (f / MAX_FREQUENCY_AMPLITUDE)))
-        val targetColor = Color(red = targetR, green = targetG, blue = targetB)
-        val animatedColor by animateColorAsState(targetValue = targetColor, label = "pieChartColor[$index]")
-        animatedFrequencies.add(Pair(currentAnimatedValue, animatedColor))
     }
 
-    var useAlternateColor = false
-    Canvas(modifier.fillMaxSize() ) {
-        for (f in animatedFrequencies) {
-                val color = f.second
-                val adjustment = frequencyRange * (f.first / MAX_FREQUENCY_AMPLITUDE)
-                val width = defaultRadius + adjustment
-                val height = defaultRadius + adjustment
-                val size = Size(width, height)
-                val arcOffset =
-                    Offset(defaultOffset.x - (width / 2), defaultOffset.y - (height / 2))
+    Canvas(modifier.fillMaxSize()) {
+        for (segment in pieSegments) {
+            drawArc(
+                color = segment.color,
+                startAngle = currentAngle,
+                sweepAngle = sweepAngle,
+                useCenter = true,
+                topLeft = segment.arcOffset,
+                size = segment.size
+            )
 
-                useAlternateColor = !useAlternateColor
-                drawArc(
-                    color,
-                    startAngle = currentAngle,
-                    sweepAngle = sweepAngle,
-                    useCenter = true,
-                    topLeft = arcOffset,
-                    size = size
-                )
-
-                currentAngle += sweepAngle
+            currentAngle += sweepAngle
         }
-
-
     }
 }
+private fun calculateTargetColor(
+    baseColor : Color,
+    colorRange: ColorRange,
+    fractionOfAmplification : Float,
+    isDarkMode : Boolean) : Color {
+    val targetR : Float
+    val targetG : Float
+    val targetB : Float
+    if (isDarkMode) {
+        targetR = baseColor.red + (colorRange.red * fractionOfAmplification)
+        targetG = baseColor.green + (colorRange.green * fractionOfAmplification)
+        targetB = baseColor.blue + (colorRange.blue * fractionOfAmplification)
+    } else {
+        targetR = baseColor.red - (colorRange.red * fractionOfAmplification)
+        targetG = baseColor.green - (colorRange.green * fractionOfAmplification)
+        targetB = baseColor.blue - (colorRange.blue * fractionOfAmplification)
+    }
+    Log.v(
+        LOG_TAG,
+        "rRange: ${colorRange.red}, gRange: ${colorRange.green}, bRange: ${colorRange.blue}, fractionOfAmplification: $fractionOfAmplification"
+    )
+    return Color(red = targetR, green = targetG, blue = targetB)
+
+}
+
+private data class PieSegment (
+    val color : Color,
+    val arcOffset : Offset,
+    val size : Size
+)
+
+private data class ColorRange (
+    val red : Float,
+    val green : Float,
+    val blue : Float
+)
+
