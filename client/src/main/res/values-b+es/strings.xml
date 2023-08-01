@@ -87,6 +87,8 @@
 
     <!-- Visualizer names -->
     <string name="bars">Barras</string>
+    <string name="circular">Circular</string>
+    <string name="pie_chart">Gráfico Circular</string>
     <string name="smooth_line">Línea Lisa</string>
     <string name="fountain">Fuente</string>
 

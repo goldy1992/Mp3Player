@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.utils
+package com.github.goldy1992.mp3player.client.utils
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.Email
-import com.github.goldy1992.mp3player.client.ui.utils.ContextUtils.getActivity
+import com.github.goldy1992.mp3player.client.utils.ContextUtils.getActivity
 import com.github.goldy1992.mp3player.commons.LogTagger
 
 object EmailUtils : LogTagger {
@@ -40,7 +40,10 @@ object EmailUtils : LogTagger {
     }
 
     private fun sendEmail(email: Email, context: Context) {
-            Log.v(logTag(), "sendEmail() invoked with subject: ${email.subject}, toAddresses: ${email.toAddresses} and ccAddresses: ${email.ccAddresses}")
+        Log.v(
+            logTag(),
+            "sendEmail() invoked with subject: ${email.subject}, toAddresses: ${email.toAddresses} and ccAddresses: ${email.ccAddresses}"
+        )
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                 val addresses: Array<String> = email.toAddresses
                 putExtra(Intent.EXTRA_SUBJECT, email.subject)
@@ -52,7 +55,11 @@ object EmailUtils : LogTagger {
                 context.startActivity(Intent.createChooser(emailIntent, sendEmailTitle))
             } catch (ex : ActivityNotFoundException) {
                 Log.e(logTag(), "No email client found on device")
-                Toast.makeText(context, "Could not find an email application on your device", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Could not find an email application on your device",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 

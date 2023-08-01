@@ -11,6 +11,8 @@ object VisualizerUtils {
             VisualizerType.BAR -> context.getString(R.string.bars)
             VisualizerType.FOUNTAIN -> context.getString(R.string.fountain)
             VisualizerType.LINE ->  context.getString(R.string.smooth_line)
+            VisualizerType.CIRCULAR -> context.getString(R.string.circular)
+            VisualizerType.PIE_CHART -> context.getString(R.string.pie_chart)
         }
     }
 }

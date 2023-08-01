@@ -9,6 +9,8 @@ import com.github.goldy1992.mp3player.commons.Constants
 
 object AudioDataUtils {
 
+    const val MAX_FREQUENCY_AMPLITUDE = 200f
+
     fun getAudioSample(eventHolder: SessionCommandEventHolder) : AudioSample {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getAudioSampleApi33AndAbove(eventHolder)

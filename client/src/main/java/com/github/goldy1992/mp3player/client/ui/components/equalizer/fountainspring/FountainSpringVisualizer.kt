@@ -146,8 +146,8 @@ private fun FountainSpringCanvas(
     Canvas( modifier = modifier
         .fillMaxSize()
     ) {
-        for (springs in fountain.springs) {
-            for (particle in springs.particles) {
+        for (spring in fountain.springs) {
+            for (particle in spring.particles) {
                 drawCircleParticle(particle)
             }
         }
@@ -162,4 +162,3 @@ private fun DrawScope.drawCircleParticle(particle: Particle) {
         center = Offset(particle.x, particle.y)
     )
 }
-

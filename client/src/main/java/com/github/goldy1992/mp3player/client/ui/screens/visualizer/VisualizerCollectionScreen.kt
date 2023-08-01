@@ -28,7 +28,9 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.BarCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.CircularEqualizerCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.PieChartCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -157,6 +159,30 @@ fun VisualizerContentCardCollection(
                         onClickCard(VisualizerType.FOUNTAIN)
                     },
                 isPlaying = isPlaying,
+                frequencyPhases = audioMagnitudes,
+            )
+        }
+
+        item {
+            CircularEqualizerCard(
+                modifier = Modifier
+                    .width(cardLengthDp)
+                    .height(cardLengthDp)
+                    .clickable {
+                        onClickCard(VisualizerType.CIRCULAR)
+                    },
+                frequencyPhases = audioMagnitudes,
+            )
+        }
+
+        item {
+            PieChartCard(
+                modifier = Modifier
+                    .width(cardLengthDp)
+                    .height(cardLengthDp)
+                    .clickable {
+                        onClickCard(VisualizerType.PIE_CHART)
+                    },
                 frequencyPhases = audioMagnitudes,
             )
         }

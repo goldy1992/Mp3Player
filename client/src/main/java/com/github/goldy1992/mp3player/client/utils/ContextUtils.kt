@@ -1,4 +1,4 @@
-package com.github.goldy1992.mp3player.client.ui.utils
+package com.github.goldy1992.mp3player.client.utils
 
 import android.content.Context
 import android.content.ContextWrapper

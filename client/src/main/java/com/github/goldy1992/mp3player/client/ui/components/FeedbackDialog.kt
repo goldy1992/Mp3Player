@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.utils.EmailUtils
+import com.github.goldy1992.mp3player.client.utils.EmailUtils
 
 @Preview
 @Composable

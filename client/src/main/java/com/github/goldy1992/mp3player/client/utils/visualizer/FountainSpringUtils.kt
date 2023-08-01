@@ -54,4 +54,19 @@ object FountainSpringUtils {
         return toReturn.toList()
     }
 
+    inline fun <T> Iterable<T>.average(selector: (T) -> Float): Float {
+        val count = this.count()
+        if (count == 0) {
+            return 0f
+        }
+        var sum = 0f
+
+        for (element in this) {
+            sum += selector(element)
+        }
+        return sum / count
+
+
+    }
+
 }

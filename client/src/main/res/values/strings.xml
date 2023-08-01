@@ -88,6 +88,8 @@
 
     <!-- Visualizer names -->
     <string name="bars">Bars</string>
+    <string name="circular">Circular</string>
+    <string name="pie_chart">Pie Chart</string>
     <string name="smooth_line">Smooth Line</string>
     <string name="fountain">Fountain</string>
 </resources>
