@@ -27,7 +27,7 @@ private const val LOG_TAG = "CircularEqualizer"
 @Composable
 fun CircularEqualizer(modifier: Modifier = Modifier,
                      frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
-                     canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+                     canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(300.dp, 1000.dp, LocalDensity.current),
                      insetPx : Float = 10f,
                      surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
                      lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -44,8 +44,8 @@ fun CircularEqualizer(modifier: Modifier = Modifier,
 
 
     val coordinates: MutableList<Offset> = mutableListOf()
-
-    val frequencyCoordinates = offsets(animatedFrequencies, maxOf(canvasSize.widthPx, canvasSize.heightPx))
+    val minRadius = (0.9f * minOf(canvasSize.widthPx, canvasSize.heightPx))  / 2.1f
+    val frequencyCoordinates = offsets(animatedFrequencies, minRadius)
         .map { Offset(it.x + center.x, it.y + center.y) }.toList()
 
     coordinates.addAll(frequencyCoordinates)
@@ -76,9 +76,7 @@ fun CircularEqualizer(modifier: Modifier = Modifier,
         .fillMaxSize()
 
     ) {
-        //    drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
-
-        val curvePath = Path().apply {
+       val curvePath = Path().apply {
             reset()
             if (coordinates.isNotEmpty()) {
                 moveTo(coordinates.first().x, coordinates.first().y)
@@ -99,26 +97,15 @@ fun CircularEqualizer(modifier: Modifier = Modifier,
         }
 
 
-        /** filling the area under the path */
-
-        /** filling the area under the path */
-        /** filling the area under the path */
-        /** filling the area under the path */
-        val lineHeight = 50f
-        val fillPath = Path()
-            .apply {
-                lineTo(coordinates.last().x, lineHeight)
-                lineTo(0f, lineHeight)
-                close()
-            }
+         minRadius
         drawPath(
-            fillPath,
-            brush = Brush.verticalGradient(
-                colors = listOf(
+            curvePath,
+            brush = Brush.radialGradient(
+                colors = listOf(Color.Transparent,
                     lineColor,
-                    Color.Transparent,
                 ),
-                endY = lineHeight
+                center = center,
+                radius = if (minRadius > 0) minRadius else 200f
             ),
         )
         drawPath(
@@ -130,11 +117,133 @@ fun CircularEqualizer(modifier: Modifier = Modifier,
             )
         )
 
+        for (c in coordinates) {
+            drawCircle(Color.Red, radius = 5f, center = c)
+        }
+
     }
 }
 
-private fun offsets(frequencies: List<Float>, maxCanvasInstance : Float) : List<Offset> {
-    val minRadius = (maxCanvasInstance / 2.1f) - 150f
+
+
+@Preview(widthDp =  500, heightDp = 1000)
+@Composable
+fun CircularEqualizerNewImpl(modifier: Modifier = Modifier,
+                      frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 100f, 250f)},
+                      canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(500.dp, 1000.dp, LocalDensity.current),
+                      insetPx : Float = 10f,
+                      surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
+                      lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+) {
+
+    val frequencyPhases = frequencyPhasesState()
+    val center = Offset(canvasSize.widthPx / 2, canvasSize.heightPx / 2)
+    var animatedFrequencies = mutableListOf<Float>()
+    frequencyPhases.forEachIndexed {
+            idx, frequency ->
+        val animatedFrequency by animateFloatAsState(targetValue = frequency, label = "frequency[$idx]")
+        animatedFrequencies.add(animatedFrequency)
+    }
+
+
+    val minRadius = (0.9f * minOf(canvasSize.widthPx, canvasSize.heightPx))  / 2.1f
+    val frequencyCoordinates = offsetCoordinates(animatedFrequencies, minRadius, center)
+
+    val lines = mutableListOf<CubicBezierCurve>()
+    for (i in 0 until frequencyCoordinates.size - 1) {
+        val startPoint = frequencyCoordinates[i]
+        val endPoint = frequencyCoordinates[i+1]
+        val controlPoint1 : CircleCoordinate
+        val controlPoint2 : CircleCoordinate
+
+        val angleDiff = endPoint.angle - startPoint.angle
+        val controlPoint1Angle = startPoint.angle + (angleDiff / 3f)
+        val controlPoint2Angle = startPoint.angle + ((2 * angleDiff) / 3f)
+        val radiusToUse = (startPoint.radius + endPoint.radius) / 2f
+
+        controlPoint1 = CircleCoordinate(
+                offset = Offset(
+                    x = center.x + (radiusToUse * cos(controlPoint1Angle)),
+                    y = center.y + (radiusToUse * sin(controlPoint1Angle))),
+                radius = radiusToUse,
+                angle = controlPoint1Angle
+        )
+        controlPoint2 = CircleCoordinate(
+            offset = Offset(
+                x = center.x + (radiusToUse * cos(controlPoint2Angle)),
+                y = center.y + (radiusToUse * sin(controlPoint2Angle))),
+            radius = radiusToUse,
+            angle = controlPoint2Angle
+        )
+
+
+        lines.add(CubicBezierCurve(
+            from = startPoint,
+            to = endPoint,
+            controlPoint1 = controlPoint1,
+            controlPoint2 = controlPoint2
+        ))
+    }
+    Log.i(LOG_TAG, "lines : $lines")
+
+
+    Canvas(modifier = modifier
+        .fillMaxSize()
+
+    ) {
+        val curvePath = Path().apply {
+            reset()
+            if (frequencyCoordinates.isNotEmpty()) {
+                val firstVal = frequencyCoordinates.first().offset
+                moveTo(firstVal.x, firstVal.y)
+                for (i in lines)
+                    cubicTo(
+                        i.controlPoint1.offset.x,  i.controlPoint1.offset.y,
+                        i.controlPoint2.offset.x,  i.controlPoint2.offset.y,
+                        i.to.offset.x, i.to.offset.y
+                    )
+                close()
+            }
+
+        }
+
+
+
+//        drawPath(
+//            curvePath,
+//            brush = Brush.radialGradient(
+//                colors = listOf(Color.Transparent,
+//                    lineColor,
+//                ),
+//                center = center,
+//                radius = if (minRadius > 0) minRadius else 200f
+//            ),
+//        )
+        drawPath(
+            path = curvePath,
+            color = lineColor,
+            style = Stroke(
+                width = 5f,
+                cap = StrokeCap.Round
+            )
+        )
+
+        for (c in frequencyCoordinates) {
+            drawCircle(Color.Red, radius = 5f, center = c.offset)
+        }
+
+        lines.forEachIndexed { idx, l ->
+
+                drawCircle(Color.Green, radius = 5f, center = l.controlPoint1.offset)
+                drawCircle(Color.Yellow, radius = 5f, center = l.controlPoint2.offset)
+
+        }
+
+    }
+}
+
+private fun offsets(frequencies: List<Float>, minRadius : Float) : List<Offset> {
+
     val maxFreqRadius = 150f
     val maxFreq = 300
     val toReturn = mutableListOf<Offset>()
@@ -168,3 +277,69 @@ private fun offsets(frequencies: List<Float>, maxCanvasInstance : Float) : List<
 
     return toReturn.toList()
 }
+
+private fun offsetCoordinates(frequencies: List<Float>, minRadius : Float, center : Offset) : List<CircleCoordinate> {
+
+    val maxFreqRadius = 150f
+    val maxFreq = 300
+    val toReturn = mutableListOf<CircleCoordinate>()
+    var angle = 0f
+    if (frequencies.isNotEmpty()) {
+        val spacing = ((2 * Math.PI) / frequencies.count()).toFloat()
+
+        for (frequency in frequencies) {
+            val radius = minRadius + (maxFreqRadius * (frequency / maxFreq))
+            val x = (radius * cos(angle)) + center.x
+            val y = (radius * sin(angle)) + center.y
+            val offset = Offset(x, y)
+            toReturn.add(CircleCoordinate(offset, radius, angle))
+            Log.i(LOG_TAG, "Offset: ${offset}")
+            angle += spacing
+        }
+        toReturn.add(CircleCoordinate(toReturn[0].offset, toReturn[0].radius, Math.PI.toFloat() * 2))
+    } else {
+        val spacing = ((2 * Math.PI) / 15).toFloat()
+        for (i in 1..15) {
+            val x = (minRadius * cos(angle)) + center.x
+            val y = (minRadius * sin(angle)) + center.y
+            toReturn.add(CircleCoordinate(Offset(x, y), minRadius, angle))
+            angle += spacing
+        }
+        toReturn.add(toReturn[0])
+
+    }
+
+
+    return toReturn.toList()
+}
+
+
+@Preview
+@Composable
+private fun CircleGradient() {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        drawPath(path = Path().apply {
+            moveTo(size.width / 2, 0f)
+            lineTo(size.width, size.height / 2)
+            lineTo(size.width / 2, size.height)
+            lineTo(0f, size.height / 2)
+            close()
+        },
+            brush = Brush.verticalGradient(listOf(
+            Color.Yellow, Color.Transparent))
+        )
+    }
+}
+
+private data class CircleCoordinate(
+    val offset: Offset,
+    val radius : Float,
+    /** Radians */
+    val angle : Float
+)
+private data class CubicBezierCurve(
+    val from : CircleCoordinate,
+    val to : CircleCoordinate,
+    val controlPoint1 : CircleCoordinate,
+    val controlPoint2: CircleCoordinate
+)

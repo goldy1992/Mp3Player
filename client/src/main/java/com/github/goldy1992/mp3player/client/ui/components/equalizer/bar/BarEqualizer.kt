@@ -20,7 +20,7 @@ import com.github.goldy1992.mp3player.client.utils.visualizer.calculateBarSpacin
 
 private const val MAX_AMPLITUDE = 400f
 private const val LOG_TAG = "BarEqualizer"
-
+private const val DEFAULT_BAR_HEIGHT = 5f
 
 @Preview
 @Composable
@@ -31,7 +31,7 @@ fun BarEqualizer(modifier: Modifier = Modifier,
                  surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
                        ) {
     Log.v(LOG_TAG, "BarEqualizer() recomposing")
-    val frequencyPhases = frequencyValues()
+    val frequencyPhases = frequencyValues().ifEmpty { (1..24).map { 0f }.toList() }
     /* recalculate the bar width when the number of frequencyPhases sent changes OR the canvas size changes.
        Fixes a bug when the frequencyPhases array is empty to begin with. */
     val barWidthPx : Float = remember(frequencyPhases.size, canvasSize) {
@@ -67,7 +67,7 @@ fun BarEqualizer(modifier: Modifier = Modifier,
     val barPoints : MutableList<BarPoints> = mutableListOf()
     for (i in 0 until numberOfBars) {
         val currentAnimatedValue by animateFloatAsState(targetValue = frequencyPhases[i])
-        var barHeight = canvasSize.heightPx * (currentAnimatedValue / MAX_AMPLITUDE)
+        var barHeight = DEFAULT_BAR_HEIGHT + canvasSize.heightPx * (currentAnimatedValue / MAX_AMPLITUDE)
         if (barHeight > canvasSize.heightPx) {
             barHeight = canvasSize.heightPx
         }

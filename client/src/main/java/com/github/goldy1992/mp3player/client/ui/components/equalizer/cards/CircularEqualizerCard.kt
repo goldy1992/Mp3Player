@@ -6,6 +6,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerNewImpl
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
 
 @Preview
@@ -18,7 +19,7 @@ fun CircularEqualizerCard(
         modifier = modifier,
         title = stringResource(id = R.string.circular),
     ) { canvasSize, containerModifier ->
-        CircularEqualizer(
+        CircularEqualizerNewImpl(
             frequencyPhasesState = frequencyPhases,
             canvasSize = canvasSize,
             modifier = containerModifier)

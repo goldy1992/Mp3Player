@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -30,8 +31,6 @@ fun PieChartVisualizer(
     canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
     insetPx : Float = 10f,
     baseColor : Color = MaterialTheme.colorScheme.primaryContainer,
-
-
     ) {
     val isDarkMode = LocalIsDarkMode.current
     val colorRange = remember(baseColor, isDarkMode) {
@@ -40,14 +39,14 @@ fun PieChartVisualizer(
     val bRange =  if (isDarkMode) 1 - baseColor.blue else baseColor.blue
         ColorRange (rRange, gRange, bRange)
     }
-     val frequenciesValue = frequencyPhasesState()
+    val frequenciesValue = frequencyPhasesState()
     val pieSegments = mutableListOf<PieSegment>()
     val frequencies = frequenciesValue.ifEmpty { (1..24).map { 0f }.toList() }
     val maxRadius = remember(canvasSize) {
         (maxOf(canvasSize.widthPx, canvasSize.heightPx) / 2f) - (2 * insetPx)
     }
     val defaultRadius = remember(maxRadius) {
-        maxRadius * 0.5f
+        maxRadius * 0.8f
     }
     val frequencyRange = remember(maxRadius, defaultRadius) {
         maxRadius - defaultRadius
