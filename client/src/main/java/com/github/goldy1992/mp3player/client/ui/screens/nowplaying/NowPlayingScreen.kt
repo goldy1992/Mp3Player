@@ -8,6 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -123,7 +124,7 @@ fun NowPlayingScreen(
                 )
                 ViewPager(
                     currentSongProvider = { currentSong },
-                    queueProvider =  {queue },
+                    queue =  queue,
                     skipToNext = { viewModel.skipToNext()},
                     skipToPrevious = { viewModel.skipToPrevious() },
                     modifier = Modifier.weight(4f))
@@ -166,19 +167,17 @@ fun NowPlayingScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ViewPager(currentSongProvider : () -> Song,
-              queueProvider: () -> Queue,
+              queue: Queue,
               skipToNext : () -> Unit,
               skipToPrevious : () -> Unit,
               modifier: Modifier = Modifier,
-              pagerState: PagerState = androidx.compose.foundation.pager.rememberPagerState(
-                  initialPage = queueProvider().currentIndex
-              ),
+              pagerState: PagerState = rememberPagerState(pageCount = { queue.size() }),
            ) {
-    val queueState = queueProvider()
-    val numberOfPages = queueState.items.size
-    val currentQueuePosition = queueState.currentIndex
 
-    if (isEmpty(queueState.items)) {
+    val numberOfPages = queue.size()
+    val currentQueuePosition = queue.currentIndex
+
+    if (queue.isEmpty()) {
         Column(modifier = modifier.width(700.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -196,7 +195,7 @@ fun ViewPager(currentSongProvider : () -> Song,
             Log.v(LOG_TAG, "ViewPager() LaunchedEffect: current page changed: ${pagerState.currentPage}")
             val newPosition = pagerState.currentPage
             val atBeginning = currentQueuePosition <= 0
-            val atEnd = (currentQueuePosition + 1) >= queueState.items.size
+            val atEnd = (currentQueuePosition + 1) >= numberOfPages
             val atCurrentPosition = currentQueuePosition == newPosition
 
             if (!atCurrentPosition ) {
@@ -216,11 +215,11 @@ fun ViewPager(currentSongProvider : () -> Song,
                     .semantics {
                         contentDescription = "viewPagerColumn"
                     },
-                pageCount = numberOfPages,
-                key = { page : Int -> queueState.items[page].id }
+             //   pageCount = numberOfPages,
+                key = { page : Int -> queue.items[page].id }
 
             ) { pageIndex ->
-            val item: Song = queueState.items[pageIndex]
+            val item: Song = queue.items[pageIndex]
             Column(
                     modifier = Modifier
                         .width(300.dp)

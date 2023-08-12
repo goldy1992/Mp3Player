@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -34,9 +37,6 @@ import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCol
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.InternalCoroutinesApi
 
 
@@ -62,12 +62,13 @@ fun ComposeApp(
     windowSize: WindowSize,
     startScreen : Screen
 ) {
-    val navController = rememberAnimatedNavController()
+    val navController = rememberNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
-        AnimatedNavHost(
+        NavHost(
             navController = navController,
             startDestination = startScreen.name
         ) {
+
             composable(Screen.MAIN.name) {
                 val viewModel = hiltViewModel<MainScreenViewModel>()
                 MainScreen(
@@ -86,26 +87,26 @@ fun ComposeApp(
 
             }
             composable(Screen.NOW_PLAYING.name,
-                enterTransition = {
-                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen enterTransition() invoked")
-                    slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
-                    )
-                },
-                popEnterTransition = {
-                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popEnterTransition() invoked")
-                    slideIntoContainer(
-                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
-                    )
-                },
-                exitTransition = {
-                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen exitTransition() invoked")
-                   slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
-                },
-                popExitTransition = {
-                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popExitTransition() invoked")
-                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
-                },
+//                enterTransition = {
+//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen enterTransition() invoked")
+//                    slideIntoContainer(
+//                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+//                    )
+//                },
+//                popEnterTransition = {
+//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popEnterTransition() invoked")
+//                    slideIntoContainer(
+//                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
+//                    )
+//                },
+//                exitTransition = {
+//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen exitTransition() invoked")
+//                   slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+//                },
+//                popExitTransition = {
+//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popExitTransition() invoked")
+//                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
+//                },
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
                     action = Intent.ACTION_VIEW })

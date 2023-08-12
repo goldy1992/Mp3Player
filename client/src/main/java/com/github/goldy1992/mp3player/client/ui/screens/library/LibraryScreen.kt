@@ -61,7 +61,6 @@ private const val LOG_TAG = "LibraryScreen"
 )
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
-                  pagerState: PagerState = rememberPagerState(initialPage = 0),
                   viewModel: LibraryScreenViewModel = viewModel(),
                   windowSize: WindowSize = WindowSize.Compact,
                   scope: CoroutineScope = rememberCoroutineScope()
@@ -95,7 +94,6 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
         LibraryScreenContent(
             scope = scope,
-            pagerState = pagerState,
             rootChildrenProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
             playlist = { songs },
@@ -286,7 +284,7 @@ private fun LibraryTabs(
 fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
-    pagerState: PagerState = rememberPagerState(initialPage = 0),
+    pagerState: PagerState = rememberPagerState(initialPage = 0) { 3 },
     rootChildrenProvider: () -> Root,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
@@ -329,7 +327,7 @@ fun LibraryScreenContent(
 @Composable
 fun TabBarPages(
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(),
+    pagerState: PagerState = rememberPagerState() {3 },
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
     folders : () -> Folders = { Folders(state= State.NOT_LOADED) },
@@ -345,7 +343,6 @@ fun TabBarPages(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            pageCount = tabPages.size
         ) { pageIndex ->
             when (tabPages[pageIndex]) {
                 MediaItemType.SONGS ->
