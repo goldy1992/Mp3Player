@@ -33,6 +33,7 @@ junit4 = "4.13.2"
 kotlin = "1.8.20"
 kotlinCoroutines = "1.6.4"
 media3 = "1.1.0"
+multik = "0.2.2"
 ksp = "1.8.21-1.0.11"
 minSdk = "23"
 mockitoInline = "3.7.7"
@@ -108,6 +109,8 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref="multik" }
+kotlin-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref="multik" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
 kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutines" }

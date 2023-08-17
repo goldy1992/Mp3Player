@@ -28,6 +28,7 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizer
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerInscapeImpl
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerNewImpl
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringVisualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart.PieChartVisualizer
@@ -104,7 +105,7 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.CIRCULAR -> {
-                    CircularEqualizerNewImpl(
+                    CircularEqualizerInscapeImpl(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
                     )

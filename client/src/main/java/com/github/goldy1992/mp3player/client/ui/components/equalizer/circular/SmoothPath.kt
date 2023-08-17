@@ -1,6 +1,18 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.circular
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
 import org.apache.commons.math3.complex.Complex
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 data class CubicBezierPoint(
     var start: Complex,
@@ -66,3 +78,51 @@ fun autosmooth(points: List<Complex>, alpha: Double=1.0/3) : List<CubicBezierPoi
     }
     return toReturn
 }
+
+@Preview
+@Composable
+fun PreviewAutoSmooth() {
+
+    // use x^2 + y^2 = r^2
+    val offset = 300f
+    val r = 200f
+    val rSq = r.pow(2)
+    val complexPoints = mutableListOf<Complex>()
+    val negativeComplexPoints = mutableListOf<Complex>()
+
+    for (n in -200 .. 200 step 20) {
+        // y = sqrt(r^2 - x^2)
+        val x = n + offset
+        val y = sqrt(rSq - (n.toFloat().pow(2))) + offset
+        complexPoints.add(Complex(x.toDouble(), y.toDouble()))
+        negativeComplexPoints.add(Complex(n.toDouble(), (y * -1f).toDouble()))
+    }
+    val res : List<CubicBezierPoint> = autosmooth(complexPoints)
+
+    Canvas(Modifier.fillMaxSize()) {
+        val path = Path().apply {
+
+            moveTo(res.get(0).start.real.toFloat(), res.get(0).start.imaginary.toFloat() )
+            for (i in res) {
+
+                val cp1 = i.controlPoint1
+                val cp2 = i.controlPoint2
+                val end = i.end
+                cubicTo(cp1.real.toFloat(),
+                        cp1.imaginary.toFloat(),
+                        cp2.real.toFloat(),
+                        cp2.imaginary.toFloat(),
+                        end.real.toFloat(),
+                        end.imaginary.toFloat())
+            }
+        }
+
+        drawLine(Color.Red, start = Offset(0f, 0f), end = Offset(size.width, size.height))
+        drawPath(path, Color.Red,  style = Stroke(
+            width = 5f,
+            cap = StrokeCap.Round
+        )
+        )
+    }
+}
+

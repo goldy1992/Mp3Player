@@ -128,18 +128,6 @@ fun CircularEqualizerNewImpl(
 }
 
 
-private data class CircleCoordinate(
-    val offset: Offset,
-    val radius : Float,
-    /** Radians */
-    val angle : Float
-)
-private data class CubicBezierCurve(
-    val from : CircleCoordinate,
-    val to : CircleCoordinate,
-    val controlPoint1 : CircleCoordinate,
-    val controlPoint2: CircleCoordinate
-)
 
 
 private fun offsetCoordinates(frequencies: List<Float>, minRadius : Float, center : Offset) : List<CircleCoordinate> {
