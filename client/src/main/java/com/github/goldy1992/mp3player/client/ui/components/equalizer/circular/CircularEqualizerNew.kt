@@ -186,6 +186,8 @@ private fun createCubicBezierCurve(
     if (abs(from.radius - to.radius) < 15) {
         controlPoint1Radius = maxOf(from.radius, to.radius) * 1.01f
         controlPoint2Radius = controlPoint1Radius
+        controlPoint1Angle = 0f
+        controlPoint2Angle = 0f
     }
     else if (to.radius > from.radius) {
         radiusToUse = minOf(from.radius, to.radius) * 0.95f

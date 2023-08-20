@@ -188,7 +188,6 @@ private fun createRadialPoints(
 
 fun main() {
     val points = createPoints()
-    //curveApacheMath()
     curveMultik(points)
 }
 
@@ -228,7 +227,7 @@ fun CircleEqualizerUsingMulkit(
 
     Canvas(modifier = modifier.fillMaxSize()) {
         val p = Path().apply {
-            moveTo(x = points[0][0].toFloat(), y = points[0][1].toFloat())
+            moveTo(x = beziers[0].from.x, y = beziers[0].from.y)
             for (b in beziers) {
                 cubicTo(
                     b.controlPoint1.x, b.controlPoint1.y,
