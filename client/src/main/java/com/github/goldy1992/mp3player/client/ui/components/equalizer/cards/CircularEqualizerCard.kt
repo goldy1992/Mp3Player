@@ -1,14 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 
+import CircleEqualizerUsingMulkit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerInscapeImpl
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerNewImpl
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
 
 @Preview
 @Composable
@@ -20,7 +17,7 @@ fun CircularEqualizerCard(
         modifier = modifier,
         title = stringResource(id = R.string.circular),
     ) { canvasSize, containerModifier ->
-        CircularEqualizerInscapeImpl(
+        CircleEqualizerUsingMulkit(
             frequencyPhasesState = frequencyPhases,
             canvasSize = canvasSize,
             modifier = containerModifier)

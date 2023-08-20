@@ -101,7 +101,7 @@ fun CircularEqualizerNewImpl(
     //    drawCircle(Color.Green, radius = minRadius, center = center)
         drawPath(
             path = curvePath,
-            color = lineColor,
+            color = Color.Red,
             style = Stroke(
                 width = 5f,
                 cap = StrokeCap.Round
@@ -183,12 +183,11 @@ private fun createCubicBezierCurve(
     val radialDiff = abs(from.radius-to.radius)
     //val radiusToUse = ((from.radius + to.radius) / 2f) * 1.01f
     val radiusToUse : Float
-//    if (abs(from.radius - to.radius) < 15) {
-//        controlPoint1Radius = maxOf(from.radius, to.radius) * 1.01f
-//        controlPoint2Radius = controlPoint1Radius
-//    }
-//    else
-        if (to.radius > from.radius) {
+    if (abs(from.radius - to.radius) < 15) {
+        controlPoint1Radius = maxOf(from.radius, to.radius) * 1.01f
+        controlPoint2Radius = controlPoint1Radius
+    }
+    else if (to.radius > from.radius) {
         radiusToUse = minOf(from.radius, to.radius) * 0.95f
         controlPoint1Radius = minOf(from.radius, to.radius) * 0.95f
         controlPoint2Radius = maxOf(from.radius, to.radius) * 1.05f

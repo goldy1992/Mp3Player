@@ -127,7 +127,7 @@ dependencies {
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.kotlin.coroutines.android)
     implementation(libs.kotlin.multik.core)
-    implementation(libs.kotlin.multik.default)
+    debugImplementation(libs.kotlin.multik.kotlin)
     implementation(project(":commons"))
 
     debugImplementation(libs.androidx.compose.ui.test.manifest)

@@ -111,6 +111,8 @@ hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hi
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref="multik" }
 kotlin-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref="multik" }
+kotlin-multik-kotlin = { group = "org.jetbrains.kotlinx", name = "multik-kotlin", version.ref="multik" }
+kotlin-multik-openblas = { group = "org.jetbrains.kotlinx", name = "multik-openblas", version.ref="multik" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
 kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutines" }

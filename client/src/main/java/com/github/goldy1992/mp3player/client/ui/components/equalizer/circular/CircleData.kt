@@ -14,3 +14,10 @@ data class CubicBezierCurve(
     val controlPoint1 : CircleCoordinate,
     val controlPoint2: CircleCoordinate
 )
+
+data class CubicBezierCurveOffset(
+    val from : Offset,
+    val to : Offset,
+    val controlPoint1 : Offset,
+    val controlPoint2: Offset
+)

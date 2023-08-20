@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
+import CircleEqualizerUsingMulkit
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
@@ -105,7 +106,7 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.CIRCULAR -> {
-                    CircularEqualizerInscapeImpl(
+                    CircleEqualizerUsingMulkit(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
                     )
