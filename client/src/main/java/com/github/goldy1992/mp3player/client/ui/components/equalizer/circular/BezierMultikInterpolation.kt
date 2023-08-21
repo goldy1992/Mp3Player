@@ -5,17 +5,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CubicBezierCurveOffset
+import com.github.goldy1992.mp3player.client.utils.visualizer.circle.CircularCurveFitter
+import com.github.goldy1992.mp3player.client.utils.visualizer.circle.MultikCircularCurveFitter
 import org.jetbrains.kotlinx.multik.api.identity
 import org.jetbrains.kotlinx.multik.api.linalg.solve
 import org.jetbrains.kotlinx.multik.api.mk
@@ -202,8 +209,11 @@ fun CircleEqualizerUsingMulkit(
     lineColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 
 ) {
-    Log.v(LOG_TAG, "Invoked: CircleEqualizerUsingMulkit")
     val frequencyPhases = frequencyPhasesState()
+    var size: IntSize by remember { mutableStateOf(IntSize(0, 0)) }
+    val curveFitter: CircularCurveFitter by remember(size, frequencyPhases.size) { mutableStateOf( MultikCircularCurveFitter(size)) }
+    Log.v(LOG_TAG, "Invoked: CircleEqualizerUsingMulkit")
+
     val center = Offset(canvasSize.widthPx / 2, canvasSize.heightPx / 2)
     var animatedFrequencies = mutableListOf<Float>()
     frequencyPhases.forEachIndexed {
@@ -225,7 +235,10 @@ fun CircleEqualizerUsingMulkit(
     val points = createRadialPoints(radius = radius, offset = offset)
     val beziers = generateMultikBeziers(frequencyCoordinates)
 
-    Canvas(modifier = modifier.fillMaxSize()) {
+    Canvas(modifier = modifier.fillMaxSize()
+        .onSizeChanged {
+            size = it
+        }) {
         val p = Path().apply {
             moveTo(x = beziers[0].from.x, y = beziers[0].from.y)
             for (b in beziers) {
