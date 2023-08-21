@@ -107,7 +107,8 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.CIRCULAR -> {
-                    CircleEqualizerUsingApache(
+                   CircleEqualizerUsingMulkit(
+                   // CircleEqualizerUsingApache(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
                     )

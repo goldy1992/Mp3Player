@@ -55,7 +55,7 @@ private fun fillDiagonal(sqMatrix: RealMatrix ) : RealMatrix{
     val length  = sqMatrix.columnDimension
     val lastElement  = length - 1
     for (n in 0 .. lastElement) {
-        val currentRow = sqMatrix.getRow(n).toMutableList()
+        val currentRow = sqMatrix.getRow(n)
 
         if (n == 0) {
             currentRow[0] = 2.0
@@ -88,7 +88,7 @@ private fun fillPointsVector(points: RealMatrix) : RealMatrix {
     val len = points.rowDimension - 1
     val pMatrix = MatrixUtils.createRealMatrix(len, 2)
     for (i in 0 until  len) {
-        val p = points.getRowVector(i).mapMultiply(2.0).add(points.getRowVector(i+1).mapMultiply(2.0))
+        val p = points.getRowVector(i).mapMultiply(2.0).add(points.getRowVector(i+1)).mapMultiply(2.0)
         pMatrix.setRowVector(i, p)
     }
 
@@ -119,10 +119,13 @@ fun generateApacheBeziers(points: RealMatrix) : List<CubicBezierCurveOffset> {
     val B = MatrixUtils.createRealMatrix(numberOfCurves, 2)
 
     for (i in 0 until  numberOfCurves - 1) {
-        B.setRowVector(i, points.getRowVector(i + 1).mapMultiply(2.0).subtract(A.getRowVector(i + 1) ))
+        B.setRowVector(i,
+
+            points.getRowVector(i + 1).mapMultiply(2.0).subtract(A.getRowVector(i + 1) ))
 
     }
-B.setRowVector(numberOfCurves - 1, A.getRowVector(numberOfCurves - 1).add(points.getRowVector(numberOfCurves)).mapDivide(2.0))
+    B.setRowVector(numberOfCurves - 1,
+    A.getRowVector(numberOfCurves - 1).add(points.getRowVector(numberOfCurves)).mapDivide(2.0))
 //
 //    Log.v(LOG_TAG, "A: $A")
 //    Log.v(LOG_TAG,"B: $B")
@@ -196,6 +199,8 @@ fun CircleEqualizerUsingApache(
         drawCircle(Color.Green, 15f, center)
         for (b in beziers) {
             drawCircle(Color.Cyan, 15f, b.from)
+            drawCircle(Color.Yellow, 15f,  b.controlPoint2)
+          //  drawCircle(Color.Yellow, 15f,  b.controlPoint1)
         }
     }
 }

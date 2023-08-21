@@ -243,6 +243,12 @@ fun CircleEqualizerUsingMulkit(
                 cap = StrokeCap.Round
             )
         )
+
+        for (b in beziers) {
+            drawCircle(Color.Cyan, 15f, b.from)
+            drawCircle(Color.Yellow, 15f,  b.controlPoint2)
+            //  drawCircle(Color.Yellow, 15f,  b.controlPoint1)
+        }
     }
 }
 
