@@ -35,18 +35,18 @@ class MultikCircularCurveFitter(
     override fun generateBeziers(
         frequencies: List<Float>): List<CubicBezierCurveOffset> {
         val offsetFrequencies = offsetCoordinates(frequencies)
-        val points = offsetFrequencies.map { mk[it.x, it.y] }.toNDArray()
+        val points = offsetFrequencies.map { mk[it.x.toDouble(), it.y.toDouble()] }.toNDArray()
         val numberOfCurves = points.shape[0] - 1
-        val identity : MutableMultiArray<Float, D2> = mk.identity<Float>(numberOfCurves).times(4f)
+        val identity : MutableMultiArray<Double, D2> = mk.identity<Double>(numberOfCurves).times(4.0)
         val coefficientMatrix = fillDiagonal(identity)
 
         val P = fillPointsVector(points)
         val A = mk.linalg.solve(coefficientMatrix, P)
-        val B = mk.zeros<Float>(numberOfCurves, 2)
+        val B = mk.zeros<Double>(numberOfCurves, 2)
         for (i in 0 until  numberOfCurves - 1) {
-            B[i] = points[i + 1].times(2f) - A[i + 1]
+            B[i] = points[i + 1].times(2.0) - A[i + 1]
         }
-        B[numberOfCurves - 1] = (A[numberOfCurves - 1] + points[numberOfCurves]) / 2.0f
+        B[numberOfCurves - 1] = (A[numberOfCurves - 1] + points[numberOfCurves]) / 2.0
 
         Log.v(logTag(), "A: $A")
         Log.v(logTag(),"B: $B")
@@ -65,28 +65,28 @@ class MultikCircularCurveFitter(
     }
 
 
-    private fun fillDiagonal(sqMatrix: MutableMultiArray<Float, D2> ) : MutableMultiArray<Float, D2> {
+    private fun fillDiagonal(sqMatrix: MutableMultiArray<Double, D2> ) : MutableMultiArray<Double, D2> {
         val length  = sqMatrix.shape[0]
         val lastElement  = length - 1
         for (n in 0 .. lastElement) {
             val currentRow = sqMatrix[n].toMutableList()
 
             if (n == 0) {
-                currentRow[0] = 2.0f
+                currentRow[0] = 2.0
             }
 
             val idxLeft = n-1
             if (idxLeft in 0 .. lastElement) {
-                currentRow[idxLeft] = 1.0f
+                currentRow[idxLeft] = 1.0
             }
             val idxRight = n + 1
             if (idxRight in 0 .. lastElement) {
-                currentRow[idxRight] = 1.0f
+                currentRow[idxRight] = 1.0
             }
 
             else if (n == lastElement) {
-                currentRow[lastElement] = 7.0f
-                currentRow[lastElement - 1] = 2.0f
+                currentRow[lastElement] = 7.0
+                currentRow[lastElement - 1] = 2.0
 
             }
 
@@ -97,17 +97,17 @@ class MultikCircularCurveFitter(
     }
 
 
-    private fun fillPointsVector(points: D2Array<Float>) : D2Array<Float> {
+    private fun fillPointsVector(points: D2Array<Double>) : D2Array<Double> {
 
         val len = points.shape[0] - 1
-        val pMatrix = mutableListOf<List<Float>>()
+        val pMatrix = mutableListOf<List<Double>>()
         for (i in 0 until  len) {
-            val p = (points[i].times(2.0f) + points[i+1]).times(2.0f)
+            val p = (points[i].times(2.0) + points[i+1]).times(2.0)
             pMatrix.add(p.toList())
         }
 
-        pMatrix[0] = (points[0] + (2.0f * points[1])).toList()
-        pMatrix[len-1] = (points[len-1].times(8.0f) + points[len]).toList()
+        pMatrix[0] = (points[0] + (2.0 * points[1])).toList()
+        pMatrix[len-1] = (points[len-1].times(8.0) + points[len]).toList()
         return mk.ndarray(pMatrix)
     }
 
