@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
-import CircleEqualizerUsingMulkit
 import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
@@ -28,10 +27,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircleEqualizerUsingApache
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizer
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerInscapeImpl
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircularEqualizerNewImpl
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CircleEqualizerUsingPolikarpotchkin
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspring.FountainSpringVisualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart.PieChartVisualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
@@ -107,8 +103,8 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.CIRCULAR -> {
-                   CircleEqualizerUsingMulkit(
-                   // CircleEqualizerUsingApache(
+                  // CircleEqualizerUsingMulkit(
+                    CircleEqualizerUsingPolikarpotchkin(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
                     )

@@ -16,7 +16,7 @@ data class CubicBezierCurve(
 )
 
 data class CubicBezierCurveOffset(
-    val from : Offset,
+    //val from : Offset,
     val to : Offset,
     val controlPoint1 : Offset,
     val controlPoint2: Offset
