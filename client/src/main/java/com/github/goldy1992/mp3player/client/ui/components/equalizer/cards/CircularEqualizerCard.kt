@@ -19,7 +19,6 @@ fun CircularEqualizerCard(
     ) { canvasSize, containerModifier ->
         CircleEqualizerUsingPolikarpotchkin(
             frequencyPhasesState = frequencyPhases,
-            canvasSize = canvasSize,
             modifier = containerModifier)
     }
 

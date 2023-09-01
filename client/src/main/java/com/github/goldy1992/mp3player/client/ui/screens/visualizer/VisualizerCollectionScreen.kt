@@ -35,6 +35,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.Smoot
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.map
 
 private const val LOG_TAG = "VisualizerScreen"
 

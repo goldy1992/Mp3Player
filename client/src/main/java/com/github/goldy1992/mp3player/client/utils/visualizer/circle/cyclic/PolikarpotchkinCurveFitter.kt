@@ -10,7 +10,7 @@ class PolikarpotchkinCurveFitter(
     canvasSize: IntSize,
     override val insetPx: Float = 15f,
     override val maxFreqRadius: Double = 150.0,
-    override val maxFreq: Double = 300.0
+    override val maxFreq: Double = 300.0,
 ) : CircularCurveFitter {
 
     override val center: Offset = Offset(canvasSize.width / 2f, canvasSize.height / 2f)

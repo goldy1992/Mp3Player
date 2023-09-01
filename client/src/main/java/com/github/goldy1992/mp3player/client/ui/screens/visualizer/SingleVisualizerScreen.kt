@@ -103,16 +103,13 @@ fun SingleVisualizerScreen(
                     )
                 }
                 VisualizerType.CIRCULAR -> {
-                  // CircleEqualizerUsingMulkit(
                     CircleEqualizerUsingPolikarpotchkin(
                         frequencyPhasesState = { audioData },
-                        canvasSize = canvasSize,
                     )
                 }
                 VisualizerType.PIE_CHART -> {
                     PieChartVisualizer(
                         frequencyPhasesState = { audioData },
-                        canvasSize = canvasSize,
                     )
                 }
                 else -> {

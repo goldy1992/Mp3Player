@@ -19,7 +19,6 @@ fun PieChartCard(
     ) { canvasSize, containerModifier ->
         PieChartVisualizer(
             frequencyPhasesState = frequencyPhases,
-            canvasSize = canvasSize,
             modifier = containerModifier
         )
     }

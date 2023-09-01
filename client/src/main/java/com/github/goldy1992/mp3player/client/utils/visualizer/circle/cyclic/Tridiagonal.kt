@@ -37,9 +37,9 @@ object Tridiagonal {
                 throw Exception("Singular matrix.");
             u[j] = (rhs[j] - a[j] * u[j - 1]) / bet;
         }
-        for (j in 1 until n)
-        u[n - j - 1] -= gam[n - j] * u[n - j]; // Backsubstitution.
-
+        for (j in 1 until n) {
+            u[n - j - 1] -= gam[n - j] * u[n - j]; // Backsubstitution.
+        }
         return u;
     }
 }
