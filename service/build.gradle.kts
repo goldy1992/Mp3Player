@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
@@ -100,15 +99,12 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android.core)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.hilt.android.core)
     testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 }
 
-kapt {
-    correctErrorTypes = true
-}
 
 sonarqube {
     androidVariant = "fullDebug"

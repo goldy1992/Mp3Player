@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
 }
@@ -53,7 +53,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.hilt.android.core)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
 
     testImplementation(libs.robolectric) {

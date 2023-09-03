@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
 }
@@ -130,8 +130,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    kapt(libs.hilt.compiler)
-    kaptTest(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)
@@ -151,10 +151,6 @@ dependencies {
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
 
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 sonarqube {
