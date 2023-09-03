@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -43,7 +44,7 @@ private const val LOG_TAG = "ComposeApp"
 /**
  * Entry point to the Compose UI.
  * @param userPreferencesRepository The [IUserPreferencesRepository].
- * @param windowSize The [WindowSize].
+ * @param windowSize The [WindowSizeClass].
  * @param startScreen The [Screen] to begin with.
  */
 @OptIn(
@@ -51,6 +52,7 @@ private const val LOG_TAG = "ComposeApp"
     ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class,
     ExperimentalMaterialApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class,
     InternalCoroutinesApi::class,
 )
 @Composable
