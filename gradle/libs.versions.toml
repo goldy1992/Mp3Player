@@ -16,7 +16,6 @@ androidxTestEspresso = "3.5.1"
 androidxTestExtJunit = "1.1.5"
 androidxTestExtTruth = "1.5.0"
 androidxTestRunner = "1.5.2"
-androidxWindow = "1.0.0"
 apacheCommonsCollections4 = "4.4"
 apacheCommonsIo = "1.3.2"
 apacheCommonsLang3 = "3.9"
@@ -32,8 +31,7 @@ jacoco = "0.8.10"
 junit4 = "4.13.2"
 kotlin = "1.9.10"
 kotlinCoroutines = "1.6.4"
-media3 = "1.1.0"
-multik = "0.2.2"
+media3 = "1.1.1"
 ksp = "1.9.10-1.0.13"
 minSdk = "23"
 mockitoInline = "3.7.7"
@@ -92,7 +90,6 @@ androidx-test-ext-truth = { module = "androidx.test.ext:truth", version.ref = "a
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref="uiAutomator" }
-androidx-window = { group = "androidx.window", name = "window", version.ref = "androidxWindow" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 apache-commons-io = { group = "org.apache.commons", name = "commons-io", version.ref = "apacheCommonsIo" }
 apache-commons-collections4 = { group = "org.apache.commons", name= "commons-collections4", version.ref = "apacheCommonsCollections4" }
@@ -109,10 +106,6 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", v
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
-kotlin-multik-core = { group = "org.jetbrains.kotlinx", name = "multik-core", version.ref="multik" }
-kotlin-multik-default = { group = "org.jetbrains.kotlinx", name = "multik-default", version.ref="multik" }
-kotlin-multik-kotlin = { group = "org.jetbrains.kotlinx", name = "multik-kotlin", version.ref="multik" }
-kotlin-multik-openblas = { group = "org.jetbrains.kotlinx", name = "multik-openblas", version.ref="multik" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }
 kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutines" }
