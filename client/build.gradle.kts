@@ -118,7 +118,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.kotlin)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.compose.navigation)
-    implementation(libs.androidx.window)
     implementation(libs.coil.compose)
     implementation(libs.google.play.review)
     implementation(libs.google.play.review.ktx)

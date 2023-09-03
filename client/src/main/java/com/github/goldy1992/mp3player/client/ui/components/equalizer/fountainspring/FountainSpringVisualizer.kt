@@ -67,68 +67,66 @@ fun FountainSpringVisualizer(modifier: Modifier = Modifier,
 
     // LaunchedEffect for CREATING new particles
     LaunchedEffect(frequencyPhases) {
-        this.launch {
         //Log.i(logTag, "frequencyPhases updated, new LaunchedEffect")
-            val springs = fountain.springs.iterator()
-            val newSprings = mutableListOf<Spring>()
-            while (springs.hasNext()) {
-                val currentSpring = springs.next()
-                val currentParticleList = currentSpring.particles
-                val newParticleList = currentParticleList.toMutableList()
-                if (newParticleList.size < maxParticlesPerSpring) {
-              //    Log.i(logTag, "adding new particle to frequency: ${currentSpring.index}")
-                    val currentFreq = frequencyPhases[currentSpring.index]
-                    val fraction = currentFreq / MAX_FREQUENCY
-                    val hMax = canvasSize.heightPx * fraction
-                //    Log.i(logTag, "hMax: $hMax")
-                    val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
-                    val initialVelocity = calculateInitialVelocityGivenHMax(hMax, angle)
-                    newParticleList.add(
-                        Particle.createParticle(
-                            currentSpring.offset,
-                            initialVelocity = initialVelocity,
-                            hMax = hMax,
-                            color = particleColor
-                        )
+        val springs = fountain.springs.iterator()
+        val newSprings = mutableListOf<Spring>()
+        while (springs.hasNext()) {
+            val currentSpring = springs.next()
+            val currentParticleList = currentSpring.particles
+            val newParticleList = currentParticleList.toMutableList()
+            if (newParticleList.size < maxParticlesPerSpring) {
+          //    Log.i(logTag, "adding new particle to frequency: ${currentSpring.index}")
+                val currentFreq = frequencyPhases[currentSpring.index]
+                val fraction = currentFreq / MAX_FREQUENCY
+                val hMax = canvasSize.heightPx * fraction
+            //    Log.i(logTag, "hMax: $hMax")
+                val angle = Math.toRadians(Random.nextDouble(85.0, 95.0))
+                val initialVelocity = calculateInitialVelocityGivenHMax(hMax, angle)
+                newParticleList.add(
+                    Particle.createParticle(
+                        currentSpring.offset,
+                        initialVelocity = initialVelocity,
+                        hMax = hMax,
+                        color = particleColor
                     )
-                }
-                newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticleList.toList()))
+                )
             }
-
-            fountain = Fountain(newSprings, fountain.currentFrame)
-          //  Log.i(logTag, "set new map after creating new particles")
+            newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticleList.toList()))
         }
+
+        fountain = Fountain(newSprings, fountain.currentFrame)
+      //  Log.i(logTag, "set new map after creating new particles")
+
     }
 
     // LaunchedEffect for UPDATING and REMOVING particles.
     LaunchedEffect(fountain) {
-        this.launch {
-           // Log.i(logTag, "launching new while particles in map coroutine")
-            while (isPlaying && fountain.hasParticles()) {
-           //     Log.i(logTag, "while Particles in map, update particles")
-                val currentFrame = awaitFrame()
-                val timeDiffSinceLastFrame = currentFrame - fountain.currentFrame
-                val springsIterator = fountain.springs.iterator()
-                val newSprings = mutableListOf<Spring>()
-                while (springsIterator.hasNext()) {
-                    val currentSpring = springsIterator.next()
-                    val newParticles : MutableList<Particle> = mutableListOf()
-                    val particlesIterator = currentSpring.particles.iterator()
-                    while (particlesIterator.hasNext()) {
-                        val currentParticle = particlesIterator.next()
-                        if (!currentParticle.shouldRemove()) {
-                            newParticles.add(currentParticle.update(timeDiffSinceLastFrame))
-                        } else {
-                    //        Log.i(logTag, "removing particle of y: ${currentParticle.y}")
-                        }
+       // Log.i(logTag, "launching new while particles in map coroutine")
+        while (isPlaying && fountain.hasParticles()) {
+       //     Log.i(logTag, "while Particles in map, update particles")
+            val currentFrame = awaitFrame()
+            val timeDiffSinceLastFrame = currentFrame - fountain.currentFrame
+            val springsIterator = fountain.springs.iterator()
+            val newSprings = mutableListOf<Spring>()
+            while (springsIterator.hasNext()) {
+                val currentSpring = springsIterator.next()
+                val newParticles : MutableList<Particle> = mutableListOf()
+                val particlesIterator = currentSpring.particles.iterator()
+                while (particlesIterator.hasNext()) {
+                    val currentParticle = particlesIterator.next()
+                    if (!currentParticle.shouldRemove()) {
+                        newParticles.add(currentParticle.update(timeDiffSinceLastFrame))
+                    } else {
+                //        Log.i(logTag, "removing particle of y: ${currentParticle.y}")
                     }
-                    newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticles.toList()))
                 }
-                fountain = Fountain(newSprings.toList(), currentFrame)
-           //     Log.i(logTag, "set new map after updating particles")
-
+                newSprings.add(Spring(currentSpring.index, currentSpring.offset, newParticles.toList()))
             }
+            fountain = Fountain(newSprings.toList(), currentFrame)
+       //     Log.i(logTag, "set new map after updating particles")
+
         }
+
     }
 
     FountainSpringCanvas(

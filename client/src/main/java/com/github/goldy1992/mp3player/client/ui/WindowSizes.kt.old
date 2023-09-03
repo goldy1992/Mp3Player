@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui
 
 import android.app.Activity
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Size
@@ -9,7 +10,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.window.layout.WindowMetricsCalculator
+
+
 
 /**
  * Opinionated set of viewport breakpoints
@@ -33,7 +35,6 @@ fun Activity.rememberWindowSizeClass(): WindowSize {
     val windowDpSize = with(LocalDensity.current) {
         windowSize.toDpSize()
     }
-
     // Calculate the window size class
     return getWindowSizeClass(windowDpSize)
 }

@@ -14,9 +14,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -57,12 +61,13 @@ private const val LOG_TAG = "LibraryScreen"
 @OptIn(
     ExperimentalAnimationApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class
 )
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
                   viewModel: LibraryScreenViewModel = viewModel(),
-                  windowSize: WindowSize = WindowSize.Compact,
+                  windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DpSize(500.dp, 800.dp)),
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
     val rootItems by viewModel.root.collectAsState()
@@ -105,7 +110,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         )
 
     }
-    val isLargeScreen = windowSize == WindowSize.Expanded
+    val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             isPlayingProvider = { isPlaying },

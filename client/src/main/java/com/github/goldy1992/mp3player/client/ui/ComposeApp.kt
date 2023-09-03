@@ -2,18 +2,17 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
@@ -39,9 +38,7 @@ import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.InternalCoroutinesApi
 
-
 private const val LOG_TAG = "ComposeApp"
-private const val transitionTime = 600
 
 /**
  * Entry point to the Compose UI.
@@ -59,7 +56,7 @@ private const val transitionTime = 600
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
-    windowSize: WindowSize,
+    windowSize: WindowSizeClass,
     startScreen : Screen
 ) {
     val navController = rememberNavController()
