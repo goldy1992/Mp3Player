@@ -12,7 +12,7 @@ interface CircularCurveFitter : LogTagger {
     val center: Offset
     val minRadius : Float
     val insetPx : Float
-    val maxFreqRadius: Double
+    val maxRadiusDelta: Double
     val maxFreq : Double
 
     fun offsetCoordinates(frequencies: List<Float>) : List<Offset> {
@@ -24,7 +24,7 @@ interface CircularCurveFitter : LogTagger {
             val spacing = ((2 * Math.PI) / frequencies.count()).toFloat()
 
             for (frequency in frequencies) {
-                val radius = minRadius + (maxFreqRadius * (frequency / maxFreq))
+                val radius = minRadius + (maxRadiusDelta * (frequency / maxFreq))
                 val x = (radius * cos(angle)).toFloat() + center.x
                 val y = (radius * sin(angle)).toFloat() + center.y
 

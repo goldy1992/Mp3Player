@@ -9,12 +9,13 @@ import com.github.goldy1992.mp3player.client.utils.visualizer.circle.cyclic.Bezi
 class PolikarpotchkinCurveFitter(
     canvasSize: IntSize,
     override val insetPx: Float = 15f,
-    override val maxFreqRadius: Double = 150.0,
     override val maxFreq: Double = 300.0,
+    minRadiusScaleFactor: Float = 0.4f
 ) : CircularCurveFitter {
-
+    private val minLength = minOf(canvasSize.width, canvasSize.height) - (2 * insetPx)
     override val center: Offset = Offset(canvasSize.width / 2f, canvasSize.height / 2f)
-    override val minRadius: Float = (0.9f * minOf(canvasSize.width - (2 * insetPx), canvasSize.height - (2 * insetPx)))  / 2.1f
+    override val minRadius: Float = (minRadiusScaleFactor * minLength) / 2.0f
+    override val maxRadiusDelta: Double = (minLength / 2.0) - minRadius
 
     override fun generateBeziers(frequencies: List<Float>): List<CubicBezierCurveOffset> {
         val offsetFrequencies = offsetCoordinates(frequencies)

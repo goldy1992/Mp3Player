@@ -5,12 +5,21 @@ import org.junit.Test
 import kotlin.math.cos
 import kotlin.math.sin
 
+/**
+ * Test class for constructing a Closed Bezier Spline
+ */
 class ClosedBezierSplineTest {
 
+    /**
+     * GIVEN: 7 points on a circle of radius 100
+     * WHEN: A closed bezier spline is constructed.
+     * THEN: The control points of the bezier curve are as expected.
+     */
     @Test
-    fun testCase1() {
-        val points = create7Points()
-        val delta = 0.1
+    fun testPointsOnACircle() {
+        // GIVEN
+        val points = createPoints(numberOfPoints = 7, radius =  100.0)
+        val delta = 0.1 // accuracy +/- 0.1
 
         // assert points
         assertEquals(100.0, points[0].X, delta)
@@ -146,13 +155,11 @@ class ClosedBezierSplineTest {
         assertEquals(200.0f, curve6.to.y, deltaf)
     }
 
-    private fun create7Points(): MutableList<Point> {
-        val numOfPoints = 7
-        val radius = 100.0
+    private fun createPoints(numberOfPoints: Int = 7, radius: Double = 100.0): MutableList<Point> {
         val points = mutableListOf<Point>()
         val angleStep: Double = 2 * Math.PI / 7
 
-        for (i in 0 until numOfPoints) {
+        for (i in 0 until numberOfPoints) {
             val angle = i * angleStep
             points.add(
                 Point(
