@@ -4,6 +4,9 @@ import com.github.goldy1992.mp3player.client.utils.visualizer.FountainSpringUtil
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/**
+ * Test class for the [FountainSpringUtils].
+ */
 class FountainSpringUtilsTest {
 
     /**

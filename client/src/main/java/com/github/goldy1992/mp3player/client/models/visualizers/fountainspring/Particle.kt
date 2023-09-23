@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.models.visualizers.fountainspring
 
-
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.github.goldy1992.mp3player.client.models.visualizers.fountainspring.Constants.g
@@ -9,8 +8,10 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random
 
-private const val logTag = "Particle"
 
+/**
+ * Data class to hold a Particle within the Fountain Spring animation.
+ */
 data class Particle
     constructor(
         val startPosition : Offset,
