@@ -14,9 +14,13 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -38,6 +42,7 @@ import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.utils.MediaItemNameUtils
+import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -56,13 +61,13 @@ private const val LOG_TAG = "LibraryScreen"
 @OptIn(
     ExperimentalAnimationApi::class,
     ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class
 )
 @Composable
 fun LibraryScreen(navController: NavController = rememberAnimatedNavController(),
-                  pagerState: PagerState = rememberPagerState(initialPage = 0),
                   viewModel: LibraryScreenViewModel = viewModel(),
-                  windowSize: WindowSize = WindowSize.Compact,
+                  windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DpSize(500.dp, 800.dp)),
                   scope: CoroutineScope = rememberCoroutineScope()
 ) {
     val rootItems by viewModel.root.collectAsState()
@@ -94,7 +99,6 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
     val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
         LibraryScreenContent(
             scope = scope,
-            pagerState = pagerState,
             rootChildrenProvider =  { rootItems },
             onItemSelectedMapProvider = { onItemSelectedMap },
             playlist = { songs },
@@ -106,7 +110,7 @@ fun LibraryScreen(navController: NavController = rememberAnimatedNavController()
         )
 
     }
-    val isLargeScreen = windowSize == WindowSize.Expanded
+    val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             isPlayingProvider = { isPlaying },
@@ -285,7 +289,7 @@ private fun LibraryTabs(
 fun LibraryScreenContent(
     modifier: Modifier = Modifier,
     scope: CoroutineScope = rememberCoroutineScope(),
-    pagerState: PagerState = rememberPagerState(initialPage = 0),
+    pagerState: PagerState = rememberPagerState(initialPage = 0) { 3 },
     rootChildrenProvider: () -> Root,
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
@@ -328,7 +332,7 @@ fun LibraryScreenContent(
 @Composable
 fun TabBarPages(
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState(),
+    pagerState: PagerState = rememberPagerState() {3 },
     onItemSelectedMapProvider : () -> EnumMap<MediaItemType, Any > = { EnumMap(MediaItemType::class.java) },
     playlist : () -> Playlist = { Playlist(state= State.NOT_LOADED) },
     folders : () -> Folders = { Folders(state= State.NOT_LOADED) },
@@ -344,7 +348,6 @@ fun TabBarPages(
         modifier = modifier) {
         HorizontalPager(
             state = pagerState,
-            pageCount = tabPages.size
         ) { pageIndex ->
             when (tabPages[pageIndex]) {
                 MediaItemType.SONGS ->

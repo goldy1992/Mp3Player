@@ -26,6 +26,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -44,7 +47,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.Theme
-import com.github.goldy1992.mp3player.client.ui.WindowSize
+import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 import com.github.goldy1992.mp3player.client.ui.components.FeatureRequestDialog
@@ -65,13 +68,14 @@ private const val logTag = "SettingsScreen"
 /**
  * The Settings Screen
  */
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class,
+    ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
     navController : NavController = rememberAnimatedNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    windowSize: WindowSize = WindowSize.Compact
+    windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE)
 ) {
 
     val settings by viewModel.settings.collectAsState()
@@ -90,7 +94,7 @@ fun SettingsScreen(
     }
 
 
-    val isLargeScreen = windowSize == WindowSize.Expanded
+    val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
 
     if (isLargeScreen) {
         LargeSettingsScreen(

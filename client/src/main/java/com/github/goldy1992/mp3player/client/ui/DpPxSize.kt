@@ -11,6 +11,8 @@ data class DpPxSize(
     val heightDp : Dp
 ) {
     companion object {
+
+        val DEFAULT = DpPxSize(0f, 0f, 0.dp, 0.dp)
         fun createDpPxSizeFromPx(widthPx : Float, heightPx : Float, density: Density) : DpPxSize {
             val widthDp = (widthPx / density.density).dp
             val heightDp = (heightPx / density.density).dp

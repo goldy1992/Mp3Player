@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -61,7 +60,9 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
 
     val frequencyCoordinates = mutableListOf<Offset>()
     for (i in frequencyPhases.indices) {
-        val currentAnimatedValue by animateFloatAsState(targetValue = frequencyPhases[i])
+        val currentAnimatedValue by animateFloatAsState(targetValue = frequencyPhases[i],
+            label = "FrequencyOffset${i}"
+        )
         frequencyCoordinates.add(Offset(
             x = waveStartOffset.x + (phaseSpacing * (i + 1)),
             y = lineHeight - currentAnimatedValue
@@ -96,7 +97,7 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
         .fillMaxSize()
 
     ) {
-        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
+    //    drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
         val curvePath = Path().apply {
             reset()
             if (coordinates.isNotEmpty()) {

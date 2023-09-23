@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
-import com.github.goldy1992.mp3player.client.utils.TimerUtils.formatTime
+import com.github.goldy1992.mp3player.client.utils.TimeUtils.formatTime
 
 private const val logTag = "SongListItem"
 

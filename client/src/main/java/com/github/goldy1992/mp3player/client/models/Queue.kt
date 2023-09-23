@@ -9,4 +9,12 @@ data class Queue(
     companion object {
         val EMPTY = Queue(emptyList(), 0)
     }
+
+    fun size() : Int {
+        return items.size
+    }
+
+    fun isEmpty() : Boolean {
+        return items.isEmpty()
+    }
 }

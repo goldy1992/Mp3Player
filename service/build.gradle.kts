@@ -1,9 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.hilt)
+    id("mp3player.android.room")
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
 }
@@ -18,14 +17,6 @@ android {
         Ensures app's state is completely cleared between tests. */
         //testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles("consumer-rules.pro")
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf(
-                    "room.schemaLocation" to "$projectDir/schemas",
-                    "room.incremental" to "true"
-                )
-            }
-        }
     }
 
     buildTypes {
@@ -83,11 +74,6 @@ dependencies {
     implementation(libs.kotlin.coroutines.android)
     implementation(project(":commons"))
 
-    implementation(libs.androidx.room.kotlin)
-    implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
-    ksp(libs.androidx.room.compiler)
-
     testImplementation(libs.robolectric) {
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
@@ -100,15 +86,12 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android.core)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     testImplementation(libs.hilt.android.core)
     testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 }
 
-kapt {
-    correctErrorTypes = true
-}
 
 sonarqube {
     androidVariant = "fullDebug"

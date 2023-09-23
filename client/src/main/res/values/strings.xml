@@ -77,6 +77,7 @@
     <string name="update_permissions">Update Permissions</string>
     <string name="use_system_dark_mode">Use System Dark Mode</string>
     <string name="version">Version</string>
+    <string name="visualizer">Visualizer</string>
 
 
     <!-- Content Descriptions -->
@@ -84,4 +85,11 @@
     <string name="github_dark_mode_icon_description">Github Dark Mode Icon Description</string>
     <string name="github_light_mode_icon_description">Github Light Mode Icon Description</string>
 
+
+    <!-- Visualizer names -->
+    <string name="bars">Bars</string>
+    <string name="circular">Circular</string>
+    <string name="pie_chart">Pie Chart</string>
+    <string name="smooth_line">Smooth Line</string>
+    <string name="fountain">Fountain</string>
 </resources>

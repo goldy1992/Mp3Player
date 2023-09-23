@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.FeedbackDialog
 import com.github.goldy1992.mp3player.client.ui.components.RatingDialog
-import com.github.goldy1992.mp3player.client.ui.utils.RatingUtils.submit
+import com.github.goldy1992.mp3player.client.utils.RatingUtils.submit
 
 @Composable
 fun ReviewNavigationItem() {

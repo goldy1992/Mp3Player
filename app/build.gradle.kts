@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.kapt)
+    alias(libs.plugins.ksp)
     id("mp3player.android.application.variant_filter")
 }
 
@@ -93,14 +93,14 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android.core)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     val composeBom = platform(libs.androidx.compose.bom)
 
     "androidTestAutomationImplementation"(composeBom)
 
     "androidTestAutomationImplementation"(libs.hilt.android.core)
-    "kaptAndroidTestAutomation"(libs.hilt.compiler)
+    "kspAndroidTestAutomation"(libs.hilt.compiler)
     "androidTestAutomationImplementation"(libs.hilt.android.testing)
 
     "androidTestAutomationImplementation"(libs.androidx.test.core)
@@ -110,10 +110,6 @@ dependencies {
     "androidTestAutomationImplementation"(libs.androidx.compose.ui.test)
     "androidTestAutomationImplementation"(libs.androidx.compose.ui.test.junit4)
 
-}
-
-kapt {
-    correctErrorTypes = true
 }
 
 sonarqube {

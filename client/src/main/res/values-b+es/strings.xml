@@ -78,10 +78,18 @@
     <string name="update_permissions">Actualizar Permisos</string>
     <string name="use_system_dark_mode">Usar Modo Oscuro de Sistema</string>
     <string name="version">Versión</string>
+    <string name="visualizer">Visualizador</string>
 
     <!-- Content Descriptions -->
     <string name="settings_screen_list_description">Lista de los ajustes</string>
     <string name="github_dark_mode_icon_description">Descripción del ícono GitHub modo oscuro</string>
     <string name="github_light_mode_icon_description">Descripción del ícono GitHub modo luminoso</string>
+
+    <!-- Visualizer names -->
+    <string name="bars">Barras</string>
+    <string name="circular">Circular</string>
+    <string name="pie_chart">Gráfico Circular</string>
+    <string name="smooth_line">Línea Lisa</string>
+    <string name="fountain">Fuente</string>
 
 </resources>

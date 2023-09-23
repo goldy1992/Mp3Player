@@ -11,7 +11,7 @@ import com.github.goldy1992.mp3player.client.models.media.MediaEntity
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.State
-import com.github.goldy1992.mp3player.client.ui.utils.ExtrasUtils.hasPermissions
+import com.github.goldy1992.mp3player.client.utils.ExtrasUtils.hasPermissions
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist

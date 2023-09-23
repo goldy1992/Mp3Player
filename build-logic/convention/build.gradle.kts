@@ -38,5 +38,9 @@ gradlePlugin {
             id = "mp3player.android.application.variant_filter"
             implementationClass = "AndroidApplicationVariantFilterConvention"
         }
+        register("androidRoom") {
+            id = "mp3player.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
     }
 }

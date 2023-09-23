@@ -1,45 +1,45 @@
 [versions]
 accompanist = "0.30.1"
-androidGradlePlugin = "8.0.2"
+androidGradlePlugin = "8.1.1"
 androidxActivityKotlin = "1.7.1"
 androidxAnnotation = "1.6.0"
 androidxAppCompat = "1.6.1"
-androidxComposeCompiler = "1.4.7"
+androidxComposeCompiler = "1.5.3"
 androidxConcurrent = "1.1.0"
 androidxCoreKotlin = "1.10.0"
 androidxHiltNavigationCompose = "1.0.0"
 androidxLifecycle = "2.5.1"
+androidxNavigationVersion = "2.7.0"
 androidxTestCoreKotlin = "1.5.0"
 androidxTest = "1.5.0"
 androidxTestEspresso = "3.5.1"
 androidxTestExtJunit = "1.1.5"
 androidxTestExtTruth = "1.5.0"
 androidxTestRunner = "1.5.2"
-androidxWindow = "1.0.0"
 apacheCommonsCollections4 = "4.4"
 apacheCommonsIo = "1.3.2"
 apacheCommonsLang3 = "3.9"
 apacheCommonsMath3 = "3.6.1"
 coil = "2.4.0"
-compileSdk = "33"
-composeBom = "2023.06.01"
+compileSdk = "34"
+composeBom = "2023.08.00"
 datastorePreferences = "1.0.0"
 googlePlayReview = "2.0.1"
-hilt = "2.46.1"
+hilt = "2.48"
 hiltExt = "1.0.0"
 jacoco = "0.8.10"
 junit4 = "4.13.2"
-kotlin = "1.8.20"
+kotlin = "1.9.10"
 kotlinCoroutines = "1.6.4"
-media3 = "1.0.2"
-ksp = "1.8.21-1.0.11"
+media3 = "1.1.1"
+ksp = "1.9.10-1.0.13"
 minSdk = "23"
 mockitoInline = "3.7.7"
 mockitoKotlin = "4.1.0"
-room = "2.5.1"
+room = "2.5.2"
 robolectric = "4.10"
 sonarqube = "4.2.1.3168"
-targetSdk= "33"
+targetSdk= "34"
 uiAutomator = "2.3.0-alpha03"
 
 [libraries]
@@ -58,6 +58,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material3-windowsizes = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version = "androidxNavigationVersion" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -89,7 +90,6 @@ androidx-test-ext-truth = { module = "androidx.test.ext:truth", version.ref = "a
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidxTest" }
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref="uiAutomator" }
-androidx-window = { group = "androidx.window", name = "window", version.ref = "androidxWindow" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 apache-commons-io = { group = "org.apache.commons", name = "commons-io", version.ref = "apacheCommonsIo" }
 apache-commons-collections4 = { group = "org.apache.commons", name= "commons-collections4", version.ref = "apacheCommonsCollections4" }
@@ -123,7 +123,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 #protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 sonarqube = { id = "org.sonarqube", version.ref="sonarqube" }

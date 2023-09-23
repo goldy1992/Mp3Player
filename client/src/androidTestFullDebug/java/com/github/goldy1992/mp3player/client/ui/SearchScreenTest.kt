@@ -3,6 +3,9 @@ package com.github.goldy1992.mp3player.client.ui
 import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -31,6 +34,8 @@ import java.io.File
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
+@ExperimentalMaterial3WindowSizeClassApi
+@ExperimentalTestApi
 class SearchScreenTest {
 
     private lateinit var context : Context
@@ -52,13 +57,12 @@ class SearchScreenTest {
     /**
      * Tests that the query is updated correctly when we perform text input.
      */
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun testSearchBarOnValueChange() {
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
-                windowSize = WindowSize.Compact
+              //  windowSize = WindowSizeClass.calculateFromSize(WindowWidthSizeClass.Compact)
             )
         }
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
@@ -71,7 +75,6 @@ class SearchScreenTest {
     /**
      * Tests the song is played when selected from the results.
      */
-    @OptIn(ExperimentalFoundationApi::class)
     @Test
     fun testSearchResultsDisplayedCorrectly() {
         val searchQuery = "query"
@@ -105,7 +108,7 @@ class SearchScreenTest {
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
-                windowSize = WindowSize.Compact
+             //   windowSize = WindowSize.Compact
             )
         }
 
@@ -132,7 +135,7 @@ class SearchScreenTest {
         composeTestRule.setContent {
             SearchScreen(
                 viewModel = searchScreenViewModel,
-                windowSize = WindowSize.Compact
+          //      windowSize = WindowSize.Compact
             )
         }
         val clearSearchButton = context.resources.getString(R.string.clear_search)

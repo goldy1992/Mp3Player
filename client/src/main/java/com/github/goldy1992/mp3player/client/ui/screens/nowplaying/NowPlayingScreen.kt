@@ -8,16 +8,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -32,6 +35,7 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.models.Queue
+import com.github.goldy1992.mp3player.client.ui.components.ViewPager
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
@@ -123,7 +127,7 @@ fun NowPlayingScreen(
                 )
                 ViewPager(
                     currentSongProvider = { currentSong },
-                    queueProvider =  {queue },
+                    queue =  queue,
                     skipToNext = { viewModel.skipToNext()},
                     skipToPrevious = { viewModel.skipToPrevious() },
                     modifier = Modifier.weight(4f))
@@ -163,89 +167,4 @@ fun NowPlayingScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun ViewPager(currentSongProvider : () -> Song,
-              queueProvider: () -> Queue,
-              skipToNext : () -> Unit,
-              skipToPrevious : () -> Unit,
-              modifier: Modifier = Modifier,
-              pagerState: PagerState = androidx.compose.foundation.pager.rememberPagerState(
-                  initialPage = queueProvider().currentIndex
-              ),
-           ) {
-    val queueState = queueProvider()
-    val numberOfPages = queueState.items.size
-    val currentQueuePosition = queueState.currentIndex
 
-    if (isEmpty(queueState.items)) {
-        Column(modifier = modifier.width(700.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Empty Playlist", style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center)
-        }
-    } else {
-        LaunchedEffect(currentSongProvider()){
-            if (currentQueuePosition < numberOfPages) {
-                pagerState.scrollToPage(currentQueuePosition)
-            }
-        }
-
-        LaunchedEffect(pagerState.currentPage) {
-            Log.v(LOG_TAG, "ViewPager() LaunchedEffect: current page changed: ${pagerState.currentPage}")
-            val newPosition = pagerState.currentPage
-            val atBeginning = currentQueuePosition <= 0
-            val atEnd = (currentQueuePosition + 1) >= queueState.items.size
-            val atCurrentPosition = currentQueuePosition == newPosition
-
-            if (!atCurrentPosition ) {
-                if (!atEnd && isSkipToNext(newPosition, currentQueuePosition)) {
-                    skipToNext()
-                } else if (!atBeginning && isSkipToPrevious(newPosition, currentQueuePosition)) {
-                    skipToPrevious()
-                }
-            }
-        }
-        Log.v(LOG_TAG, "ViewPager() queue size: $numberOfPages")
-
-        HorizontalPager(
-                state = pagerState,
-                modifier = modifier
-                    .width(400.dp)
-                    .semantics {
-                        contentDescription = "viewPagerColumn"
-                    },
-                pageCount = numberOfPages,
-                key = { page : Int -> queueState.items[page].id }
-
-            ) { pageIndex ->
-            val item: Song = queueState.items[pageIndex]
-            Column(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                        painter = rememberAsyncImagePainter(
-                            model = ImageRequest.Builder(LocalContext.current).data(item.albumArt).build()
-                        ),
-                        contentDescription = "Album Art",
-                        modifier = Modifier.size(300.dp, 300.dp)
-                )
-            }
-        }
-
-    }
-
-}
-
-private fun isSkipToNext(newPosition: Int, currentPosition : Int): Boolean {
-    return newPosition == (currentPosition + 1)
-}
-
-private fun isSkipToPrevious(newPosition: Int, currentPosition : Int): Boolean {
-    return newPosition == (currentPosition - 1)
-}

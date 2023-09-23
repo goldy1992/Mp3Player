@@ -46,4 +46,5 @@ class NowPlayingScreenTest {
         val titleNode = context.resources.getString(R.string.song_title)
         composeTestRule.onNodeWithContentDescription(titleNode).assert(hasText(expectedTitle))
     }
+
 }

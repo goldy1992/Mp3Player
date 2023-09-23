@@ -8,12 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import com.github.goldy1992.mp3player.client.ui.ComposeApp
-import com.github.goldy1992.mp3player.client.ui.rememberWindowSizeClass
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
 import com.github.goldy1992.mp3player.commons.DefaultDispatcher
@@ -118,10 +119,12 @@ open class MainActivity : AppCompatActivity(), LogTagger {
         super.onStart()
     }
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     open fun ui() {
         Log.v(logTag(), "ui() invoked")
         setContent {
-            val windowSizeClass = rememberWindowSizeClass()
+            val windowSizeClass = calculateWindowSizeClass(activity = this)
+            windowSizeClass.widthSizeClass
             ComposeApp(
                 userPreferencesRepository = this.userPreferencesRepository,
                 windowSize = windowSizeClass,

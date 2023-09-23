@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.icons.GithubIcon
-import com.github.goldy1992.mp3player.client.ui.utils.EmailUtils
+import com.github.goldy1992.mp3player.client.utils.EmailUtils
 
 private const val BUG_REPORT_URL = "https://github.com/goldy1992/Mp3Player/issues/new?assignees=goldy1992&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D+-+Summary+of+Bug"
 
