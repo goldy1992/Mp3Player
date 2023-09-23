@@ -86,26 +86,6 @@ fun ComposeApp(
 
             }
             composable(Screen.NOW_PLAYING.name,
-//                enterTransition = {
-//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen enterTransition() invoked")
-//                    slideIntoContainer(
-//                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
-//                    )
-//                },
-//                popEnterTransition = {
-//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popEnterTransition() invoked")
-//                    slideIntoContainer(
-//                        AnimatedContentScope.SlideDirection.Up, animationSpec = tween(transitionTime)
-//                    )
-//                },
-//                exitTransition = {
-//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen exitTransition() invoked")
-//                   slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
-//                },
-//                popExitTransition = {
-//                    Log.v(LOG_TAG, "ComposeApp() NOW_PLAYING screen popExitTransition() invoked")
-//                    slideOutOfContainer(AnimatedContentScope.SlideDirection.Down, animationSpec = tween(transitionTime))
-//                },
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
                     action = Intent.ACTION_VIEW })
