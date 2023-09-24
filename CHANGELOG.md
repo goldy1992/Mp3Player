@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/goldy1992/Mp3Player/compare/v3.5.0...v3.6.0) (2023-09-24)
+
+
+### Features
+
+* **visualiser:** Added support to see the visualisers in full screen, as well as adding the Bezier plotted circular visualiser. ([84b8f95](https://github.com/goldy1992/Mp3Player/commit/84b8f958631ad70fc0a8dc6803444827f00ec116))
+
 # [3.5.0](https://github.com/goldy1992/Mp3Player/compare/v3.4.0...v3.5.0) (2023-07-15)
 
 
