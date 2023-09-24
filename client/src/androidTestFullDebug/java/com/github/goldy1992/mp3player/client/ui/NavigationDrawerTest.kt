@@ -13,7 +13,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.screens.library.SmallLibraryAppBar
+import com.github.goldy1992.mp3player.client.ui.screens.library.SmallAppBar
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.*
@@ -112,7 +112,7 @@ class NavigationDrawerTest {
                 Scaffold(
                     bottomBar = {},
                     topBar = {
-                        SmallLibraryAppBar(
+                        SmallAppBar(
                             title = "libraryText",
                             onClickNavIcon = {
                                 scope.launch {

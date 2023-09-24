@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,4 +41,19 @@ fun SearchNavigationItem(
         selected = isSelected,
         onClick = onClick)
 
+}
+
+@Preview
+@Composable
+fun SearchNavigationRailItem(
+    isSelected : Boolean = false,
+    onClick : () -> Unit = {}
+) {
+    val search = stringResource(id = R.string.search)
+    NavigationRailItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        icon = { Icon(Icons.Filled.Search, contentDescription = search) },
+        selected = isSelected,
+        onClick = onClick
+    )
 }

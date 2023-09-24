@@ -13,11 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationIcon
-import com.github.goldy1992.mp3player.client.ui.components.navigation.items.LibraryNavigationItem
+import com.github.goldy1992.mp3player.client.ui.components.navigation.items.LibraryNavigationDrawerItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.ReviewNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SearchNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SettingsNavigationItem
+import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationIcon
 import com.github.goldy1992.mp3player.commons.Screen
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -39,11 +39,9 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
         )
         Spacer(Modifier.height(24.dp))
 
-        val isLibraryScreenSelected = currentScreen == Screen.LIBRARY
-        LibraryNavigationItem(isSelected = isLibraryScreenSelected) {
-            if (!isLibraryScreenSelected) {
-                navController.navigate(Screen.LIBRARY.name)
-            }
+        val isLibraryScreenSelected = Screen.LIBRARY.name == navController.currentDestination?.route
+        LibraryNavigationDrawerItem(isSelected = isLibraryScreenSelected) {
+            NavigationActions.navigateToLibrary(navController)
         }
 
         val isSearchScreenSelected = currentScreen == Screen.SEARCH

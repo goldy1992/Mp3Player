@@ -13,7 +13,7 @@ import com.github.goldy1992.mp3player.client.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SmallLibraryAppBar(
+fun SmallAppBar(
     title : String = "title",
     onClickSearchIcon : () -> Unit,
     onClickNavIcon : () -> Unit
