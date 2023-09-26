@@ -33,10 +33,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.components.feed.Feed
 import com.github.goldy1992.mp3player.client.ui.components.feed.title
@@ -47,7 +49,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(widthDp = 800, heightDp = 600)
 @Composable
 fun LibraryScreenMedium(
     bottomBar : @Composable () -> Unit = {},
@@ -85,7 +87,7 @@ fun LibraryScreenMedium(
 
                  topBar = {
                      LargeTopAppBar(
-                        title = { Text("Explore")},
+                        title = { Text(stringResource(id = R.string.library))},
                         colors = TopAppBarDefaults.largeTopAppBarColors(
                            containerColor = MaterialTheme.colorScheme.surface,
                             scrolledContainerColor = MaterialTheme.colorScheme.surface
@@ -97,8 +99,11 @@ fun LibraryScreenMedium(
              ) {
                  Column(Modifier.padding(it)) {
 
-
-                     Chips()
+                     var selected by remember { mutableStateOf(SelectedLibraryItem.NONE) }
+                     val onChipSelected : (SelectedLibraryItem) -> Unit = {
+                         selected = it
+                     }
+                     LibraryChips(selected, onChipSelected)
                      val state = rememberLazyGridState()
                      Feed(
                          columns = GridCells.Fixed(1),
@@ -128,30 +133,3 @@ fun LibraryScreenMedium(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun Chips() {
-    var selected by remember { mutableStateOf(false) }
-
-
-
-    FilterChip(
-        onClick = { selected = !selected },
-        label = {
-            Text("Filter chip")
-        },
-        selected = selected,
-        leadingIcon = if (selected) {
-            {
-                Icon(
-                    imageVector = Icons.Filled.Done,
-                    contentDescription = "Done icon",
-                    modifier = Modifier.size(FilterChipDefaults.IconSize)
-                )
-            }
-        } else {
-            null
-        },
-    )
-
-}
