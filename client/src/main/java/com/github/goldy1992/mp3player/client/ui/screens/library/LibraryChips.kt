@@ -1,13 +1,16 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -25,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.screens.library.SelectedLibraryItem.NONE
 import com.github.goldy1992.mp3player.commons.Constants
@@ -44,6 +48,7 @@ enum class SelectedLibraryItem {
 @Preview
 @Composable
 fun LibraryChips(
+    modifier: Modifier = Modifier,
     currentItem : SelectedLibraryItem = SelectedLibraryItem.SONGS,
     onSelected  : (SelectedLibraryItem) -> Unit = {_->}) {
     val items = mutableListOf<ChipAnimationState>()
@@ -68,7 +73,15 @@ fun LibraryChips(
         }
     }
 
-    CustomChipLayout(modifier = Modifier,
+    // extraItems for scroll
+    for (i in 1..5) {
+        val iconPlacementPosition = remember { Animatable(0f) }
+        val iconOpacity = 1f
+        val iconChip = ChipAnimationState("home", iconPlacementPosition, true, iconOpacity )
+        items.add(iconChip)
+    }
+
+    CustomChipLayout(modifier = modifier,
         chips = items) {
 
         IconButton(modifier = Modifier.alpha(iconOpacity), onClick = { onSelected(NONE) }) {
@@ -87,6 +100,11 @@ fun LibraryChips(
                 )
             }
         }
+
+        for (i in 1..5) {
+            Icon(Icons.Filled.Home, contentDescription = "")
+        }
+
     }
 }
 
@@ -112,11 +130,17 @@ private fun LibraryFilterChip(
 @Composable
 private fun TestLibraryChips() {
     var chipState by remember { mutableStateOf(NONE) }
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
+            .background(Color.Green)) {
+        LibraryChips(
+            currentItem = chipState,
+            onSelected = { v -> chipState = v }
+        )
 
-    LibraryChips(
-        currentItem = chipState,
-        onSelected = { v -> chipState = v }
-    )
+    }
 }
 
 private fun getChipName(selectedLibraryItem: SelectedLibraryItem, context : Context) : String {
@@ -137,57 +161,33 @@ private fun CustomChipLayout(
     val defaultConstraints = Constraints()
     Layout(modifier = modifier,
         content = content) { measurables, constraints ->
+        var measuredHeight = 0
         val placeables = measurables.map { measurable ->
             // Measure each children
-            measurable.measure(defaultConstraints)
+            val placeable = measurable.measure(defaultConstraints)
+            if (placeable.height > measuredHeight) {
+                measuredHeight = placeable.height
+            }
+            placeable
         }
 
         // Set the size of the layout as big as it can
-        layout(constraints.maxWidth, constraints.maxHeight) {
-            // Track the y co-ord we have placed children up to
+        layout(constraints.maxWidth, measuredHeight) {
+            // Track the x co-ord we have placed children up to
             var xPosition = 0
 
             // Place children in the parent layout
             placeables.forEachIndexed { index, placeable ->
                 val currentChip = chips[index]
-                if (index == 0) {
-                    if (currentChip.opacity > 0 ) {
-                        Log.i(LOG_TAG, "${currentChip.name} at point 0")
+                val shouldPlace = currentChip.visible || currentChip.opacity > 0
+                if (shouldPlace) {
+                    if (currentChip.visible) {
                         val placePosX = xPosition
                         scope.launch {currentChip.placementPosition.animateTo(placePosX.toFloat()) }
-                        placeable.placeRelative(currentChip.placementPosition.value.toInt(), 0)
-                        if (currentChip.visible) {
-                            xPosition += placeable.width + 10
-                            Log.i(LOG_TAG, "new xPos: $xPosition")
-                        }
-                    }
-                } else {
-                    if (currentChip.visible) {
-                        if(currentChip.name == SelectedLibraryItem.SONGS.name) {
-                            Log.i(
-                                LOG_TAG,
-                                "chip: ${currentChip.name} is visible, chipPlacement: (float=${currentChip.placementPosition.value}) int(${currentChip.placementPosition.value.toInt()}), desiredValue: (int=${xPosition}) (float=${xPosition.toFloat()})"
-                            )
-                        }
-                        val placeableXPos = xPosition
-                        scope.launch {
-                            if (currentChip.name == SelectedLibraryItem.SONGS.name) {
-                                Log.i(
-                                    LOG_TAG,
-                                    "calling on coroutine scope, setting songs xPos to $placeableXPos"
-                                )
-                            }
-                            currentChip.placementPosition.animateTo(placeableXPos.toFloat())
-                        }
-                        placeable.placeRelative(currentChip.placementPosition.value.toInt(), 0)
                         xPosition += placeable.width + 10
-                        Log.i(LOG_TAG, "new xPos: $xPosition")
-
-                    } else if (currentChip.opacity > 0) {
-                        placeable.placeRelative(currentChip.placementPosition.value.toInt(), 0)
                     }
+                    placeable.placeRelative(currentChip.placementPosition.value.toInt(), 0)
                 }
-
             }
         }
 
