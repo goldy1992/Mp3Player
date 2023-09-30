@@ -1,29 +1,32 @@
-@file:OptIn(ExperimentalAnimationApi::class)
-
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
+import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Albums
@@ -35,14 +38,18 @@ import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.navigation.AppNavigationRail
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContentInternal
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils
+import com.github.goldy1992.mp3player.client.utils.NavigationUtils.toggleNavigationDrawer
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 private const val LOG_TAG = "LibraryScreen"
@@ -54,10 +61,7 @@ private const val LOG_TAG = "LibraryScreen"
  * @param viewModel The [LibraryScreenViewModel].
  */
 @OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterialApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class
+   ExperimentalMaterial3Api::class, ExperimentalCoilApi::class
 )
 @Composable
 fun LibraryScreen(
@@ -87,59 +91,93 @@ fun LibraryScreen(
 
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentMediaItem by viewModel.currentSong.state().collectAsState()
+    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
-    val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(
-            isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play()
-                Log.v(LOG_TAG, "PlayToolbar.onClickPlay() clicked play")},
-            onClickPause = {viewModel.pause()
-                Log.v(LOG_TAG, "PlayToolbar.onClickPause() clicked pause")},
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
-            currentSongProvider = { currentMediaItem }
-        )
+    Navigation(
+        navController = navController,
+        windowSizeClass = windowSize,
+        drawerState = drawerState,
+        scope = scope
+    ) {
+
+        val scrollBehavior : TopAppBarScrollBehavior =
+            TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+
+        Scaffold(
+            modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .fillMaxSize(),
+            topBar = {
+                LibraryAppBar(
+                    windowSize = windowSize,
+                    scrollBehavior = scrollBehavior,
+                    onClickNavIcon = { scope.launch { toggleNavigationDrawer(drawerState)} },
+                    onClickSearchIcon = { navController.navigate(Screen.SEARCH.name) }
+                )
+            }
+            ,
+            bottomBar = {
+                PlayToolbar(
+                    isPlayingProvider = { isPlaying },
+                    onClickPlay = { viewModel.play()
+                        Log.v(LOG_TAG, "PlayToolbar.onClickPlay() clicked play")},
+                    onClickPause = {viewModel.pause()
+                        Log.v(LOG_TAG, "PlayToolbar.onClickPause() clicked pause")},
+                    onClickSkipPrevious = { viewModel.skipToPrevious() },
+                    onClickSkipNext = { viewModel.skipToNext() },
+                    onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
+                    currentSongProvider = { currentMediaItem },
+                    windowSizeClass = windowSize
+                )
+            }) {
+            Column(Modifier.padding(it)) {
+
+                var selected by remember { mutableStateOf(SelectedLibraryItem.NONE) }
+                val onChipSelected: (SelectedLibraryItem) -> Unit = { selectedItem ->
+                    selected = selectedItem
+                }
+                ScrollableLibraryChips(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 11.dp),
+                    currentItem = selected,
+                    onSelected = onChipSelected
+                )
+
+                AnimatedContent(
+                    targetState = selected,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(150, 150)) togetherWith
+                                fadeOut(animationSpec = tween(150))
+
+                    }, label = ""
+                ) { selected ->
+                    when (selected) {
+                        SelectedLibraryItem.NONE -> LibraryFeedNoSelection(albumsProvider = {albums })
+
+                        SelectedLibraryItem.SONGS -> {
+                            SongList(
+                                modifier = Modifier.fillMaxSize(),
+                                playlist = songs,
+                                expanded = false,
+                                isPlayingProvider = { isPlaying },
+                                currentSongProvider = { currentMediaItem }
+                            ) { itemIndex: Int, mediaItemList: Playlist -> onSongSelected(itemIndex, mediaItemList) }
+                        }
+
+                        SelectedLibraryItem.FOLDERS -> FolderList(folders = folders)
+                        SelectedLibraryItem.ALBUMS -> AlbumsList(modifier = Modifier.padding(11.dp),
+                            albums = albums)
+                        else -> androidx.compose.material3.Text("Unknown")
+                    }
+                }
+
+            }
+        }
+        // content
     }
 
-    when(windowSize.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> LibraryScreenCompact(
-            bottomBar = bottomBar,
-            navController= navController,
-            isPlayingProvider = { isPlaying },
-            songs = { songs},
-            folders = {folders},
-            albums = { albums },
-            root = {rootItems},
-            scope = scope
 
-        )
-        WindowWidthSizeClass.Medium -> LibraryScreenMedium(
-            navController= navController,
-            isPlayingProvider = { isPlaying },
-            songs = { songs},
-            folders = {folders},
-            albums = { albums },
-            root = {rootItems},
-            scope = scope
-        )
-        WindowWidthSizeClass.Expanded -> LibraryScreenExpanded(
-            navController= navController,
-            isPlayingProvider = { isPlaying },
-            songs = { songs},
-            folders = {folders},
-            albums = { albums },
-            root = {rootItems},
-            scope = scope
-        )
-    }
-
-    val navDrawerContent : @Composable () -> Unit = {
-        NavigationDrawerContent(
-            navController = navController,
-            currentScreen = Screen.LIBRARY
-        )
-    }
 
 //    val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
 //        LibraryScreenContent(
@@ -209,7 +247,6 @@ fun LibraryScreen(
  * @param bottomBar The Bottom Bar.
  * @param content The content of the Library Screen.
  */
-@ExperimentalMaterialApi
 @Composable
 fun LargeLibraryScreen(
     navDrawerContent : @Composable () -> Unit = {},
@@ -261,9 +298,6 @@ fun SmallLibraryScreen(
 }
 
 
-
-
-@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @Composable
 fun LibraryScreenContent(
@@ -389,3 +423,87 @@ fun LargeAppBar(title : String,
         },
     )
 }
+
+@Composable
+@Preview
+private fun Navigation(
+    windowSizeClass: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
+    navController : NavController = rememberNavController(),
+    scope: CoroutineScope = rememberCoroutineScope(),
+    drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+    content: @Composable () -> Unit = {}
+) {
+    when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> {
+            ModalNavigationDrawer(
+                drawerContent = {
+                    NavigationDrawerContent(
+                        navController = navController,
+                        currentScreen = Screen.LIBRARY
+                    )
+                },
+                drawerState = drawerState,
+                content = content
+            )
+        }
+        WindowWidthSizeClass.Medium -> {
+            Row(Modifier.fillMaxSize()) {
+                AppNavigationRail {
+                    scope.launch {
+                        if (drawerState.isOpen) {
+                            drawerState.close()
+                        } else {
+                            drawerState.open()
+                        }
+                    }
+                }
+                content()
+            }
+        }
+
+        WindowWidthSizeClass.Expanded -> {
+            PermanentNavigationDrawer(
+                drawerContent = {
+                    PermanentDrawerSheet {
+                        NavigationDrawerContentInternal(navController,
+                            currentScreen = Screen.LIBRARY)
+                    }
+                },
+            ) {
+                content()
+            }
+
+        }
+    }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+@Preview
+private fun LibraryAppBar(
+    windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
+    onClickSearchIcon : () -> Unit = {},
+    scrollBehavior : TopAppBarScrollBehavior =
+    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+
+                onClickNavIcon : () -> Unit = {}) {
+    val title = stringResource(id = R.string.library)
+    if (windowSize.widthSizeClass == WindowWidthSizeClass.Compact) {
+        SmallAppBar(
+            title = title,
+            scrollBehavior = scrollBehavior,
+            onClickSearchIcon = onClickSearchIcon,
+            onClickNavIcon = onClickNavIcon)
+    } else {
+        LargeTopAppBar(
+            title = { androidx.compose.material3.Text(stringResource(id = R.string.library)) },
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.surface,
+                scrolledContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            scrollBehavior = scrollBehavior
+        )
+    }
+}
+

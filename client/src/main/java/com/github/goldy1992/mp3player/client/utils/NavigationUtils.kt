@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.utils
 
 import android.util.Base64
 import android.util.Log
+import androidx.compose.material3.DrawerState
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
@@ -49,6 +50,14 @@ object NavigationUtils : LogTagger{
             Screen.SINGLE_VISUALIZER.name
                     + "/" + visualizerTypeString)
 
+    }
+
+    suspend fun toggleNavigationDrawer(drawerState : DrawerState) {
+        if (drawerState.isClosed) {
+            drawerState.open()
+        } else {
+            drawerState.close()
+        }
     }
     override fun logTag(): String {
         return "NavigationUtils"

@@ -15,6 +15,9 @@ import com.github.goldy1992.mp3player.client.R
 @Composable
 fun SmallAppBar(
     title : String = "title",
+    scrollBehavior: TopAppBarScrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState()),
+
     onClickSearchIcon : () -> Unit,
     onClickNavIcon : () -> Unit
 ) {
@@ -31,7 +34,8 @@ fun SmallAppBar(
             IconButton(onClick = onClickSearchIcon) {
             Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
         }
-},
+        },
+        scrollBehavior = scrollBehavior,
         navigationIcon = {
             IconButton(
                 onClick = onClickNavIcon,

@@ -29,53 +29,63 @@ fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavCo
                             context : Context = LocalContext.current) {
 
     ModalDrawerSheet {
-        Spacer(Modifier.height(12.dp))
 
-        Text(
-            text = context.getString(R.string.app_title),
-            style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(horizontal = 28.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Spacer(Modifier.height(24.dp))
-
-        val isLibraryScreenSelected = Screen.LIBRARY.name == navController.currentDestination?.route
-        LibraryNavigationDrawerItem(isSelected = isLibraryScreenSelected) {
-            NavigationActions.navigateToLibrary(navController)
-        }
-
-        val isSearchScreenSelected = currentScreen == Screen.SEARCH
-        SearchNavigationItem(isSelected = isSearchScreenSelected) {
-            if (!isSearchScreenSelected) {
-                navController.navigate(Screen.SEARCH.name)
-            }
-        }
-
-        val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
-        VisualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
-            if (!isEqualizerScreenSelected) {
-                navController.navigate(Screen.VISUALIZER_COLLECTION.name)
-            }
-        }
-
-        Divider(
-            modifier = Modifier.padding(
-                top = 16.dp,
-                end = 28.dp
-            ),
-            color = MaterialTheme.colorScheme.outline
-        )
-
-        ReviewNavigationItem()
-
-        val isSettingsScreenSelected = currentScreen == Screen.SETTINGS
-        SettingsNavigationItem(isSelected = isSettingsScreenSelected) {
-            if (!isSettingsScreenSelected) {
-                navController.navigate(Screen.SETTINGS.name)
-            }
-        }
-
+        NavigationDrawerContentInternal(navController, currentScreen, context)
     }
 }
+
+@Preview
+@Composable
+fun NavigationDrawerContentInternal (navController: NavController = rememberAnimatedNavController(),
+                            currentScreen : Screen = Screen.LIBRARY,
+                            context : Context = LocalContext.current) {
+    Spacer(Modifier.height(12.dp))
+
+    Text(
+        text = context.getString(R.string.app_title),
+        style = MaterialTheme.typography.titleSmall,
+        modifier = Modifier.padding(horizontal = 28.dp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+    Spacer(Modifier.height(24.dp))
+
+    val isLibraryScreenSelected = Screen.LIBRARY.name == navController.currentDestination?.route
+    LibraryNavigationDrawerItem(isSelected = isLibraryScreenSelected) {
+        NavigationActions.navigateToLibrary(navController)
+    }
+
+    val isSearchScreenSelected = currentScreen == Screen.SEARCH
+    SearchNavigationItem(isSelected = isSearchScreenSelected) {
+        if (!isSearchScreenSelected) {
+            navController.navigate(Screen.SEARCH.name)
+        }
+    }
+
+    val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
+    VisualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
+        if (!isEqualizerScreenSelected) {
+            navController.navigate(Screen.VISUALIZER_COLLECTION.name)
+        }
+    }
+
+    Divider(
+        modifier = Modifier.padding(
+            top = 16.dp,
+            end = 28.dp
+        ),
+        color = MaterialTheme.colorScheme.outline
+    )
+
+    ReviewNavigationItem()
+
+    val isSettingsScreenSelected = currentScreen == Screen.SETTINGS
+    SettingsNavigationItem(isSelected = isSettingsScreenSelected) {
+        if (!isSettingsScreenSelected) {
+            navController.navigate(Screen.SETTINGS.name)
+        }
+    }
+}
+
+
 
 
