@@ -23,12 +23,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.media.Albums
+import com.github.goldy1992.mp3player.client.models.media.Folders
+import com.github.goldy1992.mp3player.client.models.media.Playlist
+import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_NUMBER_OF_TABS
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.util.EnumMap
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Preview
@@ -37,7 +43,11 @@ fun LibraryScreenCompact(
     bottomBar : @Composable () -> Unit = {},
     currentMediaItemProvider : () -> Song = { Song() },
     isPlayingProvider : () -> Boolean = {false},
-    library: Library = Library.DEFAULT,
+    root: () -> Root = {Root.NOT_LOADED},
+    songs : () ->Playlist = { Playlist.NOT_LOADED},
+    folders : () -> Folders = { Folders.NOT_LOADED},
+    albums : () -> Albums = { Albums.NOT_LOADED },
+    onSelectedMap: () -> EnumMap<MediaItemType, Any> = { EnumMap(MediaItemType::class.java) },
     navController: NavController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -79,18 +89,18 @@ fun LibraryScreenCompact(
                 .padding(it)) {
                 LibraryTabs(
                     pagerState = pagerState,
-                    rootChildrenProvider = library.root,
+                    rootChildrenProvider = root,
                     scope = scope
                 )
 
                 Row(modifier = Modifier.padding(top = 4.dp, bottom = 4.dp)) {
                     TabBarPages(
                         pagerState = pagerState,
-                        playlist = library.songs,
-                        folders = library.folders,
-                        albums = library.albums,
+                        playlist = songs,
+                        folders = folders,
+                        albums = albums,
                         currentMediaItemProvider = currentMediaItemProvider,
-                        onItemSelectedMapProvider = library.onSelectedMap,
+                        onItemSelectedMapProvider = onSelectedMap,
                         isPlayingProvider = isPlayingProvider
                     )
                 }

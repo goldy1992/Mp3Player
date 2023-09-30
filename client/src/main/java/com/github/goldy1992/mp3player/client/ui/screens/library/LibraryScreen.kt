@@ -84,12 +84,6 @@ fun LibraryScreen(
     onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
     onItemSelectedMap[MediaItemType.ALBUMS] = onAlbumSelected
 
-    val library = Library(
-        root = {rootItems},
-        songs = {songs},
-        folders = {folders},
-        onSelectedMap = { onItemSelectedMap }
-    )
 
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentMediaItem by viewModel.currentSong.state().collectAsState()
@@ -113,12 +107,31 @@ fun LibraryScreen(
             bottomBar = bottomBar,
             navController= navController,
             isPlayingProvider = { isPlaying },
-            library = library,
+            songs = { songs},
+            folders = {folders},
+            albums = { albums },
+            root = {rootItems},
             scope = scope
 
         )
-        WindowWidthSizeClass.Medium -> LibraryScreenMedium()
-        WindowWidthSizeClass.Expanded -> LibraryScreenExpanded()
+        WindowWidthSizeClass.Medium -> LibraryScreenMedium(
+            navController= navController,
+            isPlayingProvider = { isPlaying },
+            songs = { songs},
+            folders = {folders},
+            albums = { albums },
+            root = {rootItems},
+            scope = scope
+        )
+        WindowWidthSizeClass.Expanded -> LibraryScreenExpanded(
+            navController= navController,
+            isPlayingProvider = { isPlaying },
+            songs = { songs},
+            folders = {folders},
+            albums = { albums },
+            root = {rootItems},
+            scope = scope
+        )
     }
 
     val navDrawerContent : @Composable () -> Unit = {
@@ -128,20 +141,20 @@ fun LibraryScreen(
         )
     }
 
-    val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
-        LibraryScreenContent(
-            scope = scope,
-            rootChildrenProvider =  { rootItems },
-            onItemSelectedMapProvider = { onItemSelectedMap },
-            playlist = { songs },
-            folders = { folders },
-            albums = { albums },
-            currentMediaItemProvider = { currentMediaItem },
-            isPlayingProvider = { isPlaying },
-            modifier = Modifier.padding(it)
-        )
-
-    }
+//    val libraryScreenContent : @Composable (PaddingValues) -> Unit = {
+//        LibraryScreenContent(
+//            scope = scope,
+//            rootChildrenProvider =  { rootItems },
+//            onItemSelectedMapProvider = { onItemSelectedMap },
+//            playlist = { songs },
+//            folders = { folders },
+//            albums = { albums },
+//            currentMediaItemProvider = { currentMediaItem },
+//            isPlayingProvider = { isPlaying },
+//            modifier = Modifier.padding(it)
+//        )
+//
+//    }
 //    val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
 //
 //    val context = LocalContext.current
