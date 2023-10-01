@@ -1,17 +1,21 @@
-@file:OptIn(ExperimentalAnimationApi::class)
-
 package com.github.goldy1992.mp3player.client.ui.components.navigation
 
 import android.content.Context
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.LibraryNavigationDrawerItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.ReviewNavigationItem
@@ -19,73 +23,82 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.items.Sear
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SettingsNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationIcon
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 
 @Preview
 @Composable
-fun NavigationDrawerContent(navController: NavController = rememberAnimatedNavController(),
+fun NavigationDrawerContent(navController: NavController = rememberNavController(),
                             currentScreen : Screen = Screen.LIBRARY,
                             context : Context = LocalContext.current) {
 
     ModalDrawerSheet {
+        LazyColumn {
+            item {
+                Spacer(Modifier.height(12.dp))
+            }
+            item {
+                Text(
+                    text = context.getString(R.string.app_title),
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(horizontal = 28.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            item {
+                Spacer(Modifier.height(24.dp))
+            }
 
-        NavigationDrawerContentInternal(navController, currentScreen, context)
+            item {
+                val isLibraryScreenSelected =
+                    Screen.LIBRARY.name == navController.currentDestination?.route
+                LibraryNavigationDrawerItem(isSelected = isLibraryScreenSelected) {
+                    NavigationActions.navigateToLibrary(navController)
+                }
+            }
+
+            item {
+                val isSearchScreenSelected = currentScreen == Screen.SEARCH
+                SearchNavigationItem(isSelected = isSearchScreenSelected) {
+                    if (!isSearchScreenSelected) {
+                        navController.navigate(Screen.SEARCH.name)
+                    }
+                }
+            }
+            item {
+                val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
+                VisualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
+                    if (!isEqualizerScreenSelected) {
+                        navController.navigate(Screen.VISUALIZER_COLLECTION.name)
+                    }
+                }
+            }
+
+            item {
+                Divider(
+                    modifier = Modifier.padding(
+                        top = 16.dp,
+                        end = 28.dp
+                    ),
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+
+            item {
+                ReviewNavigationItem()
+            }
+
+            item {
+                val isSettingsScreenSelected = currentScreen == Screen.SETTINGS
+                SettingsNavigationItem(isSelected = isSettingsScreenSelected) {
+                    if (!isSettingsScreenSelected) {
+                        navController.navigate(Screen.SETTINGS.name)
+                    }
+                }
+            }
+
+        }
     }
 }
-
-@Preview
-@Composable
-fun NavigationDrawerContentInternal (navController: NavController = rememberAnimatedNavController(),
-                            currentScreen : Screen = Screen.LIBRARY,
-                            context : Context = LocalContext.current) {
-    Spacer(Modifier.height(12.dp))
-
-    Text(
-        text = context.getString(R.string.app_title),
-        style = MaterialTheme.typography.titleSmall,
-        modifier = Modifier.padding(horizontal = 28.dp),
-        color = MaterialTheme.colorScheme.onSurfaceVariant
-    )
-    Spacer(Modifier.height(24.dp))
-
-    val isLibraryScreenSelected = Screen.LIBRARY.name == navController.currentDestination?.route
-    LibraryNavigationDrawerItem(isSelected = isLibraryScreenSelected) {
-        NavigationActions.navigateToLibrary(navController)
-    }
-
-    val isSearchScreenSelected = currentScreen == Screen.SEARCH
-    SearchNavigationItem(isSelected = isSearchScreenSelected) {
-        if (!isSearchScreenSelected) {
-            navController.navigate(Screen.SEARCH.name)
-        }
-    }
-
-    val isEqualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
-    VisualizerNavigationIcon(isSelected = isEqualizerScreenSelected) {
-        if (!isEqualizerScreenSelected) {
-            navController.navigate(Screen.VISUALIZER_COLLECTION.name)
-        }
-    }
-
-    Divider(
-        modifier = Modifier.padding(
-            top = 16.dp,
-            end = 28.dp
-        ),
-        color = MaterialTheme.colorScheme.outline
-    )
-
-    ReviewNavigationItem()
-
-    val isSettingsScreenSelected = currentScreen == Screen.SETTINGS
-    SettingsNavigationItem(isSelected = isSettingsScreenSelected) {
-        if (!isSettingsScreenSelected) {
-            navController.navigate(Screen.SETTINGS.name)
-        }
-    }
-}
-
 
 
 

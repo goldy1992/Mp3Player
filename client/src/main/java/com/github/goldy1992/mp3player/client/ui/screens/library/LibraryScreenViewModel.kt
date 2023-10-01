@@ -42,6 +42,9 @@ class LibraryScreenViewModel
     private val _root = MutableStateFlow(Root.NOT_LOADED)
     val root : StateFlow<Root> = _root
 
+    private val _selectedChip = MutableStateFlow(SelectedLibraryItem.NONE)
+    val selectedChip : StateFlow<SelectedLibraryItem> = _selectedChip
+
     private val _songs : MutableStateFlow<Playlist> = MutableStateFlow(Playlist.NOT_LOADED)
     val songs : StateFlow<Playlist> = _songs
 
@@ -137,6 +140,10 @@ class LibraryScreenViewModel
 
     private fun isChildOfRootItem(parentId: String) : Boolean {
         return root.value.childMap.values.map(MediaEntity::id).toList().contains(parentId)
+    }
+
+    fun setSelectedChip(chip: SelectedLibraryItem) {
+        _selectedChip.value = chip
     }
 
     override fun logTag(): String {
