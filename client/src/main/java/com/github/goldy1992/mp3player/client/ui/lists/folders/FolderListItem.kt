@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.lists.folders
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,13 +36,16 @@ fun FolderListItem(folder : Folder = Folder(),
         colors = ListItemDefaults.colors(containerColor = containerColor) ,
         leadingContent = { FolderIcon()},
         headlineContent = {
-            Text(text = folder.name,
+            Text(
+                modifier = Modifier.basicMarquee(),
+                text = folder.name,
                 style = MaterialTheme.typography.bodyMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis)
         },
         supportingContent = {
             Text(
+                modifier = Modifier.basicMarquee(),
                 text = folder.path,
                 maxLines = 1,
                 style = MaterialTheme.typography.bodySmall,

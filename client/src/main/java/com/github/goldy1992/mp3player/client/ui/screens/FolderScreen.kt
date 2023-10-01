@@ -1,7 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,8 +43,7 @@ private const val LOG_TAG = "FolderScreen"
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class
+    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalFoundationApi::class
 )
 @Composable
 fun FolderScreen(
@@ -77,6 +77,7 @@ fun FolderScreen(
             title = {
                 Column {
                     Text(
+                        modifier = Modifier.basicMarquee(),
                         text = folder.name,
                         overflow = TextOverflow.Ellipsis
                     )
