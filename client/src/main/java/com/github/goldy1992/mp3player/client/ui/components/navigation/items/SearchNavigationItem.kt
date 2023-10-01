@@ -3,7 +3,9 @@ package com.github.goldy1992.mp3player.client.ui.components.navigation.items
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Equalizer
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
@@ -53,6 +55,36 @@ fun SearchNavigationRailItem(
     NavigationRailItem(
         modifier = Modifier.padding(horizontal = 12.dp),
         icon = { Icon(Icons.Filled.Search, contentDescription = search) },
+        selected = isSelected,
+        onClick = onClick
+    )
+}
+
+@Preview
+@Composable
+fun VisualizerNavigationRailItem(
+    isSelected : Boolean = false,
+    onClick : () -> Unit = {}
+) {
+    val visualizer = stringResource(id = R.string.visualizer)
+    NavigationRailItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        icon = { Icon(Icons.Filled.Equalizer, contentDescription = visualizer) },
+        selected = isSelected,
+        onClick = onClick
+    )
+}
+
+@Preview
+@Composable
+fun SettingsNavigationRailItem(
+    isSelected : Boolean = false,
+    onClick : () -> Unit = {}
+) {
+    val settings = stringResource(id = R.string.settings)
+    NavigationRailItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        icon = { Icon(Icons.Filled.Settings, contentDescription = settings) },
         selected = isSelected,
         onClick = onClick
     )

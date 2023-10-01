@@ -17,6 +17,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.LibraryNavigationRailItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SearchNavigationRailItem
+import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SettingsNavigationRailItem
+import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationRailItem
 import com.github.goldy1992.mp3player.commons.Screen
 
 @Preview
@@ -42,8 +44,19 @@ fun AppNavigationRail(navController: NavController = rememberNavController(),
               NavigationActions.navigateToLibrary(navController)
         }
 
-        SearchNavigationRailItem(isSelected = currentScreen == Screen.SEARCH) {
-            NavigationActions.navigateToSearch(navController)
+        val isSearchScreenSelected = currentScreen == Screen.SEARCH
+        SearchNavigationRailItem(isSelected = isSearchScreenSelected) {
+            navController.navigate(Screen.SEARCH.name)
+        }
+
+        val isVisualizerScreenSelected = currentScreen == Screen.VISUALIZER_COLLECTION
+        VisualizerNavigationRailItem(isSelected = isVisualizerScreenSelected) {
+            navController.navigate(Screen.VISUALIZER_COLLECTION.name)
+        }
+
+        val isSettingsScreenSelected = currentScreen == Screen.SETTINGS
+        SettingsNavigationRailItem(isSelected = isSettingsScreenSelected) {
+            navController.navigate(Screen.SETTINGS.name)
         }
         Spacer(Modifier.weight(1f))
     }

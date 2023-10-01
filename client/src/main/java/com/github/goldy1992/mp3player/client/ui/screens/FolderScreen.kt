@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
@@ -34,7 +35,6 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
 import com.github.goldy1992.mp3player.client.utils.TimeUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -47,7 +47,7 @@ private const val LOG_TAG = "FolderScreen"
 )
 @Composable
 fun FolderScreen(
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
     windowSize : WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
     viewModel: FolderScreenViewModel = viewModel()
 ) {

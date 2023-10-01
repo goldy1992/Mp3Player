@@ -1,46 +1,45 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
-import android.util.Log
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
-import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
-import com.github.goldy1992.mp3player.client.models.Queue
 import com.github.goldy1992.mp3player.client.ui.components.ViewPager
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.apache.commons.lang3.ObjectUtils.isEmpty
 
 const val LOG_TAG = "NowPlayingScreen"
 @OptIn(
@@ -52,7 +51,7 @@ const val LOG_TAG = "NowPlayingScreen"
 @Composable
 fun NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
@@ -65,7 +64,6 @@ fun NowPlayingScreen(
     val currentSong by viewModel.currentSong.state().collectAsState()
 
     Scaffold (
-
         topBar = {
             TopAppBar (
                 title = {

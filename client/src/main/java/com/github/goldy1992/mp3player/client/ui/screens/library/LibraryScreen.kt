@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -38,6 +40,7 @@ import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.AppNavigationRail
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
+import com.github.goldy1992.mp3player.client.ui.components.seekbar.PlaybackPositionAnimation
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
@@ -51,12 +54,14 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 private const val LOG_TAG = "LibraryScreen"
+
 /**
- * The Main Screen of the app.
+ * The Library Screen of the app.
  *
  * @param navController The [NavController].
- * @param pagerState The [PagerState].
  * @param viewModel The [LibraryScreenViewModel].
+ * @param windowSize The [WindowSizeClass].
+ * @param scope The [CoroutineScope].
  */
 @OptIn(
    ExperimentalMaterial3Api::class, ExperimentalCoilApi::class
@@ -68,11 +73,15 @@ fun LibraryScreen(
     windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
-
     val selectedLibraryChip by viewModel.selectedChip.collectAsState()
     val songs by viewModel.songs.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
+    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val currentMediaItem by viewModel.currentSong.state().collectAsState()
+    val currentPlaybackSpeed by viewModel.playbackSpeed.state().collectAsState()
+    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
+    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     val onSongSelected: (Int, Playlist) -> Unit = { itemIndex, mediaItemList ->
         viewModel.playPlaylist(mediaItemList, itemIndex)
@@ -80,26 +89,27 @@ fun LibraryScreen(
     val onFolderSelected: (Folder) -> Unit = { NavigationUtils.navigate(navController, it) }
     val onAlbumSelected: (Album) -> Unit = { NavigationUtils.navigate(navController, it) }
 
-    val onItemSelectedMap: EnumMap<MediaItemType, Any> = EnumMap(MediaItemType::class.java)
-    onItemSelectedMap[MediaItemType.SONGS] = onSongSelected
-    onItemSelectedMap[MediaItemType.FOLDERS] = onFolderSelected
-    onItemSelectedMap[MediaItemType.ALBUMS] = onAlbumSelected
+    val linearProgress: @Composable () -> Unit = {
+        PlaybackPositionAnimation(
+            isPlayingProvider = { isPlaying },
+            currentSongProvider = { currentMediaItem},
+            playbackSpeedProvider = {currentPlaybackSpeed},
+            playbackPositionProvider = {playbackPosition }
+        ) {
+            LinearProgressIndicator(
+                progress = it,
+                modifier = Modifier.fillMaxWidth().height(2.dp)
+            )
 
-
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentMediaItem by viewModel.currentSong.state().collectAsState()
-    val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
+        }
+    }
     Navigation(
         navController = navController,
         windowSizeClass = windowSize,
         drawerState = drawerState,
         scope = scope
     ) {
-
-        val scrollBehavior: TopAppBarScrollBehavior =
-            TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
+        val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
         Scaffold(
             modifier = Modifier
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -127,12 +137,11 @@ fun LibraryScreen(
                     onClickSkipNext = { viewModel.skipToNext() },
                     onClickBar = { navController.navigate(Screen.NOW_PLAYING.name) },
                     currentSongProvider = { currentMediaItem },
-                    windowSizeClass = windowSize
+                    windowSizeClass = windowSize,
+                    progressIndicator = linearProgress
                 )
             }) {
             Column(Modifier.padding(it)) {
-
-
                 val onChipSelected: (SelectedLibraryItem) -> Unit = { selectedItem ->
                    viewModel.setSelectedChip(selectedItem)
                 }
@@ -150,7 +159,7 @@ fun LibraryScreen(
                         fadeIn(animationSpec = tween(150, 150)) togetherWith
                                 fadeOut(animationSpec = tween(150))
 
-                    }, label = ""
+                    }, label = "animatedContentLibraryChips"
                 ) { selected ->
                     when (selected) {
                         SelectedLibraryItem.NONE -> LibraryFeedNoSelection(albumsProvider = { albums })
@@ -170,9 +179,11 @@ fun LibraryScreen(
                             }
                         }
 
-                        SelectedLibraryItem.FOLDERS -> FolderList(folders = folders)
+                        SelectedLibraryItem.FOLDERS -> FolderList(folders = folders,
+                            onFolderSelected = onFolderSelected)
                         SelectedLibraryItem.ALBUMS -> AlbumsList(
                             modifier = Modifier.padding(11.dp),
+                            onAlbumSelected = onAlbumSelected,
                             albums = albums
                         )
 
@@ -205,6 +216,7 @@ private fun Navigation(
             Row(Modifier.fillMaxSize()) {
                 if (showNavRail(windowSizeClass)) {
                     AppNavigationRail(
+                        navController = navController,
                         currentScreen = Screen.LIBRARY
                     ) {
                         scope.launch { toggleNavigationDrawer(drawerState) }
@@ -246,6 +258,11 @@ private fun LibraryAppBar(
                 containerColor = MaterialTheme.colorScheme.surface,
                 scrolledContainerColor = MaterialTheme.colorScheme.surface
             ),
+            actions = {
+                IconButton(onClick = onClickSearchIcon) {
+                    Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+                }
+            },
             scrollBehavior = scrollBehavior
         )
     }

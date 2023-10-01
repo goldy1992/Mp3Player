@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,6 +64,45 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
         seekTo = seekTo
     )
 }
+
+
+
+
+@Composable
+fun PlaybackPositionAnimation(
+    isPlayingProvider: () -> Boolean = {true},
+    currentSongProvider: () -> Song = { Song.DEFAULT},
+    playbackSpeedProvider : () ->  Float = {1.0f},
+    playbackPositionProvider: () -> PlaybackPositionEvent = {PlaybackPositionEvent.DEFAULT},
+    content: @Composable (Float) -> Unit
+) {
+
+    Log.v(LOG_TAG, "SeekBar() recomposed")
+    val isPlaying = isPlayingProvider()
+    val song = currentSongProvider()
+    val playbackSpeed = playbackSpeedProvider()
+    val playbackPositionEvent = playbackPositionProvider()
+    val duration = song.duration.toFloat()
+    val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
+    Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
+    val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
+    val durationDescription = stringResource(id = R.string.duration)
+    val currentPositionDescription = stringResource(id = R.string.current_position)
+
+    val currentProgress = currentPosition / duration
+    val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentProgress)) }
+
+
+    if (isPlaying) {
+        LaunchedEffect(seekBarAnimation) {
+            Log.i(LOG_TAG, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
+            seekBarAnimation.value.animateTo(1.0f,
+                animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
+        }
+    }
+    content(seekBarAnimation.value.value)
+}
+
 
 @Composable
 private fun SeekBarUi(currentPosition : Float,

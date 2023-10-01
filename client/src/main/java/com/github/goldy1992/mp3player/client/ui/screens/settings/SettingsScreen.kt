@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE
@@ -58,7 +59,6 @@ import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
@@ -73,7 +73,7 @@ private const val logTag = "SettingsScreen"
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
-    navController : NavController = rememberAnimatedNavController(),
+    navController : NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
     windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE)
 ) {
