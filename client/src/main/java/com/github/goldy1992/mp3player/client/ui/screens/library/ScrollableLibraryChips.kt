@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -26,8 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.media.Root
+import com.github.goldy1992.mp3player.commons.Constants.UNKNOWN
 
 private const val CLOSE_ICON = "CloseIcon"
 private const val LOG_TAG = "ScrollableLibraryChips"
@@ -37,6 +42,7 @@ private const val LOG_TAG = "ScrollableLibraryChips"
 @Composable
 fun ScrollableLibraryChips(
     modifier: Modifier = Modifier,
+
     currentItem : SelectedLibraryItem = SelectedLibraryItem.SONGS,
     onSelected  : (SelectedLibraryItem) -> Unit = {_->}) {
     val visibleItems = mutableListOf<ScrollableItem>()
@@ -47,7 +53,7 @@ fun ScrollableLibraryChips(
     if (isChipSelected) {
         visibleItems.add(closeIcon)
     }
-
+   // rootItems().childMap
     for (chip in SelectedLibraryItem.values()) {
         if (chip != SelectedLibraryItem.NONE) {
             val libraryChipIsVisible =
@@ -60,7 +66,7 @@ fun ScrollableLibraryChips(
             }
         }
     }
-
+    val context = LocalContext.current
     LazyRow(
         modifier = modifier) {
         items(visibleItems.size, key = { visibleItems[it].name}) {
@@ -82,10 +88,10 @@ fun ScrollableLibraryChips(
                     modifier = Modifier
                         .padding(5.dp)
                         .alpha(currentRowItem.opacity)
-                        .animateItemPlacement(),
+                        .animateItemPlacement() ,
                     onClick = { onSelected(e) },
                     label = {
-                        Text(e.name)
+                        Text(getChipName(e, context))
                     },
                     selected = currentItem == e,
                 )
@@ -135,3 +141,13 @@ private data class ScrollableItem(
     val name: String,
     val opacity: Float
 )
+
+private fun getChipName(chip: SelectedLibraryItem, context: Context) : String {
+    return when (chip) {
+        SelectedLibraryItem.SONGS -> context.getString(R.string.songs)
+        SelectedLibraryItem.FOLDERS -> context.getString(R.string.folders)
+        SelectedLibraryItem.ALBUMS -> context.getString(R.string.albums)
+        else -> UNKNOWN
+    }
+//    context.getString()
+}

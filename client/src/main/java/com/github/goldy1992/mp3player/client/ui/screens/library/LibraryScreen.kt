@@ -74,6 +74,7 @@ fun LibraryScreen(
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
     val selectedLibraryChip by viewModel.selectedChip.collectAsState()
+    val root by viewModel.root.collectAsState()
     val songs by viewModel.songs.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
@@ -98,7 +99,9 @@ fun LibraryScreen(
         ) {
             LinearProgressIndicator(
                 progress = it,
-                modifier = Modifier.fillMaxWidth().height(2.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
             )
 
         }
