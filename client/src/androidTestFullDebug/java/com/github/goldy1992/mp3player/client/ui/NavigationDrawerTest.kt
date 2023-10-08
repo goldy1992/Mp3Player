@@ -96,6 +96,7 @@ class NavigationDrawerTest {
         assertTrue(drawerState.isOpen)
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun TestNavigationDrawerComposable(drawerState: DrawerState) {
         val scope = rememberCoroutineScope()

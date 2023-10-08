@@ -6,11 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -30,12 +26,8 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.models.media.Album
-import com.github.goldy1992.mp3player.client.models.media.Albums
 import com.github.goldy1992.mp3player.client.models.media.Folder
-import com.github.goldy1992.mp3player.client.models.media.Folders
 import com.github.goldy1992.mp3player.client.models.media.Playlist
-import com.github.goldy1992.mp3player.client.models.media.Song
-import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.*
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.AppNavigationRail
@@ -47,7 +39,6 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils.showNavRail
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils.toggleNavigationDrawer
-import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -185,7 +176,8 @@ fun LibraryScreen(
                         SelectedLibraryItem.FOLDERS -> FolderList(folders = folders,
                             onFolderSelected = onFolderSelected)
                         SelectedLibraryItem.ALBUMS -> AlbumsList(
-                            modifier = Modifier.padding(11.dp),
+                            modifier = Modifier.padding(5.dp),
+                            windowSize = windowSize,
                             onAlbumSelected = onAlbumSelected,
                             albums = albums
                         )

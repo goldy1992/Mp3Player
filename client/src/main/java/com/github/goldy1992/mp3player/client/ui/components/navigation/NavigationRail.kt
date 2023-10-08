@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationRail
@@ -34,7 +34,7 @@ fun AppNavigationRail(navController: NavController = rememberNavController(),
                 modifier = Modifier.padding(vertical = 12.dp),
                 onClick = onClickMenuIcon,
             )    {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
+                Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu Btn")
             }
         },
     ){

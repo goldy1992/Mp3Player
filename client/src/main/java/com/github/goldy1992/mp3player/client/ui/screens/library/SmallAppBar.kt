@@ -2,8 +2,8 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ fun SmallAppBar(
 ) {
     val navigationDrawerIconDescription = stringResource(id = R.string.navigation_drawer_menu_icon)
 
-    val title : @Composable () -> Unit = {
+    val titleComposable : @Composable () -> Unit = {
         Text(text = title,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface,
@@ -34,7 +34,7 @@ fun SmallAppBar(
 
     val actions : @Composable RowScope.() -> Unit = {
         IconButton(onClick = onClickSearchIcon) {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+            Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
         }
     }
 
@@ -47,18 +47,18 @@ fun SmallAppBar(
                     contentDescription = navigationDrawerIconDescription
                 })
             {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Menu Btn")
+                Icon(imageVector = Icons.Rounded.Menu, contentDescription = "Menu Btn")
             }
         }
         TopAppBar(
-            title = title,
+            title = titleComposable,
             actions = actions,
             scrollBehavior = scrollBehavior,
             navigationIcon = navIcon
         )
     } else {
         TopAppBar(
-            title = title,
+            title = titleComposable,
             actions = actions,
             scrollBehavior = scrollBehavior,
         )

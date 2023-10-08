@@ -1,8 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.buttons
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.rounded.SkipNext
+import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +20,8 @@ fun SkipToPreviousButton(
         modifier = modifier,
         onClick = { onClick() }){
         Icon(
-            imageVector = Icons.Filled.SkipPrevious,
+            modifier= Modifier.fillMaxSize(),
+            imageVector = Icons.Rounded.SkipPrevious,
             contentDescription = stringResource(id = R.string.skip_to_previous),
             tint = MaterialTheme.colorScheme.primary,
         )
@@ -33,7 +35,8 @@ fun SkipToNextButton(modifier: Modifier = Modifier,
         onClick = { onClick() },
         modifier = modifier) {
         Icon(
-            imageVector = Icons.Filled.SkipNext,
+            modifier = Modifier.fillMaxSize(),
+            imageVector = Icons.Rounded.SkipNext,
             contentDescription = stringResource(id = R.string.skip_to_next),
             tint = MaterialTheme.colorScheme.primary,
         )

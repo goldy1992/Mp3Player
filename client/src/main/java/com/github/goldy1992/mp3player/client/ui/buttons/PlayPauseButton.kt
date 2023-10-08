@@ -1,15 +1,22 @@
 package com.github.goldy1992.mp3player.client.ui.buttons
 
 import android.util.Log
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
@@ -26,7 +33,6 @@ private const val LOG_TAG = "PlayPauseButton"
  * @param onClickPlay Called when play is clicked, defaults to no implementation.
  * @param onClickPause Called when pause is clicked, defaults to no implementation.
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PlayPauseButton(
                     modifier: Modifier = Modifier,
@@ -37,7 +43,9 @@ fun PlayPauseButton(
     val isPlayingValue = isPlaying()
     Log.d(LOG_TAG, "PlayPauseButton() isPlayingValue: $isPlayingValue")
     val tweenTime = 500
-    val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime))
+    val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime),
+        label = "playPause Rotation Animation"
+    )
 
     val fadeTime = 300
 
@@ -47,10 +55,10 @@ fun PlayPauseButton(
                 targetContentEnter = fadeIn(tween(fadeTime)),
                 initialContentExit = fadeOut(tween(fadeTime)),
             )
-        }
+        }, label = "PlayPause value changing"
 
 
-        ) { isPlayingCurrentVal ->
+    ) { isPlayingCurrentVal ->
         if (isPlayingCurrentVal) {
             PauseButton(onClick = onClickPause,
                 modifier = modifier.rotate(rotation + 180f))
@@ -69,10 +77,12 @@ fun PlayPauseButton(
 fun PlayButton(modifier : Modifier = Modifier,
                onClick : () -> Unit =  {}) {
     IconButton(
+        colors = IconButtonDefaults.filledTonalIconButtonColors(),//containerColor = MaterialTheme.colorScheme.inversePrimary),
         onClick = { onClick()},
-        modifier = modifier) {
+        modifier = modifier){//.background(Color.Yellow)) {
         Icon(
-            imageVector = Icons.Filled.PlayArrow,
+            modifier = Modifier.fillMaxSize(),
+            imageVector = Icons.Rounded.PlayArrow,
             contentDescription = stringResource(id = R.string.play),
             tint = MaterialTheme.colorScheme.primary,
         )
@@ -86,10 +96,13 @@ fun PlayButton(modifier : Modifier = Modifier,
 fun PauseButton(modifier: Modifier = Modifier,
                 onClick: () -> Unit = {},
                 ) {
-    IconButton(onClick = { onClick() },
-                modifier = modifier) {
+    IconButton(
+        colors = IconButtonDefaults.filledTonalIconButtonColors(),//containerColor = MaterialTheme.colorScheme.inversePrimary),
+        onClick = { onClick() },
+        modifier = modifier) {
         Icon(
-            imageVector = Icons.Filled.Pause,
+            modifier = Modifier.fillMaxSize(),
+            imageVector = Icons.Rounded.Pause,
             contentDescription = stringResource(id = R.string.pause),
             tint = MaterialTheme.colorScheme.primary,
         )

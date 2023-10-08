@@ -51,7 +51,7 @@ fun AlbumListItem(modifier: Modifier = Modifier,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
                     .size(width))
-            Column(Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)) {
+            Column(Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end=2.dp)) {
                 Text(album.title,
                     modifier = Modifier.basicMarquee(),
                     style = MaterialTheme.typography.bodyMedium,
