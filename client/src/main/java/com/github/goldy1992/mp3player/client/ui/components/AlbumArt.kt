@@ -31,11 +31,10 @@ fun AlbumArtAsync(uri : Uri,
     Log.v(LOG_TAG, "AlbumArtAsync() Invoked with Uri: ${uri.path}")
 
     if (isEmpty(uri.path)) {
-        Image(
-            modifier = Modifier
-                .clip(RoundedCornerShape(10f)),
-        painter = painterResource(id = R.drawable.mock_album_art),
-            contentDescription = ""
+        Icon(
+            Icons.Filled.Error,
+            contentDescription = "error-$contentDescription",
+            modifier = modifier
         )
     } else {
         SubcomposeAsyncImage(
