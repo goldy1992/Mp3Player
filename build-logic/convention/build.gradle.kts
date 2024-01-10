@@ -42,5 +42,9 @@ gradlePlugin {
             id = "mp3player.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
+        register("androidLibraryBuildConfig") {
+            id = "mp3player.android.library.buildconfig"
+            implementationClass = "AndroidLibraryBuildConfigConventionPlugin"
+        }
     }
 }

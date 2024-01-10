@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
+    id("mp3player.android.library.buildconfig")
     id("mp3player.android.library.variant_filter")
 }
 
