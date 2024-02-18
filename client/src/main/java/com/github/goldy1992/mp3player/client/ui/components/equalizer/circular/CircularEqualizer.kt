@@ -181,8 +181,7 @@ private fun CircleGradient() {
             lineTo(0f, size.height / 2)
             close()
         },
-            brush = Brush.verticalGradient(listOf(
-            Color.Yellow, Color.Transparent))
+            brush = Brush.verticalGradient()
         )
     }
 }

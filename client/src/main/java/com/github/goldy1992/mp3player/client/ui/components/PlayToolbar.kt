@@ -70,9 +70,7 @@ fun PlayToolbar(
 
     {
         val localDensity = LocalDensity.current
-        Column(verticalArrangement = Arrangement.Top,
-            //modifier = Modifier.background(Color.Yellow)
-             ) {
+        Column(verticalArrangement = Arrangement.Top) {
             progressIndicator()
             var height by remember { mutableStateOf(0.dp) }
             Row(
@@ -105,10 +103,7 @@ fun PlayToolbar(
               //  Spacer(Modifier.weight(1f))
                 Row(
                     modifier = Modifier
-                        .padding(top = 4.dp, bottom = 4.dp, end = 4.dp, start = 4.dp)
-                        .background(
-                            Color.Yellow
-                        ),
+                        .padding(top = 4.dp, bottom = 4.dp, end = 4.dp, start = 4.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
 
@@ -153,7 +148,6 @@ fun PlayToolbarWithLin(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(2.dp)
-                  //  .background(Color.Yellow)
             )
 
         }

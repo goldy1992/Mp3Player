@@ -54,12 +54,12 @@ fun AlbumListItem(modifier: Modifier = Modifier,
             Column(Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end=2.dp)) {
                 Text(album.title,
                     modifier = Modifier.basicMarquee(),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.labelLarge,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
                 Text(album.artist,
                     modifier = Modifier.basicMarquee(),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.labelSmall,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
             }

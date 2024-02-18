@@ -4,8 +4,7 @@ import android.net.Uri
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
-data class Album
-    constructor(
+data class Album(
         override val id : String = Constants.UNKNOWN,
         val title : String = Constants.UNKNOWN,
         val artist : String = Constants.UNKNOWN,

@@ -79,7 +79,7 @@ fun PlayButton(modifier : Modifier = Modifier,
     IconButton(
         colors = IconButtonDefaults.filledTonalIconButtonColors(),//containerColor = MaterialTheme.colorScheme.inversePrimary),
         onClick = { onClick()},
-        modifier = modifier){//.background(Color.Yellow)) {
+        modifier = modifier){
         Icon(
             modifier = Modifier.fillMaxSize(),
             imageVector = Icons.Rounded.PlayArrow,
