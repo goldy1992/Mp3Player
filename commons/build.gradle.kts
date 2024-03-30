@@ -66,7 +66,7 @@ dependencies {
 }
 
 sonarqube {
-    androidVariant = "debug"
+    setAndroidVariant("debug")
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/debug/classes,${project.buildDir}/tmp/kotlin-classes/debug")
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/debugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/debugUnitTest")

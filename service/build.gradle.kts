@@ -94,7 +94,7 @@ dependencies {
 
 
 sonarqube {
-    androidVariant = "fullDebug"
+    setAndroidVariant("fullDebug")
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/fullDebug/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebug")
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest")

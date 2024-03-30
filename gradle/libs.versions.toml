@@ -7,8 +7,8 @@ androidxAppCompat = "1.6.1"
 androidxComposeCompiler = "1.5.9"
 androidxConcurrent = "1.1.0"
 androidxCoreKotlin = "1.12.0"
-androidxHiltNavigationCompose = "1.1.0"
-androidxLifecycle = "2.6.2"
+androidxHiltNavigationCompose = "1.2.0"
+androidxLifecycle = "2.7.0"
 androidxNavigationVersion = "2.7.0"
 androidxTestCoreKotlin = "1.5.0"
 androidxTest = "1.5.0"
@@ -43,8 +43,6 @@ targetSdk= "34"
 uiAutomator = "2.3.0-beta01"
 
 [libraries]
-accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist" }
-accompanist-navigation-animation = { group = "com.google.accompanist", name = "accompanist-navigation-animation", version.ref = "accompanist" }
 androidx-activity-kotlin = { group =  "androidx.activity", name =  "activity-ktx", version.ref = "androidxActivityKotlin" }
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
