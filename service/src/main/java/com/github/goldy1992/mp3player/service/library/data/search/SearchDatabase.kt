@@ -4,8 +4,22 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.AutoMigration
 
-@Database(entities = [Song::class, Folder::class, Album::class], version = 3)
+@Database(
+    version = 3,
+    entities = [Song::class, Folder::class, Album::class],
+    autoMigrations = [
+        AutoMigration (
+            from = 1,
+            to = 2
+        ),
+        AutoMigration (
+            from = 2,
+            to = 3
+        ),
+    ]
+)
 abstract class SearchDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
     abstract fun folderDao(): FolderDao
