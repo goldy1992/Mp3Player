@@ -21,7 +21,10 @@ import androidx.media3.common.text.CueGroup
 import androidx.media3.common.util.Size
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnPlaybackPositionChangedEvent
 
-class PlayerTestImpl() : Player {
+/**
+ * Test implementation of [Player].
+ */
+class PlayerTestImpl : Player {
     private val listeners = mutableSetOf<Player.Listener>()
 
     private fun updateListeners(updateLambda : (Player.Listener) -> Unit) {
@@ -569,6 +572,10 @@ class PlayerTestImpl() : Player {
     }
 
     override fun setDeviceMuted(muted: Boolean, flags: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAudioAttributes(audioAttributes: AudioAttributes, handleAudioFocus: Boolean) {
         TODO("Not yet implemented")
     }
 
