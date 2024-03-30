@@ -1,3 +1,10 @@
+## [3.6.1](https://github.com/goldy1992/Mp3Player/compare/v3.6.0...v3.6.1) (2024-03-30)
+
+
+### Bug Fixes
+
+* **cicd:** removed ui tests from the release flow, added fix commit in the correct format ([ae49583](https://github.com/goldy1992/Mp3Player/commit/ae495835f058a04951b648190027a6696c37906f))
+
 # [3.6.0](https://github.com/goldy1992/Mp3Player/compare/v3.5.0...v3.6.0) (2023-09-24)
 
 
