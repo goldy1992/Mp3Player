@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.circular
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -16,9 +15,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
@@ -181,8 +177,7 @@ private fun CircleGradient() {
             lineTo(0f, size.height / 2)
             close()
         },
-            brush = Brush.verticalGradient(listOf(
-            Color.Yellow, Color.Transparent))
+            brush = Brush.verticalGradient()
         )
     }
 }

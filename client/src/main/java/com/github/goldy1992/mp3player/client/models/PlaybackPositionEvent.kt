@@ -6,6 +6,6 @@ data class PlaybackPositionEvent(
     val systemTime : Long
 ) {
     companion object {
-        val DEFAULT = PlaybackPositionEvent(false, 0L, 0L)
+        val DEFAULT = PlaybackPositionEvent(false, 500L, 0L)
     }
 }

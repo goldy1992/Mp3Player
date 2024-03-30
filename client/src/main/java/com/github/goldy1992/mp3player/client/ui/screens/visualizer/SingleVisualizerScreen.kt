@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -33,7 +34,6 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart.Pie
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerUtils.getVisualizerName
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "SingleVisualizerScreen"
@@ -43,7 +43,7 @@ private const val LOG_TAG = "SingleVisualizerScreen"
 @Preview
 @Composable
 fun SingleVisualizerScreen(
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
     viewModel: SingleVisualizerScreenViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope()
 ) {

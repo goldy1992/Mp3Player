@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
+    id("mp3player.android.library.buildconfig")
     id("mp3player.android.library.variant_filter")
 }
 
@@ -65,7 +66,7 @@ dependencies {
 }
 
 sonarqube {
-    androidVariant = "debug"
+    setAndroidVariant("debug")
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/debug/classes,${project.buildDir}/tmp/kotlin-classes/debug")
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/debugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/debugUnitTest")

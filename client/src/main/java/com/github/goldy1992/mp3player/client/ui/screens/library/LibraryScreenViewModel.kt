@@ -19,6 +19,8 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.PlaybackPositionViewModelState
+import com.github.goldy1992.mp3player.client.ui.viewmodel.state.PlaybackSpeedViewModelState
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +43,9 @@ class LibraryScreenViewModel
 
     private val _root = MutableStateFlow(Root.NOT_LOADED)
     val root : StateFlow<Root> = _root
+
+    private val _selectedChip = MutableStateFlow(SelectedLibraryItem.NONE)
+    val selectedChip : StateFlow<SelectedLibraryItem> = _selectedChip
 
     private val _songs : MutableStateFlow<Playlist> = MutableStateFlow(Playlist.NOT_LOADED)
     val songs : StateFlow<Playlist> = _songs
@@ -134,9 +139,14 @@ class LibraryScreenViewModel
 
     val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
     val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
-
+    val playbackSpeed = PlaybackSpeedViewModelState(mediaRepository, viewModelScope)
+    val playbackPosition = PlaybackPositionViewModelState(mediaRepository, viewModelScope)
     private fun isChildOfRootItem(parentId: String) : Boolean {
         return root.value.childMap.values.map(MediaEntity::id).toList().contains(parentId)
+    }
+
+    fun setSelectedChip(chip: SelectedLibraryItem) {
+        _selectedChip.value = chip
     }
 
     override fun logTag(): String {

@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.lists.albums
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,13 +51,15 @@ fun AlbumListItem(modifier: Modifier = Modifier,
                 modifier = modifier
                     .align(Alignment.CenterHorizontally)
                     .size(width))
-            Column(Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)) {
+            Column(Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end=2.dp)) {
                 Text(album.title,
-                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.basicMarquee(),
+                    style = MaterialTheme.typography.labelLarge,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
                 Text(album.artist,
-                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.basicMarquee(),
+                    style = MaterialTheme.typography.labelSmall,
                     maxLines=1,
                     overflow = TextOverflow.Ellipsis)
             }

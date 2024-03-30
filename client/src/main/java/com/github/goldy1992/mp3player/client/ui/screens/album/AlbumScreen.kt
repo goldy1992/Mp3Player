@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -50,7 +51,6 @@ import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 import com.github.goldy1992.mp3player.client.utils.TimeUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun AlbumScreen(
-    navController: NavController = rememberAnimatedNavController(),
+    navController: NavController = rememberNavController(),
     viewModel: AlbumScreenViewModel = viewModel(),
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
@@ -224,7 +224,8 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
                 albumProvider: () -> Album = { Album() },
                 scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
                 scope: CoroutineScope = rememberCoroutineScope(),
-                navController: NavController = rememberAnimatedNavController()) {
+                navController: NavController = rememberNavController()
+) {
     val album = albumProvider()
     LargeTopAppBar(
         modifier = modifier,

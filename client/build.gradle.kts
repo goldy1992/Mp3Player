@@ -89,8 +89,8 @@ dependencies {
 
     implementation(composeBom)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation(libs.accompanist.insets)
-    implementation(libs.accompanist.navigation.animation)
+    //implementation(libs.accompanist.insets)
+    //implementation(libs.accompanist.navigation.animation)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.kotlin)
@@ -154,7 +154,7 @@ dependencies {
 }
 
 sonarqube {
-    androidVariant = "fullDebug"
+    setAndroidVariant("fullDebug")
     properties {
         property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/fullDebug/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebug")
         property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest")

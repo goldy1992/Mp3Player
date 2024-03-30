@@ -34,6 +34,7 @@ fun SongList(
     playlist : Playlist = Playlist(state= State.NOT_LOADED),
     isPlayingProvider : () -> Boolean = {false},
     currentSongProvider : () -> Song = { Song() },
+    expanded: Boolean = false,
     onSongSelected : (itemIndex: Int, playlist : Playlist) -> Unit = { _, _ -> }) {
     Log.v(LOG_TAG, "SongList() invoked with ${playlist.songs.size} songs")
     val currentMediaItem = currentSongProvider()
@@ -46,6 +47,7 @@ fun SongList(
                 modifier,
                 currentMediaItem,
                 isPlayingProvider,
+                expanded,
                 onSongSelected
             )
         }
@@ -70,6 +72,7 @@ private fun LoadedSongsList(
     modifier: Modifier,
     currentMediaItem: Song,
     isPlayingProvider: () -> Boolean,
+    expanded: Boolean = false,
     onSongSelected: (itemIndex: Int, playlist: Playlist) -> Unit
 ) {
     val songList = playlist.songs
@@ -85,10 +88,18 @@ private fun LoadedSongsList(
         ) { itemIndex ->
             val song = songList[itemIndex]
             val isItemSelected = isSongItemSelected(song, currentMediaItem)
-            SongListItem(
-                song = song,
-                isSelected = isItemSelected,
-                onClick = { onSongSelected(itemIndex, playlist) })
+            if (expanded) {
+                LargeSongListItem(
+                    song = song,
+                    isSelected = isItemSelected,
+                    onClick = { onSongSelected(itemIndex, playlist) })
+            }
+            else {
+                SongListItem(
+                    song = song,
+                    isSelected = isItemSelected,
+                    onClick = { onSongSelected(itemIndex, playlist) })
+            }
         }
 
     }

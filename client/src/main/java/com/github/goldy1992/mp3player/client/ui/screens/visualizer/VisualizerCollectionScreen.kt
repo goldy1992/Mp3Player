@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
@@ -32,17 +32,16 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.Circu
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.FountainSpringCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.PieChartCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
+import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.commons.Screen
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.map
 
 private const val LOG_TAG = "VisualizerScreen"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun VisualizerCollectionScreen(
-    navController : NavController = rememberAnimatedNavController(),
+    navController : NavController = rememberNavController(),
     viewModel: VisualizerCollectionViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope()) {
 

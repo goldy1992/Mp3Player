@@ -56,8 +56,7 @@ class MediaLibrarySessionCallback
         val updatedPlayerCommands = connectionResult
             .availablePlayerCommands
             .buildUpon()
-            .add(Player.COMMAND_SET_MEDIA_ITEMS_METADATA)
-            .add(Player.COMMAND_GET_MEDIA_ITEMS_METADATA)
+            .add(Player.COMMAND_SET_PLAYLIST_METADATA)
             .build()
         return ConnectionResult.accept(updatedSessionCommands,updatedPlayerCommands)
     }

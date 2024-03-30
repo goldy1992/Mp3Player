@@ -50,8 +50,8 @@ class PieChartVisualizerState(
 
     fun setSize(size: IntSize) {
         this.canvasSize = size
-        maxRadius = (maxOf(canvasSize.width, canvasSize.height) / 2f) - (2 * insetPx)
-        defaultRadius = maxRadius * 0.8f
+        maxRadius = (minOf(canvasSize.width, canvasSize.height) / 2f) - (2 * insetPx)
+        defaultRadius = maxRadius * 1.5f
         frequencyRange = maxRadius - defaultRadius
         defaultOffset = Offset((canvasSize.width / 2f), (canvasSize.height / 2f))
     }

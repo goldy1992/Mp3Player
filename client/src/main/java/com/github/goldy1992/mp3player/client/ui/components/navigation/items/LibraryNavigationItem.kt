@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,9 +17,9 @@ import com.github.goldy1992.mp3player.client.R
 
 @Preview
 @Composable
-fun LibraryNavigationItem(
+fun LibraryNavigationDrawerItem(
     isSelected : Boolean = false,
-    onClick : () -> Unit = {}
+    onClick : () -> Unit = { }
 ) {
     val library = stringResource(id = R.string.library)
     NavigationDrawerItem(
@@ -29,6 +30,21 @@ fun LibraryNavigationItem(
                 style = MaterialTheme.typography.labelLarge
             )
         },
+        icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
+        selected = isSelected,
+        onClick = onClick
+    )
+}
+
+@Preview
+@Composable
+fun LibraryNavigationRailItem(
+    isSelected : Boolean = false,
+    onClick : () -> Unit = {}
+) {
+    val library = stringResource(id = R.string.library)
+    NavigationRailItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
         icon = { Icon(Icons.Filled.LibraryMusic, contentDescription = library) },
         selected = isSelected,
         onClick = onClick

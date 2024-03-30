@@ -9,7 +9,7 @@ data class Song
         override val id : String = Constants.UNKNOWN,
         val title : String = Constants.UNKNOWN,
         val artist : String = Constants.UNKNOWN,
-        val duration : Long = 0L,
+        val duration : Long = 1000L,
         val albumArt : Uri = Uri.EMPTY,
         override val state: State = State.NOT_LOADED
     ) : MediaEntity {
