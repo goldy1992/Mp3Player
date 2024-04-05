@@ -1,13 +1,17 @@
 import React from "react";
 import Layout from "../components/layout";
 import Icon from 'assets/icon.svg'
+import AppBar from "components/app_bar/app_bar";
 const Home : React.FC =() => {
   return (
     <Layout>
+      <AppBar />
+      <div className="flex flex-col">
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
 <div className="">MP3 Player</div>
 
         </main>
+        </div>
     </Layout>
   )}
 
