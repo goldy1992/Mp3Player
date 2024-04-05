@@ -1,5 +1,6 @@
 import type { GatsbyConfig } from "gatsby";
 
+
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `website`,
@@ -9,12 +10,12 @@ const config: GatsbyConfig = {
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
-  plugins: ["gatsby-plugin-postcss", "gatsby-plugin-image", "gatsby-plugin-sitemap", {
+  plugins: ["gatsby-plugin-root-import", "gatsby-plugin-postcss", "gatsby-plugin-image", "gatsby-plugin-sitemap", {
     resolve: 'gatsby-plugin-manifest',
     options: {
       "icon": "src/images/icon.png"
     }
-  }, "gatsby-plugin-mdx", "gatsby-plugin-sharp", "gatsby-transformer-sharp", {
+  }, "gatsby-plugin-sharp", "gatsby-transformer-sharp", "gatsby-plugin-tsconfig-paths", {
     resolve: 'gatsby-source-filesystem',
     options: {
       "name": "images",
@@ -28,7 +29,19 @@ const config: GatsbyConfig = {
       "path": "./src/pages/"
     },
     __key: "pages"
-  }]
+  },
+  {
+    resolve: "gatsby-plugin-react-svg",
+    options: {
+      rule: {
+        include: /assets/ // See below to configure properly
+      }
+    }
+  },
+
+
+],
+
 };
 
 export default config;

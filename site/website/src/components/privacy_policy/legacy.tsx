@@ -22,7 +22,7 @@ import React from "react"
         <p className="mb-2">This summary provides key points from our privacy notice, but you can find out more details about any of these topics by clicking the link following each key point or by using our table of contents below to find the section you are looking for.</p>
 
         <div className="font-semibold">What personal information do we process?</div> 
-        <p className="mb-2">When you visit, use, or navigate our Services, we may process personal information depending on how you interact with __________ and the Services, the choices you make, and the products and features you use.</p>
+        <p className="mb-2">When you visit, use, or navigate our Services, we may process personal information depending on how you interact with MP3 Player and the Services, the choices you make, and the products and features you use.</p>
 
         <div className="font-semibold">Do we process any sensitive personal information?</div>
           <p className="mb-2">We do not process sensitive personal information.</p>
