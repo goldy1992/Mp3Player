@@ -13,9 +13,12 @@ const GithubIcon: React.FC = ({width=48, height=48} : {width?: Number, height?: 
         )
   
     return (
+        <a href="https://github.com/goldy1992/Mp3Player" title="Github Repository">
     <div className="hover:cursor-pointer">  
     { GitHubImage}
-    </div>)
+    </div>
+    </a>)
+    
 }
 
 export default GithubIcon

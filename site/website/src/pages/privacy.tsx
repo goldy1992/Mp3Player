@@ -1,18 +1,18 @@
 import * as React from "react"
 import LegacyPrivacyPolicy from "../components/privacy_policy/legacy"
 import AppBar from "components/app_bar/app_bar"
-import Layout from "components/layout"
 
 
 
-export const PrivacyPolicy : React.FC = () => {
+export const PrivacyPolicy: React.FC = () => {
     return (
-        <Layout>
-        <AppBar />
-        <div>
-            <LegacyPrivacyPolicy />
+        <div className="pb-24">
+            <AppBar />
+            <div >
+                <LegacyPrivacyPolicy />
+            </div>
         </div>
-        </Layout>
+
     )
 }
 
