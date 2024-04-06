@@ -1,9 +1,13 @@
-import React from "react"
+import { IsDarkModeContext } from "components/dark_mode/dark_mode_context";
+import React, { useContext } from "react"
 
- const LegacyPrivacyPolicy : React.FC = () => {
+const LegacyPrivacyPolicy : React.FC = () => {
+
+   const dm = useContext(IsDarkModeContext);
+            
     return (
 
-        <div className="m-4">
+        <div className="m-4 text-gray-950 dark:text-gray-50">
             <div className="text-2xl">PRIVACY POLICY</div>
             <p className="py-2">
                 Last updated April 1<sup>st</sup>, 2024
