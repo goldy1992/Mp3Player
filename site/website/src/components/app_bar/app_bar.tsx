@@ -10,7 +10,7 @@ const AppBar : React.FC =() => {
     return (
         <div className="p-4 flex">
             <div className="flex-none">
-                <Logo width={ICON_WIDTH} height={ICON_HEIGHT}/>
+                <Logo width={48} height={48}/>
             </div>
             <div className="flex-grow" />
             {/* <div className="flex-none">

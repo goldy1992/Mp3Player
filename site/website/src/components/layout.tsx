@@ -9,7 +9,7 @@ const LayoutInner = ({ children } :  AppProps) => {
     var darkMode = darkModeContext.enabled
     const isDarkMode = darkMode ? "dark" : ""
     console.log("dark mode: " + darkMode)
-    const rootClassName = "scroll-smooth bg-neutral-100 dark:bg-neutral-900"
+    const rootClassName = "scroll-smooth bg-neutral-100 dark:bg-neutral-900 text-gray-950 dark:text-gray-50"
     return (
   
         <div className={isDarkMode}>

@@ -7,7 +7,7 @@ const LegacyPrivacyPolicy : React.FC = () => {
             
     return (
 
-        <div className="m-4 text-gray-950 dark:text-gray-50">
+        <div className="m-4">
             <div className="text-2xl">PRIVACY POLICY</div>
             <p className="py-2">
                 Last updated April 1<sup>st</sup>, 2024

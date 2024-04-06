@@ -2,14 +2,17 @@ import React from "react";
 import Layout from "../components/layout";
 import AppBar from "components/app_bar/app_bar";
 import { Link } from "gatsby";
+import GithubIcon from "components/icons/github";
 const Home : React.FC =() => {
   return (
     <Layout>
       <AppBar />
       <div className="flex flex-col">
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-<div className="">MP3 Player</div>
-<div className=""><Link to="/privacy">Privacy Policy</Link></div>
+          <div className="text-center">An <span className="font-bold italic">open source</span> <span className="text-3xl font-extrabold text-nowrap">MP3 Player</span> for <span className="font-bold">Android</span></div>
+         
+          <div className=""><GithubIcon /></div>
+          <div className=""><Link to="/privacy">Privacy Policy</Link></div>
 
         </main>
         </div>
