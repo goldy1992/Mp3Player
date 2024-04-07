@@ -70,5 +70,5 @@ jobs:
 
       - name: Build and Deploy to GitHub Pages
         id: deployment
-        run: gatsby deploy
+        run: npm run deploy
 
