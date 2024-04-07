@@ -76,4 +76,6 @@ jobs:
         working-directory: ./site
         id: deployment
         run: gatsby build --prefix-paths && gh-pages -d public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
