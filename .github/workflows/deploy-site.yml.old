@@ -1,0 +1,20 @@
+name: Deploy Static Site to Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: release_env
+    steps:
+      - uses: actions/checkout@v3
+      - uses: enriikke/gatsby-gh-pages-action@v2
+        with:
+          access-token: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
+          deploy-branch: master
+          gatsby-args: --prefix-paths
+          working-dir: ./site/
