@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Link, HeadFC, PageProps } from "gatsby"
+import AppBar from "components/app_bar/app_bar"
 
 const pageStyles = {
   color: "#232129",
@@ -25,6 +26,11 @@ const codeStyles = {
 
 const NotFoundPage: React.FC<PageProps> = () => {
   return (
+    <div className="flex flex-col min-h-screen">
+    <div className="flex-none">
+      <AppBar />
+    </div>
+
     <main style={pageStyles}>
       <h1 style={headingStyles}>Page not found</h1>
       <p style={paragraphStyles}>
@@ -41,6 +47,7 @@ const NotFoundPage: React.FC<PageProps> = () => {
         <Link to="/">Go home</Link>.
       </p>
     </main>
+    </div>
   )
 }
 
