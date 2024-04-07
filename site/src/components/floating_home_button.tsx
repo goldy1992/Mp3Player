@@ -1,5 +1,4 @@
 import React from 'react'
-import ArrowUpIcon from 'src/assets/arrow_top.svg'
 
 export default function FloatingHomeButton(
     {onClick} : 
