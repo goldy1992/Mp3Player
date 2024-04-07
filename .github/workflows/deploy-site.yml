@@ -70,7 +70,7 @@ jobs:
 
       - name: Install gh-pages CLI
         working-directory: ./site
-        run: npm install -g gatsby-cli
+        run: npm install -g gh-pages
 
       - name: Build and Deploy to GitHub Pages
         working-directory: ./site
