@@ -2,8 +2,6 @@ import { IsDarkModeContext } from "components/dark_mode/dark_mode_context";
 import React, { useContext } from "react"
 
 const LegacyPrivacyPolicy : React.FC = () => {
-
-   const dm = useContext(IsDarkModeContext);
             
     return (
 

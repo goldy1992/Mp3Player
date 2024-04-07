@@ -2,9 +2,6 @@ name: Deploy Static Site to Pages
 
 on:
   workflow_dispatch:
-    secrets:
-      SEMANTIC_RELEASE_FINE_GRAINED_TOKEN:
-        required: true
   push:
     branches:
       - master
@@ -12,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: release_env
     steps:
       - uses: actions/checkout@v3
       - uses: enriikke/gatsby-gh-pages-action@v2
