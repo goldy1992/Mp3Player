@@ -63,7 +63,12 @@ jobs:
       - name: Install dependencies
         working-directory: ./site
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+
+      - name: Install Gatsby CLI
+        working-directory: ./site
+        run: npm install -g gatsby-cli
+
       - name: Build and Deploy to GitHub Pages
         id: deployment
-        run: npm run deploy
+        run: gatsby deploy
 
