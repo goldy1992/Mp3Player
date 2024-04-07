@@ -17,4 +17,4 @@ jobs:
           access-token: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}
           deploy-branch: master
           gatsby-args: --prefix-paths
-          working-dir: ./site
+          working-dir: ./site/
