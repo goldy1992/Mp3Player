@@ -31,7 +31,7 @@ defaults:
 
 jobs:
   # Build job
-  setup:
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment: release_env
     steps:
@@ -63,12 +63,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./site
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-
-  # Deployment job
-  deploy:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
       - name: Build and Deploy to GitHub Pages
         id: deployment
         run: gatsby deploy
+
