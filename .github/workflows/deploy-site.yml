@@ -65,5 +65,5 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build and Deploy to GitHub Pages
         id: deployment
-        run: gatsby deploy
+        run: npm run deploy
 
