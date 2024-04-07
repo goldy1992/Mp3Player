@@ -71,5 +71,5 @@ jobs:
       - name: Build and Deploy to GitHub Pages
         working-directory: ./site
         id: deployment
-        run: npm run deploy
+        run: gatsby build --prefix-paths && gh-pages -d public
 
