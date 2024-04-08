@@ -65,7 +65,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ./site_next/.next/cache
+            ./site/.next/cache
           # Generate a new cache whenever packages or source files change.
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
@@ -73,17 +73,17 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
      
       - name: Install dependencies
-        working-directory: ./site_next
+        working-directory: ./site
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
      
       - name: Build with Next.js
-        working-directory: ./site_next
+        working-directory: ./site
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site_next/out
+          path: ./site/out
 
   # Deployment job
   deploy:

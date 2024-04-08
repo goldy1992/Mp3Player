@@ -8,15 +8,13 @@ const LIGHT_FILL = "#DEDEDE"
 
  const DarkModeButton = ({width=48, height=48}: IconProps) => {
     const dm = useContext(IsDarkModeContext);
-    const icProps: IconProps = {
-
-      fill: dm.enabled ? LIGHT_FILL : DARK_FILL
-    }
+    const fill = dm.enabled ? LIGHT_FILL : DARK_FILL
+    
     const icon =   ( 
       <div className="hover:cursor-pointer" onClick={() => {dm.setIsDarkMode(!dm.enabled)}} >
             
             
-          <DarkModeIcon width={width} height={height} />
+          <DarkModeIcon width={width} height={height} fill={fill} />
         </div>
     );
 
