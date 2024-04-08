@@ -6,7 +6,7 @@ import FloatingHomeButton from "@/app/components/floating_home_button"
 
 
 
-export const PrivacyPolicy: React.FC = () => {
+const PrivacyPolicy: React.FC = () => {
     return (
         <div className="pb-24">
             <div id="home" />
