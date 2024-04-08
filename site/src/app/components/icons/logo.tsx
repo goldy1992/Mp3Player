@@ -9,7 +9,6 @@ const Logo: React.FC = ({width=48, height=48} : {width?: number, height?: number
         alt="MP3 Player Logo"
         width={width}
         height={height}
-        style={{width: 'auto', height: 'auto'}}
   />)
 }
 
