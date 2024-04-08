@@ -14,7 +14,7 @@
     "build": "gatsby build",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "autoprefixer": "^10.4.19",
@@ -37,7 +37,6 @@
     "@types/react-dom": "^18.2.19",
     "gatsby-plugin-root-import": "^2.0.9",
     "gatsby-plugin-tsconfig-paths": "^1.0.6",
-    "gh-pages": "^6.1.1",
     "typescript": "^5.3.3"
   }
 }
