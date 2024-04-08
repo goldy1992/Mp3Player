@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',
-    basePath: '/MP3Player',
+    basePath: '/Mp3Player',
 };
 
 export default nextConfig;
