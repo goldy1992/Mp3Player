@@ -4,8 +4,8 @@ import Logo from "@/app/components/icons/logo"
 import DarkModeButton from "@/app/components/dark_mode/dark_mode_button";
 import Link from "next/link";
 
-const ICON_WIDTH = 24
-const ICON_HEIGHT = 24
+const ICON_WIDTH: number = 24
+const ICON_HEIGHT: number = 24
 
 const AppBar : React.FC =() => {
     return (

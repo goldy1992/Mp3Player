@@ -1,10 +1,16 @@
 import React from "react"
 
+export interface IconProps extends React.ComponentProps<any> {
+    width?: number,
+    height?: number,
+    fill?: string
+}
 
-const DarkModeIcon : React.FC = ({width=48, height=48, fill="#212121"}: {width?:Number, height?:Number, fill?: string}) => {
+
+const DarkModeIcon = ({width=48, height=48, fill="#212121"}: IconProps) => {
     return (
 
-        <svg width={width.toString()} height={height.toString()} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg width={width} height={height} viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
             <title>Dark and Light Mode Switch</title>
     <desc>Created with Sketch.</desc>
     <g id="🔍-Product-Icons" stroke="none" strokeWidth="1" fill={fill} fillRule="evenodd">

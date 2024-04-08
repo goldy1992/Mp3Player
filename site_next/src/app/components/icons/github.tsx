@@ -3,13 +3,14 @@
 import { IsDarkModeContext } from "@/app/components/dark_mode/dark_mode_context";
 import React, { useContext } from "react";
 import Image from 'next/image'
+import { IconProps } from "./dark_mode";
 
 // import GitHubLight from "assets/github-mark/github-mark-white.svg"
 // import GitHubDark from "assets/github-mark/github-mark.svg"
 
 const ICON_ALT = "MP3 Player GitHub Repository"
 
-const GithubIcon: React.FC = ({width=48, height=48} : {width?: number, height?: number}) => {
+const GithubIcon: React.FC = ({width=48, height=48} : IconProps) => {
     const dm = useContext(IsDarkModeContext);
     const GitHubImage = dm.enabled ? (
         // <GitHubLight width={width} height={height} />
