@@ -7,6 +7,7 @@
   "keywords": [
     "gatsby"
   ],
+  "homepage": "https://goldy1992.github.io/Mp3Player",
   "scripts": {
     "develop": "gatsby develop",
     "start": "gatsby develop",
@@ -14,7 +15,6 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit",
-    "deploy": "gatsby build --prefix-paths && gh-pages -d public"
   },
   "dependencies": {
     "autoprefixer": "^10.4.19",
