@@ -1,11 +1,8 @@
 'use client'
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { DarkModeProvider, IsDarkModeContext } from "./components/dark_mode/dark_mode_context";
 import { useContext } from "react";
-import { TitleContext, TitleProvider } from "./components/title_context";
-
-const inter = Inter({ subsets: ["latin"] });
+import { MetadataContext, MetadataProvider } from "./components/metadata_context";
 
 
 const RootLayout = ({
@@ -15,11 +12,11 @@ const RootLayout = ({
 }>) => {
   return (
     <DarkModeProvider>
-      <TitleProvider>
+      <MetadataProvider>
         <RootChild>
           {children}
        </RootChild>
-      </TitleProvider>
+      </MetadataProvider>
     </DarkModeProvider>
   );
 }
@@ -34,13 +31,21 @@ const RootChild = ({
   const darkModeContext = useContext(IsDarkModeContext)
   var darkMode = darkModeContext.enabled
   const isDarkMode = darkMode ? "dark" : ""
-  const titleContext = useContext(TitleContext)
-  const title = titleContext.title
-
+  const metadataContext = useContext(MetadataContext)
+  const metadata = metadataContext.metadata
+  const url = "https://goldy1992.github.io/Mp3Player" + (!metadata.path ? "" : metadata.path) 
   return (
     <html lang="en" className={isDarkMode}>
       <head>
-        <title>{title}</title>
+        <title>{metadata.title}</title>
+        <meta property="og:image" content="logo_inkscape.svg" />
+        <meta property="og:image:type" content="image/svg+xml" />
+        <meta property="og:image:alt" content="MP3 Player" />
+        <meta property="og:site_name" content="MP3 Player" />
+        <meta property="og:title" content={metadata.title} />
+        <meta property="og:type" content="website" />
+        <meta property="og:description" content={metadata.description} />
+        <meta property="og:url" content={url} />
       </head>
       <body className="bg-neutral-100 dark:bg-neutral-900 text-gray-950 dark:text-gray-50">{children}</body>
     </html>

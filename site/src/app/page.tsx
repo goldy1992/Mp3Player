@@ -6,11 +6,12 @@ import GithubIcon from "@/app/components/icons/github";
 import AppBar from "@/app/components/app_bar/app_bar";
 import Link from "next/link";
 import Head from "next/head";
-import { DEFAULT_TITLE, TitleContext } from "./components/title_context";
+import { MetadataContext } from "./components/metadata_context";
+import { DEFAULT_METADATA } from "./constants";
 
 const Home: React.FC = () => {
-  const title = React.useContext(TitleContext)
-  title.setTitle(DEFAULT_TITLE)
+  const metadataContext = React.useContext(MetadataContext)
+  metadataContext.setMetadata(DEFAULT_METADATA)
   return (
     <div className="flex flex-col min-h-screen">
       <Head>

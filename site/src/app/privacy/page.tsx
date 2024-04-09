@@ -3,13 +3,19 @@ import * as React from "react"
 import LegacyPrivacyPolicy from "../components/privacy_policy/legacy"
 import AppBar from "@/app/components/app_bar/app_bar"
 import FloatingHomeButton from "@/app/components/floating_home_button"
-import { DEFAULT_TITLE, TitleContext } from "../components/title_context"
+import { MetadataContext } from "../components/metadata_context"
+import { DEFAULT_TITLE } from "../constants"
 
 const TITLE = DEFAULT_TITLE + ": Privacy"
+const DESCRIPTION = "Privacy Policy for MP3 Player Android App."
 
 const PrivacyPolicy: React.FC = () => {
-  const title = React.useContext(TitleContext)
-  title.setTitle(TITLE)
+  const metadataContext = React.useContext(MetadataContext)
+  metadataContext.setMetadata({
+    title: TITLE,
+    description: DESCRIPTION,
+    path: "/privacy"
+  })
     return (
         <div className="pb-24">
             <div id="home" />
