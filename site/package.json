@@ -1,5 +1,8 @@
 {
   "name": "mp3-player-website",
+  "homepage": "https://goldy1992.github.io/Mp3Player",
+  "description": "Static website to accompany the MP3 Player Android Application.",
+  "keywords": ["MP3 Player", "Android", "Next.js"],
   "version": "0.1.0",
   "private": true,
   "scripts": {
