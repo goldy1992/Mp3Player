@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
+    alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
 android {
@@ -15,9 +16,9 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
+//    composeOptions {
+//        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
+//    }
     packaging {
         resources {
             excludes += "**/attach_hotspot_windows.dll"
@@ -67,9 +68,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 
     testOptions {
         animationsDisabled = false
@@ -81,10 +79,14 @@ android {
 
 
     namespace = "com.github.goldy1992.mp3player.client"
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
     val composeBom = platform(libs.androidx.compose.bom)
 
     implementation(composeBom)
@@ -131,7 +133,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     ksp(libs.hilt.compiler)
-    kspTest(libs.hilt.compiler)
+    //kspTest(libs.hilt.compiler)
 
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
@@ -74,7 +74,7 @@ fun NavigationDrawerContent(navController: NavController = rememberNavController
             }
 
             item {
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier.padding(
                         top = 16.dp,
                         end = 28.dp

@@ -2,8 +2,8 @@ package com.github.goldy1992.mp3player.client.ui.buttons
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material.icons.filled.ShuffleOn

@@ -44,7 +44,6 @@ enum class SelectedLibraryItem {
     NONE
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun LibraryChips(

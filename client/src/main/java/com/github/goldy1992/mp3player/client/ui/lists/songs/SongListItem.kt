@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -91,7 +91,7 @@ fun SongListItem(
             )
         }
         )
-    Divider(//startIndent = 72.dp,
+    HorizontalDivider(//startIndent = 72.dp,
         color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
@@ -178,7 +178,7 @@ Text("@supportinh")
 //            }
 //        }
     )
-    Divider(//startIndent = 72.dp,
+    HorizontalDivider(//startIndent = 72.dp,
         color = MaterialTheme.colorScheme.surfaceVariant)
 }
 

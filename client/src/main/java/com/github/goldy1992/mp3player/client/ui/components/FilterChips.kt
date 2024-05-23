@@ -54,7 +54,7 @@ fun FilterChips(modifier: Modifier = Modifier) {
                     Icon(Icons.Default.Clear, contentDescription = "close")
                 }
                 FilterChip(selected = true, onClick = { /*TODO*/ }) {
-                    Text(text = currentSelection!!.name)
+                    Text(text = currentSelection.name)
                 }
             }
         }

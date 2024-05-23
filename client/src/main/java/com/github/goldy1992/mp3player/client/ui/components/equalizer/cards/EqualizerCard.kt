@@ -61,8 +61,8 @@ fun EqualizerCard(
                         )
                     }) {
                     equalizer(
-                        canvasSize = equalizerSize,
-                        modifier = Modifier.fillMaxSize()
+                        equalizerSize,
+                        Modifier.fillMaxSize()
                     )
             }
             Column(

@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -203,7 +203,7 @@ private fun AlbumHeaderItem(
                 verticalAlignment = Alignment.CenterVertically) {
                 shuffleButton()
                 Spacer(modifier = Modifier.width(12.dp))
-                Divider(modifier = Modifier
+                HorizontalDivider(modifier = Modifier
                     .fillMaxHeight()
                     .width(1.dp),
                     thickness = 1.dp)
@@ -239,7 +239,7 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
                     }
                 }) {
                     Icon(
-                        Icons.Filled.ArrowBack, "Back",
+                        Icons.AutoMirrored.Filled.ArrowBack, "Back",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
 

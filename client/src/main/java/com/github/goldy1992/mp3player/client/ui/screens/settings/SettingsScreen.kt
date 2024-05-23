@@ -1,5 +1,4 @@
 @file:OptIn(
-    ExperimentalAnimationApi::class,
     ExperimentalMaterial3Api::class
 )
 package com.github.goldy1992.mp3player.client.ui.screens.settings
@@ -236,7 +235,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
         item {
             SubHeader(title = stringResource(id = R.string.permissions))
@@ -274,7 +273,7 @@ fun SettingsScreenContent(
             )
         }
         item {
-            Divider()
+            HorizontalDivider()
         }
         item {
             SubHeader(title = stringResource(id = R.string.input))
@@ -286,7 +285,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
 
         item {
@@ -304,7 +303,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
 
         item {
