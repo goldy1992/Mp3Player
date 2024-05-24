@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +11,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,8 +22,8 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
 import com.github.goldy1992.mp3player.client.utils.TimeUtils.formatTime
@@ -86,8 +85,6 @@ fun PlaybackPositionAnimation(
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
     val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
-    val durationDescription = stringResource(id = R.string.duration)
-    val currentPositionDescription = stringResource(id = R.string.current_position)
 
     val currentProgress = currentPosition / duration
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentProgress)) }
@@ -124,7 +121,7 @@ private fun SeekBarUi(currentPosition : Float,
         }
     }
     val isTouchTracking = remember { mutableStateOf(false)   }
-    val touchTrackingPosition = remember { mutableStateOf(0f) }
+    val touchTrackingPosition = remember { mutableFloatStateOf(0f) }
 
     Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly) {
@@ -138,18 +135,18 @@ private fun SeekBarUi(currentPosition : Float,
             textAlign = TextAlign.Center)
         Slider(
             modifier = Modifier.weight(5f),
-            value = if (isTouchTracking.value) touchTrackingPosition.value else seekBarAnimation.value.value ,
+            value = if (isTouchTracking.value) touchTrackingPosition.floatValue else seekBarAnimation.value.value ,
             valueRange = 0f..duration,
             onValueChange = {
                 isTouchTracking.value = true
-                touchTrackingPosition.value = it
+                touchTrackingPosition.floatValue = it
             },
             onValueChangeFinished = {
                 isTouchTracking.value = false
-                seekBarAnimation.value = Animatable(touchTrackingPosition.value)
-                scope.launch { seekTo(touchTrackingPosition.value.toLong()) }
+                seekBarAnimation.value = Animatable(touchTrackingPosition.floatValue)
+                scope.launch { seekTo(touchTrackingPosition.floatValue.toLong()) }
             })
-        Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.value.toLong() else seekBarAnimation.value.value.toLong()),
+        Text(text = formatTime(if (isTouchTracking.value) touchTrackingPosition.floatValue.toLong() else seekBarAnimation.value.value.toLong()),
             modifier = Modifier
                 .weight(2f)
                 .align(Alignment.CenterVertically)

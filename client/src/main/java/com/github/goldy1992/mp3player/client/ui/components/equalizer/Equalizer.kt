@@ -43,14 +43,15 @@ fun Equalizer(maxHeight : Dp = 30.dp,
         val spaceBetweenBarsPx : Float = LocalDensity.current.run { spaceBetweenBars.toPx()}
 
         for( bar in 1 .. numOfBars) {
-            val infiniteTransition = rememberInfiniteTransition()
+            val infiniteTransition = rememberInfiniteTransition(label = "equalizerInfiniteTransition")
             val duration = remember {Random.nextInt(400, 600)}
             list.add(infiniteTransition.animateFloat(initialValue = 0f,
                 targetValue = maxHeightPx,
                 animationSpec = infiniteRepeatable(
                     animation = tween(duration, easing = LinearEasing),
                     repeatMode = RepeatMode.Reverse
-                )))
+                ), label = "barNum$bar"
+            ))
         }
 
         Canvas(modifier = Modifier

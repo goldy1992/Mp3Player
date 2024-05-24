@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel

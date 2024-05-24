@@ -37,7 +37,9 @@ fun LineEqualizerWithStateListCanvasOnly(modifier: Modifier = Modifier,
 
 
     for (i in frequencyPhases.indices) {
-        val currentPhase by animateFloatAsState(targetValue = frequencyPhases[i], animationSpec = tween(300))
+        val currentPhase by animateFloatAsState(targetValue = frequencyPhases[i], animationSpec = tween(300),
+            label = "Line$i"
+        )
         list[i] = currentPhase
     }
 

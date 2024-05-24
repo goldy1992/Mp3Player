@@ -91,8 +91,6 @@ dependencies {
 
     implementation(composeBom)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    //implementation(libs.accompanist.insets)
-    //implementation(libs.accompanist.navigation.animation)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.kotlin)
@@ -103,6 +101,7 @@ dependencies {
     implementation(libs.apache.commons.math3)
     implementation(libs.androidx.activity.kotlin)
     implementation(libs.androidx.compose.activity)
+    implementation(libs.androidx.compose.animation.beta)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material)
@@ -133,7 +132,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     ksp(libs.hilt.compiler)
-    //kspTest(libs.hilt.compiler)
 
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)
