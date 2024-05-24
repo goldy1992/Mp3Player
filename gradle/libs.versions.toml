@@ -7,7 +7,7 @@ androidxConcurrent = "1.1.0"
 androidxCoreKotlin = "1.12.0"
 androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.7.0"
-androidxNavigationVersion = "2.7.0"
+androidxNavigationComposeVersion = "2.7.7"
 androidxTestCoreKotlin = "1.5.0"
 androidxTest = "1.5.0"
 androidxTestEspresso = "3.5.1"
@@ -57,7 +57,7 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 androidx-compose-material3-windowsizes = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-compose-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
-androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version = "androidxNavigationVersion" }
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version = "2.7.7" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }

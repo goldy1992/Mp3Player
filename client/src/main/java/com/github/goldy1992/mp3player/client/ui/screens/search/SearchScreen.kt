@@ -1,7 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -58,6 +61,7 @@ import java.util.*
 
 private const val logTag = "SearchScreen"
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @ExperimentalMaterial3WindowSizeClassApi
 @ExperimentalAnimationApi
 @ExperimentalComposeUiApi
@@ -66,7 +70,10 @@ private const val logTag = "SearchScreen"
 fun SearchScreen(
     navController: NavController = rememberNavController(),
     windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
-    viewModel : SearchScreenViewModel = viewModel()) {
+    viewModel : SearchScreenViewModel = viewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+) {
 
     Log.i(logTag,"composing search screen")
     val searchResults by viewModel.searchResults.collectAsState()

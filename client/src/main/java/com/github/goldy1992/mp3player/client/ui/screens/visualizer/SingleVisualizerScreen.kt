@@ -1,7 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,13 +42,16 @@ import kotlinx.coroutines.CoroutineScope
 private const val LOG_TAG = "SingleVisualizerScreen"
 
 @OptIn(ExperimentalAnimationApi::class,
-    ExperimentalMaterial3Api::class)
-@Preview
+    ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class
+)
 @Composable
 fun SingleVisualizerScreen(
     navController: NavController = rememberNavController(),
     viewModel: SingleVisualizerScreenViewModel = viewModel(),
-    scope : CoroutineScope = rememberCoroutineScope()
+    scope : CoroutineScope = rememberCoroutineScope(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val audioData by viewModel.audioData.state().collectAsState()

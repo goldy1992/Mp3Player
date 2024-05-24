@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -59,12 +62,16 @@ import kotlinx.coroutines.launch
     ExperimentalAnimationApi::class,
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
+    ExperimentalSharedTransitionApi::class,
 )
 @Composable
 fun AlbumScreen(
     navController: NavController = rememberNavController(),
     viewModel: AlbumScreenViewModel = viewModel(),
-    scope: CoroutineScope = rememberCoroutineScope()
+    scope: CoroutineScope = rememberCoroutineScope(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
 
     val isPlaying by viewModel.isPlaying.state().collectAsState()

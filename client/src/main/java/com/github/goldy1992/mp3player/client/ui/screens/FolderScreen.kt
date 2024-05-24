@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
@@ -78,13 +81,17 @@ private const val LOG_TAG = "FolderScreen"
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalFoundationApi::class
+    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalFoundationApi::class,
+    ExperimentalSharedTransitionApi::class
 )
 @Composable
 fun FolderScreen(
     navController: NavController = rememberNavController(),
     windowSize : WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
-    viewModel: FolderScreenViewModel = viewModel()
+    viewModel: FolderScreenViewModel = viewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
     val scope = rememberCoroutineScope()
     val isPlaying by viewModel.isPlaying.state().collectAsState()

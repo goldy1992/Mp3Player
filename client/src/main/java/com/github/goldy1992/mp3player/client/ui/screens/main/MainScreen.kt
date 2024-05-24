@@ -1,5 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.screens.main
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -14,11 +17,15 @@ import androidx.navigation.NavController
  * @param windowSize The [WindowSize] object.
  * @param viewModel The [MainScreenViewModel].
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun MainScreen(navController: NavController,
                windowSize: WindowSizeClass,
                viewModel: MainScreenViewModel = viewModel(),
+               sharedTransitionScope: SharedTransitionScope,
+               animatedContentScope: AnimatedContentScope
+
 ) {
 
     Text("Welcome to the main screen")

@@ -1,6 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,9 +46,9 @@ import kotlinx.coroutines.InternalCoroutinesApi
 
 const val LOG_TAG = "NowPlayingScreen"
 @OptIn(
-    ExperimentalAnimationApi::class,
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class,
+    ExperimentalSharedTransitionApi::class,
 )
 @InternalCoroutinesApi
 @Composable
@@ -53,6 +56,9 @@ fun NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
     navController: NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
     val playbackPosition by viewModel.playbackPosition.state().collectAsState()

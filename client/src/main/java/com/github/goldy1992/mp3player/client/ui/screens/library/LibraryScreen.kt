@@ -2,6 +2,9 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -75,14 +78,18 @@ private const val LOG_TAG = "LibraryScreen"
  * @param scope The [CoroutineScope].
  */
 @OptIn(
-   ExperimentalMaterial3Api::class, ExperimentalCoilApi::class
+   ExperimentalMaterial3Api::class, ExperimentalCoilApi::class,
+    ExperimentalSharedTransitionApi::class
 )
 @Composable
 fun LibraryScreen(
     navController: NavController = rememberNavController(),
     viewModel: LibraryScreenViewModel = viewModel(),
     windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
-    scope: CoroutineScope = rememberCoroutineScope()
+    scope: CoroutineScope = rememberCoroutineScope(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
     val selectedLibraryChip by viewModel.selectedChip.collectAsState()
     val root by viewModel.root.collectAsState()

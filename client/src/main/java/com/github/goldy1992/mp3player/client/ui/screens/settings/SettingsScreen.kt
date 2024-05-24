@@ -13,7 +13,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -68,13 +71,17 @@ private const val logTag = "SettingsScreen"
  * The Settings Screen
  */
 @OptIn(ExperimentalAnimationApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class)
+    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalSharedTransitionApi::class
+)
 @Composable
 fun SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
     navController : NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE)
+    windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
+
 ) {
 
     val settings by viewModel.settings.collectAsState()
