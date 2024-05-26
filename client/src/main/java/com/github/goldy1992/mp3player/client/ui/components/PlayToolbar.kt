@@ -1,8 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -43,9 +42,9 @@ import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.PlaybackPositionAnimation
 
 //@Preview(uiMode = UI_MODE_NIGHT_MASK)
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PlayToolbar(
+fun SharedTransitionScope.PlayToolbar(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     progressIndicator : @Composable () -> Unit = {},
     isPlayingProvider : () -> Boolean = {false},
     onClickPlay: () -> Unit = {},
@@ -54,9 +53,7 @@ fun PlayToolbar(
     onClickSkipPrevious: () -> Unit = {},
     onClickBar : () -> Unit = {},
     currentSongProvider : () -> Song = { Song.DEFAULT },
-
     windowSizeClass: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
-
 ) {
     val bottomAppBarDescr = stringResource(id = R.string.bottom_app_bar)
     Surface(
@@ -108,22 +105,22 @@ fun PlayToolbar(
                 ) {
 
                     val currentSong = currentSongProvider()
-                  //  if (currentSong != Song.DEFAULT) {
                     AlbumArtAsync(
                         uri = currentSong.albumArt,
                         contentDescription = currentSong.title,
-              //          modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(currentSong.id),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
                     )
-           //         }
                 }
             }
         }
     }
 }
 
-@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun PlayToolbarWithLin(
+fun SharedTransitionScope.PlayToolbarWithLin(
     isPlayingProvider : () -> Boolean = {false},
     onClickPlay: () -> Unit = {},
     onClickPause: () -> Unit = {},
@@ -134,8 +131,8 @@ fun PlayToolbarWithLin(
     windowSizeClass: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
     playbackSpeedProvider : () ->  Float = {1.0f},
     playbackPositionProvider: () -> PlaybackPositionEvent = { PlaybackPositionEvent.DEFAULT},
-
-    ) {
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     val linearProgress: @Composable () -> Unit = {
         PlaybackPositionAnimation(
             isPlayingProvider = isPlayingProvider,
@@ -163,7 +160,7 @@ fun PlayToolbarWithLin(
         onClickBar = onClickBar,
         currentSongProvider = currentSongProvider,
         windowSizeClass = windowSizeClass,
-
+        animatedVisibilityScope = animatedVisibilityScope
     )
 
 }

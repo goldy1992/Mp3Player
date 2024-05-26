@@ -24,8 +24,7 @@ composeAminationBeta = "1.7.0-beta01"
 composeBom = "2024.05.00"
 datastorePreferences = "1.0.0"
 googlePlayReview = "2.0.1"
-hilt = "2.49"
-hiltExt = "1.2.0"
+hilt = "2.51"
 jacoco = "0.8.10"
 junit4 = "4.13.2"
 kotlin = "2.0.0"
@@ -102,8 +101,6 @@ junit4 = { group = "junit", name = "junit", version.ref = "junit4"}
 hilt-android-core = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
-hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
 kotlin-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinCoroutines" }

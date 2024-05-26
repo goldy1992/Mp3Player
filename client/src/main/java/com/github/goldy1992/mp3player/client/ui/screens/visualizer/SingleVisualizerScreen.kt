@@ -41,15 +41,12 @@ import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "SingleVisualizerScreen"
 
-@OptIn(ExperimentalAnimationApi::class,
-    ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class
-)
+
 @Composable
-fun SingleVisualizerScreen(
+fun SharedTransitionScope.SingleVisualizerScreen(
     navController: NavController = rememberNavController(),
     viewModel: SingleVisualizerScreenViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 
 ) {
@@ -65,6 +62,7 @@ fun SingleVisualizerScreen(
         },
         bottomBar = {
             PlayToolbar(
+                animatedVisibilityScope = animatedContentScope,
                 isPlayingProvider = { isPlaying },
                 onClickPlay = { viewModel.play() },
                 onClickPause = {viewModel.pause() },

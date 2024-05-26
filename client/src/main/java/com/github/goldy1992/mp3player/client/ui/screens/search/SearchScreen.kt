@@ -67,11 +67,10 @@ private const val logTag = "SearchScreen"
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable
-fun SearchScreen(
+fun SharedTransitionScope.SearchScreen(
     navController: NavController = rememberNavController(),
     windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
     viewModel : SearchScreenViewModel = viewModel(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 ) {
 
@@ -124,7 +123,8 @@ fun SearchScreen(
             onClickPause = { viewModel.pause() },
             onClickPlay = { viewModel.play() },
             onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)},
-            currentSongProvider = { currentSong }
+            currentSongProvider = { currentSong },
+            animatedVisibilityScope = animatedContentScope
        )
     }
 

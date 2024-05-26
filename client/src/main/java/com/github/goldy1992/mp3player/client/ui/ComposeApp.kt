@@ -89,7 +89,6 @@ fun ComposeApp(
                         navController = navController,
                         viewModel = viewModel,
                         windowSize = windowSize,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
 
@@ -105,7 +104,6 @@ fun ComposeApp(
                     NowPlayingScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
                 }
@@ -115,7 +113,6 @@ fun ComposeApp(
                         navController = navController,
                         windowSize = windowSize,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
                 }
@@ -131,7 +128,6 @@ fun ComposeApp(
                         navController = navController,
                         windowSize = windowSize,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
 
@@ -149,7 +145,6 @@ fun ComposeApp(
                     AlbumScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
 
@@ -174,7 +169,6 @@ fun ComposeApp(
                     SingleVisualizerScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
                 }
@@ -183,7 +177,6 @@ fun ComposeApp(
                     VisualizerCollectionScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
                 }

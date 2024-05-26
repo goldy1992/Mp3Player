@@ -31,7 +31,6 @@ android {
         }
     }
 
-
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -81,6 +80,20 @@ android {
     namespace = "com.github.goldy1992.mp3player.client"
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-Xopt-in=kotlin.RequiresOptIn",
+            // Enable experimental coroutines APIs, including Flow
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            // Enable experimental compose APIs
+            "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-Xopt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            "-Xopt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
+            "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-Xopt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi"
+            ,
+        )
+
     }
 
 }

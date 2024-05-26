@@ -2,9 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +23,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,7 +37,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -79,17 +75,12 @@ import kotlinx.coroutines.launch
 
 private const val LOG_TAG = "FolderScreen"
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalFoundationApi::class,
-    ExperimentalSharedTransitionApi::class
-)
+
 @Composable
-fun FolderScreen(
+fun SharedTransitionScope.FolderScreen(
     navController: NavController = rememberNavController(),
     windowSize : WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
     viewModel: FolderScreenViewModel = viewModel(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 
 ) {
@@ -104,12 +95,13 @@ fun FolderScreen(
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
+            animatedVisibilityScope = animatedContentScope,
             isPlayingProvider = { isPlaying },
             onClickPlay = { viewModel.play() },
             onClickPause = {viewModel.pause() },
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
         )
     }
 

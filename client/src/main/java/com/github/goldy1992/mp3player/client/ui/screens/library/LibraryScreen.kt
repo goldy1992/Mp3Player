@@ -82,12 +82,11 @@ private const val LOG_TAG = "LibraryScreen"
     ExperimentalSharedTransitionApi::class
 )
 @Composable
-fun LibraryScreen(
+fun SharedTransitionScope.LibraryScreen(
     navController: NavController = rememberNavController(),
     viewModel: LibraryScreenViewModel = viewModel(),
     windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
     scope: CoroutineScope = rememberCoroutineScope(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 
 ) {
@@ -145,6 +144,7 @@ fun LibraryScreen(
             },
             bottomBar = {
                 PlayToolbar(
+                    animatedVisibilityScope = animatedContentScope,
                     isPlayingProvider = { isPlaying },
                     onClickPlay = {
                         viewModel.play()

@@ -58,18 +58,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalSharedTransitionApi::class,
-)
+
 @Composable
-fun AlbumScreen(
+fun SharedTransitionScope.AlbumScreen(
     navController: NavController = rememberNavController(),
     viewModel: AlbumScreenViewModel = viewModel(),
     scope: CoroutineScope = rememberCoroutineScope(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 
 ) {
@@ -104,12 +98,13 @@ fun AlbumScreen(
     }
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
+            animatedVisibilityScope = animatedContentScope,
             isPlayingProvider = { isPlaying },
             onClickPlay = { viewModel.play() },
             onClickPause = {viewModel.pause() },
             onClickSkipPrevious = { viewModel.skipToPrevious() },
             onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
         )
     }
 

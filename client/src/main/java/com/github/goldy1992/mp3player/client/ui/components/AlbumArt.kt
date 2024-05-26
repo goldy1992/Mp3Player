@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
@@ -37,42 +38,10 @@ fun AlbumArtAsync(uri : Uri,
             modifier = modifier
         )
     } else {
-        SubcomposeAsyncImage(
+        AsyncImage(
             model = uri,
             contentDescription = contentDescription,
-            modifier = modifier.clip(RoundedCornerShape(10f)),
-        ) {
-            when (painter.state) {
-                is AsyncImagePainter.State.Loading -> {
-                    Log.v(LOG_TAG, "AlbumArtAsync() PainterState: LOADING")
-                    CircularProgressIndicator(modifier = modifier.semantics {
-                        this.contentDescription = "loading-$contentDescription"
-                    })
-                }
-
-                is AsyncImagePainter.State.Error -> {
-                    Log.v(LOG_TAG, "AlbumArtAsync() PainterState: ERROR")
-                    Icon(
-                        Icons.Filled.Error,
-                        contentDescription = "error-$contentDescription",
-                        modifier = modifier
-                    )
-                }
-
-                is AsyncImagePainter.State.Success -> {
-                    Log.v(LOG_TAG, "AlbumArtAsync() PainterState: SUCCESS")
-                    SubcomposeAsyncImageContent(modifier = modifier)
-                }
-
-                else -> {
-                    Log.v(LOG_TAG, "AlbumArtAsync() PainterState: OTHER")
-                    Icon(
-                        Icons.Filled.Album,
-                        contentDescription = contentDescription,
-                        modifier = modifier
-                    )
-                }
-            }
-        }
+            modifier = modifier.clip(RoundedCornerShape(10f))
+        )
     }
 }

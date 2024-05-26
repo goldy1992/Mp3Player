@@ -57,11 +57,10 @@ private const val LOG_TAG = "VisualizerScreen"
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun VisualizerCollectionScreen(
+fun SharedTransitionScope.VisualizerCollectionScreen(
     navController : NavController = rememberNavController(),
     viewModel: VisualizerCollectionViewModel = viewModel(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 ) {
 
@@ -80,6 +79,7 @@ fun VisualizerCollectionScreen(
          },
         bottomBar = {
             PlayToolbar(
+                animatedVisibilityScope = animatedContentScope,
                 isPlayingProvider = { isPlaying },
                 onClickPlay = { viewModel.play() },
                 onClickPause = {viewModel.pause() },

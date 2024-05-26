@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -34,8 +35,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.ViewPager
@@ -45,20 +49,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 
 const val LOG_TAG = "NowPlayingScreen"
-@OptIn(
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalSharedTransitionApi::class,
-)
-@InternalCoroutinesApi
+
 @Composable
-fun NowPlayingScreen(
+fun SharedTransitionScope.NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
     navController: NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
-
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
     val playbackPosition by viewModel.playbackPosition.state().collectAsState()
@@ -99,16 +96,6 @@ fun NowPlayingScreen(
                 windowInsets = TopAppBarDefaults.windowInsets
             )
         },
-        bottomBar = {
-            PlayToolbar(
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = { viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
-                currentSongProvider = { currentSong }
-            )
-        },
 
         content = {
             val nowPlayingDescr = stringResource(id = R.string.now_playing_screen)
@@ -129,16 +116,24 @@ fun NowPlayingScreen(
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
+
                 ViewPager(
                     currentSongProvider = { currentSong },
-                    queue =  queue,
-                    skipToNext = { viewModel.skipToNext()},
+                    queue = queue,
+                    skipToNext = { viewModel.skipToNext() },
                     skipToPrevious = { viewModel.skipToPrevious() },
-                    modifier = Modifier.weight(4f))
+                    modifier = Modifier.Companion
+                        .sharedElement(
+                            rememberSharedContentState(key = currentSong.id),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .weight(4f)
+                    )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 2.dp, bottom = 2.dp)
                         .weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -147,6 +142,18 @@ fun NowPlayingScreen(
                         shuffleEnabledProvider = { shuffleEnabled },
                         onClick = { isEnabled -> viewModel.setShuffleEnabled(isEnabled) }
                     )
+                    SkipToPreviousButton{
+                        viewModel.skipToPrevious()
+                    }
+                    PlayPauseButton(
+                        modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
+                        isPlaying = {isPlaying},
+                        onClickPlay = { viewModel.play() },
+                        onClickPause = { viewModel.pause() }
+                    )
+                    SkipToNextButton {
+                        viewModel.skipToNext()
+                    }
                     RepeatButton(
                         repeatModeProvider = { repeatMode },
                         onClick = { currentRepeatMode -> viewModel.setRepeatMode(RepeatModeUtils.getNextRepeatMode(currentRepeatMode)) }
