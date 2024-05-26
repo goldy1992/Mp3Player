@@ -49,14 +49,6 @@ private const val LOG_TAG = "ComposeApp"
  * @param windowSize The [WindowSizeClass].
  * @param startScreen The [Screen] to begin with.
  */
-@OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterialApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class,
-    InternalCoroutinesApi::class, ExperimentalSharedTransitionApi::class,
-)
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
@@ -155,7 +147,6 @@ fun ComposeApp(
                         navController = navController,
                         viewModel = viewModel,
                         windowSize = windowSize,
-                        sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable
                     )
                 }

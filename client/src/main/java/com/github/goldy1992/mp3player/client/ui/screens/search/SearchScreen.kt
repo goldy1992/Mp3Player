@@ -61,11 +61,7 @@ import java.util.*
 
 private const val logTag = "SearchScreen"
 
-@OptIn(ExperimentalSharedTransitionApi::class)
-@ExperimentalMaterial3WindowSizeClassApi
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
-@ExperimentalFoundationApi
+
 @Composable
 fun SharedTransitionScope.SearchScreen(
     navController: NavController = rememberNavController(),
@@ -193,7 +189,7 @@ private fun LargeSearchResults(
     }
 }
 
-@ExperimentalComposeUiApi
+
 @Composable
 fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" },
               onNavUpPressed : () -> Unit = {},
@@ -269,9 +265,6 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
 
 }
 
-@OptIn(ExperimentalCoilApi::class)
-@ExperimentalComposeUiApi
-@ExperimentalFoundationApi
 @Composable
 fun SearchResultsContent(
     modifier : Modifier = Modifier,

@@ -88,6 +88,7 @@ android {
             // Enable experimental compose APIs
             "-Xopt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-Xopt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xopt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
             "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
             "-Xopt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi"

@@ -1,7 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.hasText
@@ -15,12 +19,11 @@ import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferences
 import com.github.goldy1992.mp3player.client.repositories.permissions.FakePermissionsRepository
 import com.github.goldy1992.mp3player.client.repositories.preferences.FakeUserPreferencesRepository
+import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
+import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
-import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
-import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +31,6 @@ import org.junit.Test
 /**
  * Test class for [SettingsScreen].
  */
-@ExperimentalMaterialApi
 class SettingsScreenTest {
 
     @get:Rule
@@ -57,6 +59,7 @@ class SettingsScreenTest {
     /**
      * Tests that the dark mode switch is disabled when the switch to use System dark mode is enabled.
      */
+    @SuppressLint("UnusedContentLambdaTargetStateParameter")
     @Test
     fun testDarkModeDisabledWhenUseSystemDarkModeIsTrue() {
         // set system dark mode to be false
@@ -65,8 +68,16 @@ class SettingsScreenTest {
         val systemDarkModeSwitch = context.getString(R.string.system_dark_mode_switch)
         val darkModeSwitch = context.getString(R.string.dark_mode_switch)
         composeTestRule.setContent {
-            SettingsScreen(viewModel = viewModel)
-        }
+            TestWrapper {
+                    SettingsScreen(
+                        viewModel = viewModel,
+                         animatedContentScope = it
+                    )
+                }
+            }
+
+
+
         composeTestRule.onNodeWithContentDescription(systemDarkModeSwitch).assertIsEnabled()
         composeTestRule.onNodeWithContentDescription(darkModeSwitch).assertIsNotEnabled()
     }
@@ -82,8 +93,12 @@ class SettingsScreenTest {
         val darkModeSwitch = context.getString(R.string.dark_mode_switch)
 
         composeTestRule.setContent {
-            SettingsScreen(
-                viewModel = viewModel)
+            TestWrapper {
+                SettingsScreen(
+                    viewModel = viewModel,
+                    animatedContentScope = it
+                )
+            }
         }
         composeTestRule.onNodeWithContentDescription(systemDarkModeSwitch).assertIsEnabled()
         composeTestRule.onNodeWithContentDescription(darkModeSwitch).assertIsEnabled()
@@ -98,8 +113,13 @@ class SettingsScreenTest {
         val reportABugText = context.getString(R.string.report_bug)
         val doneText = context.getString(R.string.done)
         composeTestRule.setContent {
-            SettingsScreen(
-                viewModel = viewModel)
+            TestWrapper {
+                SettingsScreen(
+                    viewModel = viewModel,
+                    animatedContentScope = it
+                    )
+
+            }
         }
         composeTestRule.onNodeWithContentDescription(lazyListDescription).performScrollToNode (
             hasText(reportABugText)
@@ -120,8 +140,12 @@ class SettingsScreenTest {
         val requestFeatureText = context.getString(R.string.request_feature)
         val doneText = context.getString(R.string.done)
         composeTestRule.setContent {
-            SettingsScreen(
-                viewModel = viewModel)
+            TestWrapper {
+                SettingsScreen(
+                    viewModel = viewModel,
+                    animatedContentScope = it
+                )
+            }
         }
         composeTestRule.onNodeWithContentDescription(lazyListDescription).performScrollToNode (
             hasText(requestFeatureText)
@@ -143,8 +167,12 @@ class SettingsScreenTest {
         val aboutDialogText = context.getString(R.string.about_description)
         val closeButtonDescription = context.getString(R.string.close)
         composeTestRule.setContent {
-            SettingsScreen(
-                viewModel = viewModel)
+            TestWrapper {
+                SettingsScreen(
+                    viewModel = viewModel,
+                    animatedContentScope = it
+                )
+            }
         }
         composeTestRule.onNodeWithContentDescription(lazyListDescription).performScrollToNode (
             hasText(aboutMenuItemTitle)
@@ -153,6 +181,17 @@ class SettingsScreenTest {
         composeTestRule.onNodeWithText(aboutDialogText).assertExists()
         composeTestRule.onNodeWithContentDescription(closeButtonDescription).performClick()
         composeTestRule.onNodeWithText(aboutDialogText).assertDoesNotExist()
+    }
+
+    @SuppressLint("UnusedContentLambdaTargetStateParameter")
+    @Composable
+    private fun TestWrapper(
+        content: @Composable SharedTransitionScope.(AnimatedContentScope) -> Unit) {
+        AnimatedContent(targetState = true, label = "") {
+            SharedTransitionScope {
+                content(this@AnimatedContent)
+            }
+        }
     }
 
 }
