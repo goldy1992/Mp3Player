@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
@@ -119,7 +118,6 @@ open class MainActivity : AppCompatActivity(), LogTagger {
         super.onStart()
     }
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     open fun ui() {
         Log.v(logTag(), "ui() invoked")
         setContent {

@@ -55,7 +55,6 @@ import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "VisualizerScreen"
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.VisualizerCollectionScreen(
     navController : NavController = rememberNavController(),
@@ -93,6 +92,7 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
             modifier = Modifier.padding(it),
             audioMagnitudes = {audioMagnitudes},
             isPlaying = { isPlaying },
+            animatedContentScope = animatedContentScope,
             onClickCard = onClickCard
         )
     }
@@ -121,13 +121,13 @@ private fun TopBar(navIcon: @Composable () -> Unit = {}) {
     )
 }
 
-@Preview
 @Composable
-fun VisualizerContentCardCollection(
+fun SharedTransitionScope.VisualizerContentCardCollection(
     modifier: Modifier = Modifier,
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
     isPlaying : () -> Boolean = {false},
     onClickCard : (VisualizerType) -> Unit = {_->},
+    animatedContentScope: AnimatedContentScope,
     scope: CoroutineScope = rememberCoroutineScope()) {
 
     val density = LocalDensity.current
@@ -143,13 +143,18 @@ fun VisualizerContentCardCollection(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
             .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
                 modifier = Modifier
+                    .sharedElement(
+                        rememberSharedContentState(VisualizerType.BAR),
+                        animatedVisibilityScope = animatedContentScope
+                    )
+                    .skipToLookaheadSize()
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -160,7 +165,10 @@ fun VisualizerContentCardCollection(
         }
         item {
             SmoothLineCard(
-                modifier = Modifier
+                modifier = Modifier  .sharedElement(
+                    rememberSharedContentState(VisualizerType.LINE),
+                    animatedVisibilityScope = animatedContentScope
+                )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -172,7 +180,10 @@ fun VisualizerContentCardCollection(
 
         item {
             FountainSpringCard(
-                modifier = Modifier
+                modifier = Modifier  .sharedElement(
+                    rememberSharedContentState(VisualizerType.FOUNTAIN),
+                    animatedVisibilityScope = animatedContentScope
+                )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -185,7 +196,10 @@ fun VisualizerContentCardCollection(
 
         item {
             CircularEqualizerCard(
-                modifier = Modifier
+                modifier = Modifier.sharedElement(
+                    rememberSharedContentState(VisualizerType.CIRCULAR),
+                    animatedVisibilityScope = animatedContentScope
+                )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -197,7 +211,10 @@ fun VisualizerContentCardCollection(
 
         item {
             PieChartCard(
-                modifier = Modifier
+                modifier = Modifier.sharedElement(
+                    rememberSharedContentState(VisualizerType.PIE_CHART),
+                    animatedVisibilityScope = animatedContentScope
+                )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -210,25 +227,6 @@ fun VisualizerContentCardCollection(
 
 }
 
-
-
-@Preview
-@Composable
-fun TestPadding() {
-    Box(modifier = Modifier
-        .width(200.dp)
-        .height(200.dp)
-        .background(Color.Red)) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Green)
-                .padding(10.dp)
-                ) {
-
-        }
-    }
-}
 
 
 

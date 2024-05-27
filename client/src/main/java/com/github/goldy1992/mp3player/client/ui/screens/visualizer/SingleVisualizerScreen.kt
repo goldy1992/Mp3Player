@@ -90,30 +90,50 @@ fun SharedTransitionScope.SingleVisualizerScreen(
                 VisualizerType.BAR -> {
                     BarEqualizer(
                         canvasSize = canvasSize,
-                        frequencyValues = { audioData }
+                        frequencyValues = { audioData },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.BAR),
+                            animatedVisibilityScope = animatedContentScope
+                        )                    .skipToLookaheadSize(),
                     )
                 }
                 VisualizerType.LINE -> {
                     SmoothLineEqualizer(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.LINE),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 VisualizerType.FOUNTAIN -> {
                     FountainSpringVisualizer(
                         frequencyPhasesProvider = {audioData},
                         canvasSize = canvasSize,
-                        isPlayingProvider = { isPlaying }
+                        isPlayingProvider = { isPlaying },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.FOUNTAIN),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 VisualizerType.CIRCULAR -> {
                     CircleEqualizerUsingPolikarpotchkin(
                         frequencyPhasesState = { audioData },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.CIRCULAR),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 VisualizerType.PIE_CHART -> {
                     PieChartVisualizer(
                         frequencyPhasesState = { audioData },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.PIE_CHART),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 else -> {

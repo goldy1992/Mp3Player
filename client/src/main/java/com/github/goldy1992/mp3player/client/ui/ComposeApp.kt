@@ -2,15 +2,9 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,7 +33,6 @@ import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCol
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.InternalCoroutinesApi
 
 private const val LOG_TAG = "ComposeApp"
 
@@ -55,6 +48,7 @@ fun ComposeApp(
     windowSize: WindowSizeClass,
     startScreen : Screen
 ) {
+
     val navController = rememberNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
 
