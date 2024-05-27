@@ -3,6 +3,8 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.bar
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,19 +18,22 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.utils.visualizer.calculateBarSpacingPixels
 
 private const val MAX_AMPLITUDE = 400f
 private const val LOG_TAG = "BarEqualizer"
 private const val DEFAULT_BAR_HEIGHT = 5f
 
-@Preview
+//@Preview
 @Composable
-fun BarEqualizer(modifier: Modifier = Modifier,
-                 frequencyValues : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
-                 canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
-                 barColor : Color = MaterialTheme.colorScheme.secondary,
-                 surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
+fun SharedTransitionScope.BarEqualizer(
+    modifier: Modifier = Modifier,
+    frequencyValues : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
+    canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+    barColor : Color = MaterialTheme.colorScheme.secondary,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
                        ) {
     Log.v(LOG_TAG, "BarEqualizer() recomposing")
     val frequencyPhases = frequencyValues().ifEmpty { (1..24).map { 0f }.toList() }
@@ -85,23 +90,30 @@ fun BarEqualizer(modifier: Modifier = Modifier,
 
     BarEqualizerCanvas(
         bars = barPoints,
+        modifier = modifier,
         barColor = barColor,
-        surfaceColor = surfaceColor,
-        modifier = modifier)
+        animatedVisibilityScope = animatedVisibilityScope
+    )
 }
 
 @Composable
-private fun BarEqualizerCanvas(
-    bars : List<BarPoints>,
-    modifier : Modifier = Modifier,
-    surfaceColor: Color = MaterialTheme.colorScheme.primaryContainer,
+private fun SharedTransitionScope.BarEqualizerCanvas(
+    bars: List<BarPoints>,
+    modifier: Modifier = Modifier,
     barColor: Color = MaterialTheme.colorScheme.secondary,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Log.i(LOG_TAG, "BarEqualizerCanvas() redraw: ${if (bars.isNotEmpty())  bars[0] else 0f} ")
 
-    Canvas(
-        modifier = modifier.fillMaxSize()
 
+    Canvas(
+        modifier = modifier
+            .fillMaxSize()
+            .sharedElement(
+                rememberSharedContentState(VisualizerType.BAR),
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+            .skipToLookaheadSize()
     ) {
 //        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
 
