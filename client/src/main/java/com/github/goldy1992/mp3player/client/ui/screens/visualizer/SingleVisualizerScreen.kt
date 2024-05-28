@@ -91,6 +91,7 @@ fun SharedTransitionScope.SingleVisualizerScreen(
                     BarEqualizer(
                         canvasSize = canvasSize,
                         frequencyValues = { audioData },
+                        animatedVisibilityScope = animatedContentScope
                     )
                 }
                 VisualizerType.LINE -> {

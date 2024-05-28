@@ -150,16 +150,12 @@ fun SharedTransitionScope.VisualizerContentCardCollection(
         item {
             BarCard(
                 modifier = Modifier
-                    .sharedElement(
-                        rememberSharedContentState(VisualizerType.BAR),
-                        animatedVisibilityScope = animatedContentScope
-                    )
-                    .skipToLookaheadSize()
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
                        onClickCard(VisualizerType.BAR)
                     },
+                animatedVisibilityScope = animatedContentScope,
                 frequencyValues = audioMagnitudes,
             )
         }

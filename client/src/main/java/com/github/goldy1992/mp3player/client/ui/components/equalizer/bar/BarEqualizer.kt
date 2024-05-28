@@ -7,6 +7,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
@@ -108,12 +109,13 @@ private fun SharedTransitionScope.BarEqualizerCanvas(
 
     Canvas(
         modifier = modifier
-            .fillMaxSize()
             .sharedElement(
                 rememberSharedContentState(VisualizerType.BAR),
                 animatedVisibilityScope = animatedVisibilityScope
             )
-            .skipToLookaheadSize()
+            .fillMaxSize()
+            .background(Color.Red)
+
     ) {
 //        drawRoundRect(color = surfaceColor, size = this.size, cornerRadius = CornerRadius(5f, 5f))
 
