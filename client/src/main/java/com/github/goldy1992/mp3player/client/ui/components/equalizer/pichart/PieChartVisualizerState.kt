@@ -110,10 +110,10 @@ class PieChartVisualizerState(
             targetG = baseColor.green - (colorRange.green * fractionOfAmplification)
             targetB = baseColor.blue - (colorRange.blue * fractionOfAmplification)
         }
-        Log.v(
-            logTag(),
-            "rRange: ${colorRange.red}, gRange: ${colorRange.green}, bRange: ${colorRange.blue}, fractionOfAmplification: $fractionOfAmplification"
-        )
+//        Log.v(
+//            logTag(),
+//            "rRange: ${colorRange.red}, gRange: ${colorRange.green}, bRange: ${colorRange.blue}, fractionOfAmplification: $fractionOfAmplification"
+//        )
         return Color(red = targetR, green = targetG, blue = targetB)
 
     }

@@ -47,15 +47,15 @@ class AudioDataFlow private constructor(
     
     override fun getFlow(): Flow<AudioSample> = onCustomCommandFlow
         .filter {
-            Log.v(
-                logTag(),
-                "audioDataFlow() filter invoked, filtering: ${Constants.AUDIO_DATA == it.command.customAction}"
-            )
+//            Log.v(
+//                logTag(),
+//                "audioDataFlow() filter invoked, filtering: ${Constants.AUDIO_DATA == it.command.customAction}"
+//            )
             Constants.AUDIO_DATA == it.command.customAction
         }.map {
 
             val newAudioSample = AudioDataUtils.getAudioSample(it)
-            Log.v(logTag(), "audioDataFlow() map invoked: ${newAudioSample.hashCode()}, ${newAudioSample.waveformData.joinToString()}")
+          //  Log.v(logTag(), "audioDataFlow() map invoked: ${newAudioSample.hashCode()}, ${newAudioSample.waveformData.joinToString()}")
             newAudioSample
         }
 

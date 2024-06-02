@@ -51,16 +51,3 @@ val testAudio =  flow<List<Float>> {
     replay = 1,
     started = SharingStarted.WhileSubscribed()
 )
-
-@RequiresApi(Build.VERSION_CODES.N)
-@Preview
-@Composable
-fun DisplaySmoothLineEqualizer() {
-   val testAudio by testAudio.collectAsState(listOf(0f, 0f, 0f, 0f))
-
-    SmoothLineCard(
-        modifier = Modifier.fillMaxSize(),
-        frequencyPhases =  {testAudio},
-  //  isPlayingProvider = {true},
-    )
-}

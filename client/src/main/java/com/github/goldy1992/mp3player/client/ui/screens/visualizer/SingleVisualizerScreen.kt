@@ -98,10 +98,7 @@ fun SharedTransitionScope.SingleVisualizerScreen(
                     SmoothLineEqualizer(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
-                        modifier = Modifier.sharedElement(
-                            rememberSharedContentState(VisualizerType.LINE),
-                            animatedVisibilityScope = animatedContentScope
-                        ),
+                        animatedVisibilityScope = animatedContentScope
                     )
                 }
                 VisualizerType.FOUNTAIN -> {

@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 
 @Preview
@@ -36,9 +37,10 @@ fun EqualizerCard(
 
     Card(
         modifier = modifier,
-        elevation = CardDefaults.outlinedCardElevation()) {
+        elevation = CardDefaults.outlinedCardElevation()
+    ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
 
             var equalizerSize by remember {

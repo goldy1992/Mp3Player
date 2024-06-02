@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.ui.screens.library
 import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -23,7 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -47,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
@@ -56,7 +52,6 @@ import com.github.goldy1992.mp3player.client.ui.DEFAULT_WINDOW_CLASS_SIZE
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.navigation.AppNavigationRail
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
-import com.github.goldy1992.mp3player.client.ui.components.seekbar.PlaybackPositionAnimation
 import com.github.goldy1992.mp3player.client.ui.lists.albums.AlbumsList
 import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
@@ -77,10 +72,6 @@ private const val LOG_TAG = "LibraryScreen"
  * @param windowSize The [WindowSizeClass].
  * @param scope The [CoroutineScope].
  */
-@OptIn(
-   ExperimentalMaterial3Api::class, ExperimentalCoilApi::class,
-    ExperimentalSharedTransitionApi::class
-)
 @Composable
 fun SharedTransitionScope.LibraryScreen(
     navController: NavController = rememberNavController(),
@@ -107,22 +98,6 @@ fun SharedTransitionScope.LibraryScreen(
     val onFolderSelected: (Folder) -> Unit = { NavigationUtils.navigate(navController, it) }
     val onAlbumSelected: (Album) -> Unit = { NavigationUtils.navigate(navController, it) }
 
-    val linearProgress: @Composable () -> Unit = {
-        PlaybackPositionAnimation(
-            isPlayingProvider = { isPlaying },
-            currentSongProvider = { currentMediaItem},
-            playbackSpeedProvider = {currentPlaybackSpeed},
-            playbackPositionProvider = {playbackPosition }
-        ) {
-            LinearProgressIndicator(
-                progress = { it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(2.dp),
-            )
-
-        }
-    }
     Navigation(
         navController = navController,
         windowSizeClass = windowSize,
@@ -159,7 +134,8 @@ fun SharedTransitionScope.LibraryScreen(
                     onClickBar = { navController.navigate(Screen.NOW_PLAYING.name) },
                     currentSongProvider = { currentMediaItem },
                     windowSizeClass = windowSize,
-                    progressIndicator = linearProgress
+                    playbackPositionProvider = { playbackPosition },
+                    playbackSpeedProvider = { currentPlaybackSpeed }
                 )
             }) {
             Column(Modifier.padding(it)) {
