@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 
 @Preview
@@ -39,44 +38,41 @@ fun EqualizerCard(
         modifier = modifier,
         elevation = CardDefaults.outlinedCardElevation()
     ) {
-        Column(
-            modifier = modifier.fillMaxSize()
-        ) {
 
-            var equalizerSize by remember {
-                mutableStateOf(
-                    DpPxSize.createDpPxSizeFromPx(
-                        0f, 0f, density
-                    )
+
+        var equalizerSize by remember {
+            mutableStateOf(
+                DpPxSize.createDpPxSizeFromPx(
+                    0f, 0f, density
                 )
-            }
+            )
+        }
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(8f)
-                    .onSizeChanged {
-                        equalizerSize = DpPxSize.createDpPxSizeFromPx(
-                            it.width.toFloat(),
-                            it.height.toFloat(),
-                            density
-                        )
-                    }) {
-                    equalizer(
-                        equalizerSize,
-                        Modifier.fillMaxSize()
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .weight(8f)
+                .onSizeChanged {
+                    equalizerSize = DpPxSize.createDpPxSizeFromPx(
+                        it.width.toFloat(),
+                        it.height.toFloat(),
+                        density
                     )
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(2f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = title,
-                    style = MaterialTheme.typography.titleMedium)
-            }
+                }) {
+                equalizer(
+                    equalizerSize,
+                    Modifier.fillMaxSize()
+                )
+        }
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .weight(2f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = title,
+                style = MaterialTheme.typography.titleMedium)
         }
     }
 }

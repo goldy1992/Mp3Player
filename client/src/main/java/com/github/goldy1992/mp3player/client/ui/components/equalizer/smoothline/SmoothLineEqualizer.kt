@@ -105,7 +105,6 @@ fun SharedTransitionScope.SmoothLineEqualizer(
             animatedVisibilityScope = animatedVisibilityScope,
             resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
         )
-        .background(Color.Red)
         .fillMaxSize()
 
     ) {
