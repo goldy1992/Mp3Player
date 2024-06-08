@@ -67,7 +67,7 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
     val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
     val playbackPosition by viewModel.playbackPosition.state().collectAsState()
 
-    val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it) }
+    val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it, audioMagnitudes) }
 
     Scaffold(
         topBar = {

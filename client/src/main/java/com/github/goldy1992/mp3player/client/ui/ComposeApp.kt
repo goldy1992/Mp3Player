@@ -145,11 +145,13 @@ fun ComposeApp(
                     )
                 }
                 composable(
-                    route = Screen.SINGLE_VISUALIZER.name + "/{visualizer}",
+                    route = Screen.SINGLE_VISUALIZER.name + "/{visualizer}/{audioData}",
                     arguments = listOf(
-                        navArgument("visualizer") { type = NavType.StringType }
+                        navArgument("visualizer") { type = NavType.StringType },
+                        navArgument("audioData") {type = NavType.StringType}
                     )
                 ) {
+
                     val viewModel = hiltViewModel<SingleVisualizerScreenViewModel>()
                     SingleVisualizerScreen(
                         navController = navController,

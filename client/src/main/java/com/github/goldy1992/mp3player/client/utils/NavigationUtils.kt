@@ -25,11 +25,12 @@ object NavigationUtils : LogTagger{
         val albumArtUriBase64 = Base64.encodeToString(album.artworkUri.toString().encodeToByteArray(), Base64.DEFAULT)
         Log.d(logTag(), "onAlbumSelected() Album $albumTitle uri: ${album.artworkUri}")
         navController.navigate(
-            Screen.ALBUM.name
-                    + "/" + albumId
-                    + "/" + albumTitle
-                    + "/" + albumArtist
-                    + "/" + albumArtUriBase64)
+    Screen.ALBUM.name
+            + "/" + albumId
+            + "/" + albumTitle
+            + "/" + albumArtist
+            + "/" + albumArtUriBase64
+        )
     }
 
     fun navigate(navController: NavController, folder : Folder) {
@@ -45,12 +46,15 @@ object NavigationUtils : LogTagger{
 
     }
 
-    fun navigate(navController: NavController, visualizerType: VisualizerType) {
+    fun navigate(navController: NavController, visualizerType: VisualizerType, currentData:List<Float>) {
         val visualizerTypeString = visualizerType.name
+        val audioDataString = currentData.joinToString(",") { it.toString() }
         Log.d(logTag(), "navigate() invoked with visualizerType: $visualizerType")
         navController.navigate(
-            Screen.SINGLE_VISUALIZER.name
-                    + "/" + visualizerTypeString)
+    Screen.SINGLE_VISUALIZER.name
+            + "/" + visualizerTypeString
+            + "/" + audioDataString
+        )
 
     }
 
