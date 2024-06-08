@@ -59,6 +59,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Song
@@ -88,6 +89,14 @@ fun SharedTransitionScope.FolderScreen(
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentSong by viewModel.currentSong.state().collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentSong},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() }
+    )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -96,11 +105,7 @@ fun SharedTransitionScope.FolderScreen(
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             animatedVisibilityScope = animatedContentScope,
-            isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play() },
-            onClickPause = {viewModel.pause() },
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickSkipNext = { viewModel.skipToNext() },
+            playbackState = playbackState,
             onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
         )
     }

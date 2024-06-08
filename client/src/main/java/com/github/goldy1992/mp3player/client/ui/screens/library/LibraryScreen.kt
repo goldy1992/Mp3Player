@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
@@ -91,7 +92,16 @@ fun SharedTransitionScope.LibraryScreen(
     val currentPlaybackSpeed by viewModel.playbackSpeed.state().collectAsState()
     val playbackPosition by viewModel.playbackPosition.state().collectAsState()
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentMediaItem},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() },
+        playbackSpeedProvider = { currentPlaybackSpeed},
+        playbackPositionProvider = { playbackPosition }
+    )
     val onSongSelected: (Int, Playlist) -> Unit = { itemIndex, mediaItemList ->
         viewModel.playPlaylist(mediaItemList, itemIndex)
     }
@@ -120,22 +130,9 @@ fun SharedTransitionScope.LibraryScreen(
             bottomBar = {
                 PlayToolbar(
                     animatedVisibilityScope = animatedContentScope,
-                    isPlayingProvider = { isPlaying },
-                    onClickPlay = {
-                        viewModel.play()
-                        Log.v(LOG_TAG, "PlayToolbar.onClickPlay() clicked play")
-                    },
-                    onClickPause = {
-                        viewModel.pause()
-                        Log.v(LOG_TAG, "PlayToolbar.onClickPause() clicked pause")
-                    },
-                    onClickSkipPrevious = { viewModel.skipToPrevious() },
-                    onClickSkipNext = { viewModel.skipToNext() },
+                    playbackState = playbackState,
                     onClickBar = { navController.navigate(Screen.NOW_PLAYING.name) },
-                    currentSongProvider = { currentMediaItem },
                     windowSizeClass = windowSize,
-                    playbackPositionProvider = { playbackPosition },
-                    playbackSpeedProvider = { currentPlaybackSpeed }
                 )
             }) {
             Column(Modifier.padding(it)) {

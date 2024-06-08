@@ -32,6 +32,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_WINDOW_CLASS_SIZE
@@ -45,16 +46,9 @@ import com.github.goldy1992.mp3player.client.ui.components.seekbar.PlaybackPosit
 fun SharedTransitionScope.PlayToolbar(
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
-    isPlayingProvider : () -> Boolean = {false},
-    onClickPlay: () -> Unit = {},
-    onClickPause: () -> Unit = {},
-    onClickSkipNext: () -> Unit = {},
-    onClickSkipPrevious: () -> Unit = {},
-    onClickBar : () -> Unit = {},
-    currentSongProvider : () -> Song = { Song.DEFAULT },
-    playbackSpeedProvider : () ->  Float = {1.0f},
-    playbackPositionProvider: () -> PlaybackPositionEvent = { PlaybackPositionEvent.DEFAULT},
+    playbackState: PlaybackState = PlaybackState.DEFAULT,
     windowSizeClass: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
+    onClickBar : () -> Unit = {}
 ) {
     val bottomAppBarDescr = stringResource(id = R.string.bottom_app_bar)
     Surface(
@@ -68,10 +62,10 @@ fun SharedTransitionScope.PlayToolbar(
         val localDensity = LocalDensity.current
         Column(verticalArrangement = Arrangement.Top) {
             PlaybackPositionAnimation(
-                isPlayingProvider = isPlayingProvider,
-                currentSongProvider = currentSongProvider,
-                playbackSpeedProvider = playbackSpeedProvider,
-                playbackPositionProvider = playbackPositionProvider
+                isPlayingProvider = playbackState.isPlayingProvider,
+                currentSongProvider = playbackState.currentSongProvider,
+                playbackSpeedProvider = playbackState.playbackSpeedProvider,
+                playbackPositionProvider = playbackState.playbackPositionProvider
             ) {
                 LinearProgressIndicator(
                     progress = { it },
@@ -91,20 +85,20 @@ fun SharedTransitionScope.PlayToolbar(
                 ) {
                     SkipToPreviousButton(
                         modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        onClick = onClickSkipPrevious
+                        onClick = playbackState.onClickSkipPrevious
                     )
                     PlayPauseButton(
                         modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        isPlaying = isPlayingProvider,
-                        onClickPlay = onClickPlay,
-                        onClickPause = onClickPause
+                        isPlaying = playbackState.isPlayingProvider,
+                        onClickPlay = playbackState.onClickPlay,
+                        onClickPause = playbackState.onClickPause
                     )
                     SkipToNextButton(
                         modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        onClick = onClickSkipNext)
+                        onClick = playbackState.onClickSkipNext)
                 }
 
-                val currentSong = currentSongProvider()
+                val currentSong = playbackState.currentSongProvider()
                 Column(Modifier.weight(1f).padding(4.dp)) {
                     Text(currentSong.title, maxLines = 1, modifier = Modifier.basicMarquee(), style = MaterialTheme.typography.bodyMedium)
                     Text(currentSong.artist, maxLines = 1, modifier = Modifier.basicMarquee(), style = MaterialTheme.typography.bodySmall)

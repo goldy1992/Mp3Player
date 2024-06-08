@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -51,7 +52,16 @@ fun SharedTransitionScope.SingleVisualizerScreen(
 
 ) {
     val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val currentSong by viewModel.currentSong.state().collectAsState()
     val audioData by viewModel.audioData.state().collectAsState()
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentSong},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() }
+    )
     val visualizerName = getVisualizerName(viewModel.visualizer, LocalContext.current)
     Scaffold(
         topBar = {
@@ -63,11 +73,7 @@ fun SharedTransitionScope.SingleVisualizerScreen(
         bottomBar = {
             PlayToolbar(
                 animatedVisibilityScope = animatedContentScope,
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = {viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
+                playbackState = playbackState,
                 onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
             )
 

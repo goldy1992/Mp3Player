@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -73,7 +74,14 @@ fun SharedTransitionScope.AlbumScreen(
     val currentSong by viewModel.currentSong.state().collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
     val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
-
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentSong},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() }
+    )
     val albumPlayPauseButton : @Composable () -> Unit = {
         AlbumPlayPauseButton(isPlaying = { isAlbumPlaying(isPlaying, currentPlaylistId, album) },
                             onClickPlay = {
@@ -99,11 +107,7 @@ fun SharedTransitionScope.AlbumScreen(
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
             animatedVisibilityScope = animatedContentScope,
-            isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play() },
-            onClickPause = {viewModel.pause() },
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickSkipNext = { viewModel.skipToNext() },
+            playbackState = playbackState,
             onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
         )
     }

@@ -75,7 +75,14 @@ fun SharedTransitionScope.SearchScreen(
     val searchQuery by viewModel.searchQuery.collectAsState()
     val isPlaying by viewModel.isPlaying.state().collectAsState()
     val currentSong by viewModel.currentSong.state().collectAsState()
-
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentSong},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() }
+    )
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
@@ -113,17 +120,11 @@ fun SharedTransitionScope.SearchScreen(
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
-            isPlayingProvider = { isPlaying },
-            onClickSkipNext = { viewModel.skipToNext() },
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickPause = { viewModel.pause() },
-            onClickPlay = { viewModel.play() },
+            playbackState = playbackState,
             onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)},
-            currentSongProvider = { currentSong },
             animatedVisibilityScope = animatedContentScope
        )
     }
-
 
     val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
     if (isLargeScreen) {

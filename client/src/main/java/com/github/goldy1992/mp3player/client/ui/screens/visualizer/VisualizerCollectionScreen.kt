@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
@@ -66,7 +67,14 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
     val currentMediaItem by viewModel.currentSong.state().collectAsState()
     val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
     val playbackPosition by viewModel.playbackPosition.state().collectAsState()
-
+    val playbackState = PlaybackState(
+        isPlayingProvider = {isPlaying},
+        currentSongProvider = {currentMediaItem},
+        onClickPlay = { viewModel.play() },
+        onClickPause = {viewModel.pause() },
+        onClickSkipPrevious = { viewModel.skipToPrevious() },
+        onClickSkipNext = { viewModel.skipToNext() }
+    )
     val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it, audioMagnitudes) }
 
     Scaffold(
@@ -81,15 +89,8 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
         bottomBar = {
             PlayToolbar(
                 animatedVisibilityScope = animatedContentScope,
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = {viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
+                playbackState = playbackState,
                 onClickBar = { navController.navigate(Screen.NOW_PLAYING.name) },
-                currentSongProvider = { currentMediaItem },
-                playbackPositionProvider = { playbackPosition },
-                playbackSpeedProvider = { playbackSpeed }
             )
         },
     ) {
