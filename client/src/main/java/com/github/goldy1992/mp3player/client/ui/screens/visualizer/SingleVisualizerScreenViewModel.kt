@@ -34,8 +34,10 @@ constructor(
         val visualiserTypeString :String = checkNotNull(savedStateHandle["visualizer"])
         visualizer = VisualizerType.valueOf(visualiserTypeString)
         val currentAudioDataString : String = checkNotNull(savedStateHandle["audioData"])
-        val currentAudioData = currentAudioDataString.split(",").map { it.toFloat() }.toList()
-        audioData.audioDataState.value = currentAudioData
+        if ("empty" != currentAudioDataString) {
+            val currentAudioData = currentAudioDataString.split(",").map { it.toFloat() }.toList()
+            audioData.audioDataState.value = currentAudioData
+        }
     }
     override fun logTag(): String {
         return "SingleVisualizerScreenViewModel"

@@ -48,7 +48,8 @@ object NavigationUtils : LogTagger{
 
     fun navigate(navController: NavController, visualizerType: VisualizerType, currentData:List<Float>) {
         val visualizerTypeString = visualizerType.name
-        val audioDataString = currentData.joinToString(",") { it.toString() }
+        var audioDataString = currentData.joinToString(",") { it.toString() }
+        audioDataString = audioDataString.ifEmpty { "empty" }
         Log.d(logTag(), "navigate() invoked with visualizerType: $visualizerType")
         navController.navigate(
     Screen.SINGLE_VISUALIZER.name
