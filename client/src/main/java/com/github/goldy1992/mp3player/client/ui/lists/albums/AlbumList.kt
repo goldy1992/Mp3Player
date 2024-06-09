@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.lists.albums
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -20,16 +22,19 @@ import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
 import com.github.goldy1992.mp3player.commons.MediaItemType
 
-@Preview
 @Composable
 fun AlbumsList(modifier : Modifier = Modifier,
                windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
                albums : Albums = Albums.NOT_LOADED,
+               sharedTransitionScope: SharedTransitionScope,
+               animatedVisibilityScope: AnimatedVisibilityScope,
                onAlbumSelected : (Album) -> Unit = {}) {
     when(albums.state) {
         State.LOADING -> LoadingIndicator()
         State.NO_RESULTS -> NoResultsFound(mediaItemType = MediaItemType.ALBUMS)
         State.LOADED -> AlbumListImpl(
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope,
                             modifier = modifier,
                             albums = albums.albums,
                             windowSize = windowSize,
@@ -44,11 +49,13 @@ val testAlbumList = listOf(
     Album(id = "id1", title = "title1", artist = "artist1" ),
     Album(id = "id2", title = "title2", artist = "artist2" )
 )
-@Preview
+
 @Composable
 private fun AlbumListImpl(modifier : Modifier = Modifier,
                           windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
                           albums : List<Album> = testAlbumList,
+                          sharedTransitionScope: SharedTransitionScope,
+                          animatedVisibilityScope: AnimatedVisibilityScope,
                           onAlbumSelected : (Album) -> Unit = {}
 ) {
 
@@ -61,9 +68,13 @@ private fun AlbumListImpl(modifier : Modifier = Modifier,
     LazyVerticalGrid(modifier = Modifier.padding(5.dp), columns = GridCells.Fixed(numberOfColumns)) {
         items(albums.size) {
             val currentAlbum = albums[it]
-            Column(modifier = modifier){//modifier.padding(5.dp)) {
-                AlbumListItem(album = currentAlbum,
-                onClick = { onAlbumSelected(currentAlbum)})
+            Column(modifier = modifier) {
+                with(sharedTransitionScope) {//modifier.padding(5.dp)) {
+                    AlbumListItem(
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        album = currentAlbum,
+                        onClick = { onAlbumSelected(currentAlbum) })
+                }
             }
 
         }

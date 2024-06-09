@@ -1,6 +1,8 @@
 package com.github.goldy1992.mp3player.client.ui.lists.albums
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.combinedClickable
@@ -27,12 +29,14 @@ import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 private const val LOG_TAG = "AlbumListItem"
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
 @Composable
-fun AlbumListItem(modifier: Modifier = Modifier,
-                  album : Album = Album(),
-                  localDensity: Density = LocalDensity.current,
-                  onClick : () -> Unit = {}) {
+fun SharedTransitionScope.AlbumListItem(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
+    album : Album = Album(),
+    localDensity: Density = LocalDensity.current,
+    onClick : () -> Unit = {}
+) {
     var width by remember { mutableStateOf(0.dp) }
     Card(
         modifier= modifier
@@ -46,9 +50,13 @@ fun AlbumListItem(modifier: Modifier = Modifier,
                 width = (it.width.toFloat() / localDensity.density).dp },
         elevation = CardDefaults.outlinedCardElevation()) {
         Column(Modifier.fillMaxSize()) {
-            AlbumArtAsync(album.artworkUri,
+            AlbumArtAsync(
+                album.artworkUri,
                 contentDescription = album.title,
-                modifier = modifier
+                modifier = modifier.sharedElement(
+                    rememberSharedContentState(album.id),
+                    animatedVisibilityScope = animatedVisibilityScope
+                    )
                     .align(Alignment.CenterHorizontally)
                     .size(width))
             Column(Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end=2.dp)) {

@@ -165,7 +165,9 @@ fun SharedTransitionScope.LibraryScreen(
                             modifier = Modifier.padding(5.dp),
                             windowSize = windowSize,
                             onAlbumSelected = onAlbumSelected,
-                            albums = albums
+                            albums = albums,
+                            sharedTransitionScope = this@LibraryScreen,
+                            animatedVisibilityScope = animatedContentScope
                         )
 
                         else -> Text("Unknown")

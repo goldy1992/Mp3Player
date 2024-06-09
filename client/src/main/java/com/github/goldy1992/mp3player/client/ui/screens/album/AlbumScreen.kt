@@ -1,6 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -95,6 +96,7 @@ fun SharedTransitionScope.AlbumScreen(
             items(count = albumSongs.size + 1) { currentAlbumSongIndex ->
                 if (currentAlbumSongIndex == 0) {
                     AlbumHeaderItem(
+                        animatedVisibilityScope = animatedContentScope,
                         playbackStateProvider = { playbackState},
                         albumProvider = { album},
                     )
@@ -123,7 +125,8 @@ fun SharedTransitionScope.AlbumScreen(
 
 @Preview
 @Composable
-private fun AlbumHeaderItem(
+private fun SharedTransitionScope.AlbumHeaderItem(
+    animatedVisibilityScope: AnimatedVisibilityScope,
     playbackStateProvider : () ->  PlaybackState = {PlaybackState.DEFAULT},
     albumProvider: () -> Album = { Album() },
     currentPlaylistIdProvider : () -> String = {""},
@@ -139,7 +142,14 @@ private fun AlbumHeaderItem(
         val playbackState = playbackStateProvider()
         val actions = playbackState.actions
         Card {
-            AlbumArtAsync(uri = album.artworkUri, contentDescription = album.title, modifier = Modifier.size(200.dp))
+            AlbumArtAsync(
+                uri = album.artworkUri,
+                contentDescription = album.title,
+                modifier = Modifier
+                .sharedElement(
+                    rememberSharedContentState(key = album.id),
+                    animatedVisibilityScope = animatedVisibilityScope
+                ).size(200.dp))
         }
 
         Column(
