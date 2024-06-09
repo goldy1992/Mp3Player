@@ -60,7 +60,7 @@ class NavigationUtilsTest {
         val expectedVisualizerType = VisualizerType.BAR
 
         argumentCaptor<String>().apply {
-            NavigationUtils.navigate(mockNavController, expectedVisualizerType)
+            NavigationUtils.navigate(mockNavController, expectedVisualizerType, listOf(0.05f))
             verify(mockNavController, times(1)).navigate(this.capture(), eq(null), eq(null))
 
             val result = this.firstValue
