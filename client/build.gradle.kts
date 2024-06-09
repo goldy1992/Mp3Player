@@ -16,9 +16,6 @@ android {
         compose = true
     }
 
-//    composeOptions {
-//        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-//    }
     packaging {
         resources {
             excludes += "**/attach_hotspot_windows.dll"
@@ -119,7 +116,6 @@ dependencies {
     implementation(libs.androidx.compose.animation.beta)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
-    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowsizes)
     implementation(libs.androidx.compose.material.icons.core)
