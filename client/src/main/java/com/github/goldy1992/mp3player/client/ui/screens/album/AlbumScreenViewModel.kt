@@ -6,9 +6,12 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.models.media.MediaActions
 import com.github.goldy1992.mp3player.client.models.media.State
+import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SetShuffleEnabled
@@ -20,6 +23,7 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewMod
 import com.github.goldy1992.mp3player.client.ui.viewmodel.state.ShuffleModeViewModelState
 import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -31,11 +35,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AlbumScreenViewModel
 @Inject
-constructor(savedStateHandle: SavedStateHandle,
-            override val mediaRepository: MediaRepository,
-) : Play, Pause, SetShuffleEnabled, ShufflePlayPlaylist, SkipToNext, SkipToPrevious, ViewModel(), LogTagger  {
+constructor(
+    savedStateHandle: SavedStateHandle,
+    mediaRepository: MediaRepository
+) : SetShuffleEnabled, ShufflePlayPlaylist, MediaViewModel(mediaRepository), LogTagger  {
 
-    override val scope = viewModelScope
     private val albumId : String = checkNotNull(savedStateHandle["albumId"])
     private val albumTitle : String = checkNotNull(savedStateHandle["albumTitle"])
     private val albumArtist : String = checkNotNull(savedStateHandle["albumArtist"])
@@ -89,11 +93,6 @@ constructor(savedStateHandle: SavedStateHandle,
         }
     }
 
-    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-    val shuffleEnabled = ShuffleModeViewModelState(mediaRepository, viewModelScope)
-    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
-
-
     // currentMediaItem
     private val _currentPlaylistIdState = MutableStateFlow("")
     val currentPlaylistIdState : StateFlow<String> = _currentPlaylistIdState
@@ -108,17 +107,7 @@ constructor(savedStateHandle: SavedStateHandle,
     }
 
 
-    fun playAlbum(index : Int, album: Album) {
-        viewModelScope.launch { mediaRepository.playPlaylist(album.playlist, index) }
-    }
 
-
-
-    fun shuffleAlbum(album: Album) {
-        viewModelScope.launch {
-            mediaRepository.playPlaylist( album.playlist, 0)
-        }
-    }
 
 
     override fun logTag(): String {

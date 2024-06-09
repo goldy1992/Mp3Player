@@ -38,7 +38,7 @@ private const val logTag = "SongListItem"
 fun SongListItem(
     song : Song = Song(),
     isSelected : Boolean = false,
-    isPlayingProvider : () -> Boolean = {false},
+    isPlayingProvider : Boolean = false,
     expanded : Boolean = true,
     onClick: () -> Unit = {},
     containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface

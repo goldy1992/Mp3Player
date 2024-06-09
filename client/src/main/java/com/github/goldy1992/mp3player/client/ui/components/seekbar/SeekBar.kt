@@ -23,6 +23,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
@@ -69,18 +70,14 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
 
 @Composable
 fun PlaybackPositionAnimation(
-    isPlayingProvider: () -> Boolean = {true},
-    currentSongProvider: () -> Song = { Song.DEFAULT},
-    playbackSpeedProvider : () ->  Float = {1.0f},
-    playbackPositionProvider: () -> PlaybackPositionEvent = {PlaybackPositionEvent.DEFAULT},
+    isPlaying: Boolean = true,
+    song: Song =  Song.DEFAULT,
+    playbackSpeed :  Float = 1.0f,
+    playbackPositionEvent :  PlaybackPositionEvent = PlaybackPositionEvent.DEFAULT,
     content: @Composable (Float) -> Unit
 ) {
 
     Log.v(LOG_TAG, "SeekBar() recomposed")
-    val isPlaying = isPlayingProvider()
-    val song = currentSongProvider()
-    val playbackSpeed = playbackSpeedProvider()
-    val playbackPositionEvent = playbackPositionProvider()
     val duration = song.duration.toFloat()
     val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
     Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")

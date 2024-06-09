@@ -30,11 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.PlaybackState
-import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
-import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_WINDOW_CLASS_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
@@ -62,10 +59,10 @@ fun SharedTransitionScope.PlayToolbar(
         val localDensity = LocalDensity.current
         Column(verticalArrangement = Arrangement.Top) {
             PlaybackPositionAnimation(
-                isPlayingProvider = playbackState.isPlayingProvider,
-                currentSongProvider = playbackState.currentSongProvider,
-                playbackSpeedProvider = playbackState.playbackSpeedProvider,
-                playbackPositionProvider = playbackState.playbackPositionProvider
+                isPlaying = playbackState.isPlaying,
+                song = playbackState.currentSong,
+                playbackSpeed = playbackState.playbackSpeed,
+                playbackPositionEvent = playbackState.playbackPosition,
             ) {
                 LinearProgressIndicator(
                     progress = { it },
@@ -85,20 +82,21 @@ fun SharedTransitionScope.PlayToolbar(
                 ) {
                     SkipToPreviousButton(
                         modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        onClick = playbackState.onClickSkipPrevious
+                        onClick = playbackState.actions.skipToPrevious
                     )
                     PlayPauseButton(
                         modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        isPlaying = playbackState.isPlayingProvider,
-                        onClickPlay = playbackState.onClickPlay,
-                        onClickPause = playbackState.onClickPause
+                        isPlaying = playbackState.isPlaying,
+                        onClickPlay = playbackState.actions.play,
+                        onClickPause = playbackState.actions.pause
                     )
                     SkipToNextButton(
                         modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        onClick = playbackState.onClickSkipNext)
+                        onClick = playbackState.actions.skipToNext
+                    )
                 }
 
-                val currentSong = playbackState.currentSongProvider()
+                val currentSong = playbackState.currentSong
                 Column(Modifier.weight(1f).padding(4.dp)) {
                     Text(currentSong.title, maxLines = 1, modifier = Modifier.basicMarquee(), style = MaterialTheme.typography.bodyMedium)
                     Text(currentSong.artist, maxLines = 1, modifier = Modifier.basicMarquee(), style = MaterialTheme.typography.bodySmall)

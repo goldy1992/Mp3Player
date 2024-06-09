@@ -52,20 +52,15 @@ fun SharedTransitionScope.NowPlayingScreen(
     animatedContentScope: AnimatedContentScope
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
-    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
-    val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val queue by viewModel.queue.state().collectAsState()
-    val shuffleEnabled by viewModel.shuffleMode.state().collectAsState()
-    val repeatMode by viewModel.repeatMode.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
 
     Scaffold (
         topBar = {
             TopAppBar (
                 title = {
-                    val title : String = currentSong.title
-                    val artist : String = currentSong.artist
+                    val title : String = playbackState.currentSong.title
+                    val artist : String = playbackState.currentSong.artist
                     Column {
                         Text(
                             text = title,
@@ -105,7 +100,7 @@ fun SharedTransitionScope.NowPlayingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpeedController(
-                    playbackSpeedProvider = { playbackSpeed },
+                    playbackSpeedProvider = { playbackState.playbackSpeed },
                     changePlaybackSpeed = { newSpeed : Float -> viewModel.changePlaybackSpeed(newSpeed)},
                     modifier = Modifier
                         .weight(1f)
@@ -113,13 +108,13 @@ fun SharedTransitionScope.NowPlayingScreen(
                 )
 
                 ViewPager(
-                    currentSongProvider = { currentSong },
+                    currentSongProvider = { playbackState.currentSong },
                     queue = queue,
                     skipToNext = { viewModel.skipToNext() },
                     skipToPrevious = { viewModel.skipToPrevious() },
                     modifier = Modifier.Companion
                         .sharedElement(
-                            rememberSharedContentState(key = currentSong.id),
+                            rememberSharedContentState(key = playbackState.currentSong.id),
                             animatedVisibilityScope = animatedContentScope
                         )
                         .weight(4f)
@@ -134,7 +129,7 @@ fun SharedTransitionScope.NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     ShuffleButton(
-                        shuffleEnabledProvider = { shuffleEnabled },
+                        isShuffleEnabled = playbackState.shuffleEnabled,
                         onClick = { isEnabled -> viewModel.setShuffleEnabled(isEnabled) }
                     )
                     SkipToPreviousButton{
@@ -142,15 +137,15 @@ fun SharedTransitionScope.NowPlayingScreen(
                     }
                     PlayPauseButton(
                         modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
-                        isPlaying = {isPlaying},
-                        onClickPlay = { viewModel.play() },
-                        onClickPause = { viewModel.pause() }
+                        isPlaying = playbackState.isPlaying,
+                        onClickPlay = playbackState.actions.play,
+                        onClickPause = playbackState.actions.pause
                     )
                     SkipToNextButton {
                         viewModel.skipToNext()
                     }
                     RepeatButton(
-                        repeatModeProvider = { repeatMode },
+                        repeatModeProvider = { playbackState.repeatMode },
                         onClick = { currentRepeatMode -> viewModel.setRepeatMode(RepeatModeUtils.getNextRepeatMode(currentRepeatMode)) }
                     )
                 }
@@ -161,10 +156,10 @@ fun SharedTransitionScope.NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(
-                        playbackSpeedProvider = { playbackSpeed },
-                        currentSongProvider = {  currentSong },
-                        isPlayingProvider = { isPlaying },
-                        playbackPositionProvider = {  playbackPosition },
+                        playbackSpeedProvider = { playbackState.playbackSpeed },
+                        currentSongProvider = {  playbackState.currentSong },
+                        isPlayingProvider = { playbackState.isPlaying },
+                        playbackPositionProvider = {  playbackState.playbackPosition },
                         seekTo = { value -> viewModel.seekTo(value)})
                 }
             }

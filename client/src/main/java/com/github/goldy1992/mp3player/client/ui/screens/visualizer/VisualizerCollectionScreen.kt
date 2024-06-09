@@ -39,7 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.PlaybackState
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
@@ -63,18 +63,7 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
 ) {
 
     val audioMagnitudes by viewModel.audioData.state().collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentMediaItem by viewModel.currentSong.state().collectAsState()
-    val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
-    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentMediaItem},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() }
-    )
+    val playbackState by viewModel.playbackState.collectAsState()
     val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it, audioMagnitudes) }
 
     Scaffold(
@@ -97,7 +86,7 @@ fun SharedTransitionScope.VisualizerCollectionScreen(
         VisualizerContentCardCollection(
             modifier = Modifier.padding(it),
             audioMagnitudes = {audioMagnitudes},
-            isPlaying = { isPlaying },
+            isPlaying = { playbackState.isPlaying },
             animatedContentScope = animatedContentScope,
             onClickCard = onClickCard
         )
@@ -150,7 +139,7 @@ fun SharedTransitionScope.VisualizerContentCardCollection(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = modifier
             .fillMaxSize()
-       //     .background(MaterialTheme.colorScheme.surface)
+            //     .background(MaterialTheme.colorScheme.surface)
             .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
@@ -215,7 +204,8 @@ fun SharedTransitionScope.VisualizerContentCardCollection(
                 modifier = Modifier
                     .sharedElement(
                         rememberSharedContentState(VisualizerType.PIE_CHART),
-                        animatedVisibilityScope = animatedContentScope, boundsTransform = BoundsTransform { initialBounds, targetBounds ->
+                        animatedVisibilityScope = animatedContentScope,
+                        boundsTransform = BoundsTransform { initialBounds, targetBounds ->
                             keyframes {
                                 durationMillis = 4000
                                 initialBounds at 0 using ArcMode.ArcBelow using FastOutSlowInEasing

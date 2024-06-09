@@ -3,6 +3,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.ChangePlaybackSpeed
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
@@ -29,19 +30,11 @@ import javax.inject.Inject
 class NowPlayingScreenViewModel
     @Inject
     constructor(
-        override val mediaRepository: MediaRepository,
-    ) : ChangePlaybackSpeed, Pause, Play, SeekTo, SetShuffleEnabled, SetRepeatMode,
-    SkipToNext, SkipToPrevious, ViewModel() {
+        mediaRepository: MediaRepository,
+    ) : ChangePlaybackSpeed, SeekTo, SetShuffleEnabled, SetRepeatMode,
+    MediaViewModel(mediaRepository) {
 
-    val playbackPosition = PlaybackPositionViewModelState(mediaRepository, viewModelScope)
-    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-    val playbackSpeed = PlaybackSpeedViewModelState(mediaRepository, viewModelScope)
-    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
     val queue = QueueViewModelState(mediaRepository, viewModelScope)
-    val repeatMode = RepeatModeViewModelState(mediaRepository, viewModelScope)
-    val shuffleMode = ShuffleModeViewModelState(mediaRepository, viewModelScope)
-
-    override val scope: CoroutineScope = viewModelScope
 
     override fun logTag(): String {
         return "NowPlayingViewModel"

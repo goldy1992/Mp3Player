@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
+import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
@@ -24,14 +25,10 @@ class SingleVisualizerScreenViewModel
 constructor(
     savedStateHandle: SavedStateHandle,
     audioDataProcessor: AudioDataProcessor,
-    override val mediaRepository: MediaRepository
-) : ViewModel(), Play, Pause, SkipToNext, SkipToPrevious {
-    override val scope: CoroutineScope = viewModelScope
+    mediaRepository: MediaRepository,
+) : MediaViewModel(mediaRepository) {
 
-    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-    val audioData = AudioDataViewModelState(mediaRepository, audioDataProcessor, isPlaying.state(), scope)
-    val currentSong = CurrentSongViewModelState(mediaRepository, scope)
-
+    val audioData = AudioDataViewModelState(mediaRepository, audioDataProcessor,  playbackState, viewModelScope)
     val visualizer : VisualizerType
     init {
         val visualiserTypeString :String = checkNotNull(savedStateHandle["visualizer"])

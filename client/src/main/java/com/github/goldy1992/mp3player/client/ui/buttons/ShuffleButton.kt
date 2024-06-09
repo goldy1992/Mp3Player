@@ -17,17 +17,15 @@ import com.github.goldy1992.mp3player.client.R
 /**
  * This button will display the either [ShuffleOnButton] or the [ShuffleOffButton] depending on the
  * current shuffle mode indicated by the shuffleEnabledProvider.
- * @param shuffleEnabledProvider Provides the current shuffle mode, i.e. enabled/disabled.
+ * @param isShuffleEnabled Provides the current shuffle mode, i.e. enabled/disabled.
  * @param onClick The code to be invoked when the button is pressed.
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
 fun ShuffleButton(
     modifier : Modifier = Modifier,
-    shuffleEnabledProvider : () -> Boolean = {true},
+    isShuffleEnabled: Boolean = true,
     onClick : (isEnabled : Boolean) -> Unit = {}) {
-    val isShuffleEnabled = shuffleEnabledProvider()
     val fadeTime = 300
     AnimatedContent(
         targetState = isShuffleEnabled,
@@ -36,7 +34,7 @@ fun ShuffleButton(
                 targetContentEnter = fadeIn(tween(fadeTime)),
                 initialContentExit = fadeOut(tween(fadeTime)),
             )
-        }
+        }, label = "ShuffleButtonAnimation"
     ) { shuffleEnabled ->
         if (shuffleEnabled) {
             ShuffleOnButton(

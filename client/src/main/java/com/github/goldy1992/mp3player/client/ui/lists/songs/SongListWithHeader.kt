@@ -21,7 +21,7 @@ fun LoadedSongsListWithHeader(
     modifier: Modifier = Modifier,
     headerItem: @Composable (() -> Unit) = {},
     currentSong: Song,
-    isPlayingProvider: () -> Boolean,
+    isPlayingProvider: Boolean,
     onSongSelected: (itemIndex: Int, playlist: Playlist) -> Unit
 ) {
     val songList = playlist.songs

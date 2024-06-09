@@ -2,10 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,14 +11,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.SearchResults
 import com.github.goldy1992.mp3player.client.models.media.Song
@@ -69,20 +65,12 @@ fun SharedTransitionScope.SearchScreen(
     viewModel : SearchScreenViewModel = viewModel(),
     animatedContentScope: AnimatedContentScope
 ) {
-
     Log.i(logTag,"composing search screen")
+    val playbackState by viewModel.playbackState.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentSong},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() }
-    )
+
+
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
         buildOnSelectedMap(
@@ -238,7 +226,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
             },
             leadingIcon = {
                 IconButton(onClick = onNavUpPressed) {
-                    Icon(Icons.Filled.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
             },
             trailingIcon = {

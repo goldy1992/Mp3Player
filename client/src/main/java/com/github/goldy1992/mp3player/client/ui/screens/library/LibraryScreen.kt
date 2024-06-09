@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.SharedTransitionScope
@@ -17,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
@@ -45,7 +43,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
@@ -87,21 +84,10 @@ fun SharedTransitionScope.LibraryScreen(
     val songs by viewModel.songs.collectAsState()
     val folders by viewModel.folders.collectAsState()
     val albums by viewModel.albums.collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentMediaItem by viewModel.currentSong.state().collectAsState()
-    val currentPlaybackSpeed by viewModel.playbackSpeed.state().collectAsState()
-    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val drawerState : DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentMediaItem},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() },
-        playbackSpeedProvider = { currentPlaybackSpeed},
-        playbackPositionProvider = { playbackPosition }
-    )
+
+
     val onSongSelected: (Int, Playlist) -> Unit = { itemIndex, mediaItemList ->
         viewModel.playPlaylist(mediaItemList, itemIndex)
     }
@@ -163,8 +149,8 @@ fun SharedTransitionScope.LibraryScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 playlist = songs,
                                 expanded = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded,
-                                isPlayingProvider = { isPlaying },
-                                currentSongProvider = { currentMediaItem }
+                                isPlayingProvider = { playbackState.isPlaying },
+                                currentSongProvider = { playbackState.currentSong }
                             ) { itemIndex: Int, mediaItemList: Playlist ->
                                 onSongSelected(
                                     itemIndex,
@@ -224,8 +210,6 @@ private fun Navigation(
 }
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 private fun LibraryAppBar(

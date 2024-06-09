@@ -36,20 +36,21 @@ private const val LOG_TAG = "PlayPauseButton"
 @Composable
 fun PlayPauseButton(
                     modifier: Modifier = Modifier,
-                    isPlaying : () -> Boolean = {false},
+                    isPlaying :  Boolean = false,
                     onClickPlay: () -> Unit = {},
                     onClickPause: () -> Unit = {}
 ) {
-    val isPlayingValue = isPlaying()
-    Log.d(LOG_TAG, "PlayPauseButton() isPlayingValue: $isPlayingValue")
+    Log.d(LOG_TAG, "PlayPauseButton() isPlayingValue: $isPlaying")
     val tweenTime = 500
-    val rotation by animateFloatAsState(targetValue = if (isPlayingValue) 180f else 0f, tween(tweenTime),
+    val rotation by animateFloatAsState(
+        targetValue = if (isPlaying) 180f else 0f, tween(tweenTime),
         label = "playPause Rotation Animation"
     )
 
     val fadeTime = 300
 
-    AnimatedContent(targetState = isPlayingValue,
+    AnimatedContent(
+        targetState = isPlaying,
         transitionSpec = {
             ContentTransform(
                 targetContentEnter = fadeIn(tween(fadeTime)),
@@ -60,11 +61,15 @@ fun PlayPauseButton(
 
     ) { isPlayingCurrentVal ->
         if (isPlayingCurrentVal) {
-            PauseButton(onClick = onClickPause,
-                modifier = modifier.rotate(rotation + 180f))
+            PauseButton(
+                onClick = onClickPause,
+                modifier = modifier.rotate(rotation + 180f)
+            )
         } else {
-            PlayButton(onClick = onClickPlay,
-                modifier = modifier.rotate(rotation))
+            PlayButton(
+                onClick = onClickPlay,
+                modifier = modifier.rotate(rotation)
+            )
         }
     }
 

@@ -1,10 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.album
 
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.github.goldy1992.mp3player.client.data.PlaybackState
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
@@ -59,7 +56,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-
 @Composable
 fun SharedTransitionScope.AlbumScreen(
     navController: NavController = rememberNavController(),
@@ -68,56 +64,20 @@ fun SharedTransitionScope.AlbumScreen(
     animatedContentScope: AnimatedContentScope
 
 ) {
-
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val isShuffleModeEnabled by viewModel.shuffleEnabled.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val album : Album by viewModel.albumState.collectAsState()
-    val currentPlaylistId : String by viewModel.currentPlaylistIdState.collectAsState()
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentSong},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() }
-    )
-    val albumPlayPauseButton : @Composable () -> Unit = {
-        AlbumPlayPauseButton(isPlaying = { isAlbumPlaying(isPlaying, currentPlaylistId, album) },
-                            onClickPlay = {
-                                if (isCurrentPlaylistTheSelectedAlbum(currentPlaylistId, album)) {
-                                    viewModel.play()
-                                } else {
-                                    viewModel.playAlbum(0, album)
-                                }
-                            },
-                            onClickPause = { viewModel.pause()},
-                            modifier = Modifier.size(40.dp))
-    }
-    val shuffleButton : @Composable () -> Unit = {
-        ShuffleButton(
-            modifier = Modifier.size(40.dp),
-            shuffleEnabledProvider = { isShuffleModeEnabled },
-            onClick = { viewModel.setShuffleEnabled(isShuffleModeEnabled)}
-        )
-    }
-    val onAlbumSongSelected : (Int) -> Unit = { itemIndex ->
-        viewModel.playAlbum(itemIndex, album)
-    }
-    val bottomBar : @Composable () -> Unit = {
-        PlayToolbar(
-            animatedVisibilityScope = animatedContentScope,
-            playbackState = playbackState,
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
-        )
-    }
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     val albumSongs = album.playlist.songs
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        bottomBar = bottomBar,
+        bottomBar = {
+            PlayToolbar(
+                animatedVisibilityScope = animatedContentScope,
+                playbackState = playbackState,
+                onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
+            )
+        },
         topBar = {
             AlbumAppBar(
                 albumProvider = { album },
@@ -135,18 +95,17 @@ fun SharedTransitionScope.AlbumScreen(
             items(count = albumSongs.size + 1) { currentAlbumSongIndex ->
                 if (currentAlbumSongIndex == 0) {
                     AlbumHeaderItem(
+                        playbackStateProvider = { playbackState},
                         albumProvider = { album},
-                        albumPlayPauseButton = albumPlayPauseButton,
-                        shuffleButton = shuffleButton
                     )
                 } else {
                     val albumSongIndex = currentAlbumSongIndex - 1
                     val albumSong = albumSongs[albumSongIndex]
-                    val isSongSelected = SongUtils.isSongItemSelected(albumSong, currentSong)
+                    val isSongSelected = SongUtils.isSongItemSelected(albumSong, playbackState.currentSong)
                     val containerColor : Color = if (isSongSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
                     ListItem(
                         modifier = Modifier.combinedClickable(
-                            onClick = { onAlbumSongSelected(albumSongIndex) },
+                            onClick = { playbackState.actions.onAlbumSongSelected(albumSongIndex, album) },
                             onLongClick = { /* TODO: Add a long click */}
                         ),
                         colors = ListItemDefaults.colors(containerColor = containerColor),
@@ -161,19 +120,15 @@ fun SharedTransitionScope.AlbumScreen(
 
 }
 
-private fun isAlbumPlaying(
-    isPlaying: Boolean,
-    currentPlaylistId: String,
-    album: Album
-) = isPlaying && isCurrentPlaylistTheSelectedAlbum(currentPlaylistId, album)
 
 @Preview
 @Composable
 private fun AlbumHeaderItem(
+    playbackStateProvider : () ->  PlaybackState = {PlaybackState.DEFAULT},
     albumProvider: () -> Album = { Album() },
+    currentPlaylistIdProvider : () -> String = {""},
     onClickShuffle : () -> Unit = {},
-    albumPlayPauseButton : @Composable () -> Unit = { AlbumPlayPauseButton(modifier = Modifier.size(50.dp))},
-    shuffleButton : @Composable () -> Unit = { ShuffleButton(modifier = Modifier.size(50.dp))}) {
+){
     Column(
         Modifier
             .fillMaxWidth()
@@ -181,6 +136,8 @@ private fun AlbumHeaderItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val album = albumProvider()
+        val playbackState = playbackStateProvider()
+        val actions = playbackState.actions
         Card {
             AlbumArtAsync(uri = album.artworkUri, contentDescription = album.title, modifier = Modifier.size(200.dp))
         }
@@ -207,7 +164,13 @@ private fun AlbumHeaderItem(
                 .padding(top = 7.dp)
                 .height(IntrinsicSize.Min),
                 verticalAlignment = Alignment.CenterVertically) {
-                shuffleButton()
+
+                ShuffleButton(
+                    modifier = Modifier.size(40.dp),
+                    isShuffleEnabled = playbackState.shuffleEnabled,
+                    onClick = { playbackState.actions.setShuffleEnabled(!playbackState.shuffleEnabled)}
+                )
+
                 Spacer(modifier = Modifier.width(12.dp))
                 HorizontalDivider(modifier = Modifier
                     .fillMaxHeight()
@@ -215,15 +178,21 @@ private fun AlbumHeaderItem(
                     thickness = 1.dp)
                 Spacer(modifier = Modifier.width(12.dp))
 
-                albumPlayPauseButton()
+                val currentPlaylistId = currentPlaylistIdProvider()
+
+                AlbumPlayPauseButton(isPlaying = {actions.isAlbumPlaying(playbackState.isPlaying, currentPlaylistId, album)},
+                    onClickPlay = {
+                        actions.onPlayAlbum(currentPlaylistId, album)
+                    },
+                    onClickPause = actions.pause,
+                    modifier = Modifier.size(40.dp)
+                )
             }
         }
-
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Preview
 @Composable
 fun AlbumAppBar(modifier: Modifier = Modifier,
@@ -252,8 +221,4 @@ fun AlbumAppBar(modifier: Modifier = Modifier,
         },
         colors = TopAppBarDefaults.largeTopAppBarColors(),
         scrollBehavior = scrollBehavior)
-}
-
-private fun isCurrentPlaylistTheSelectedAlbum(currentPlaylistId : String, album: Album) : Boolean {
-    return currentPlaylistId == album.id
 }

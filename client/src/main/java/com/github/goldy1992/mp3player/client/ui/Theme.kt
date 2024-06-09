@@ -5,11 +5,6 @@ import android.os.Build.VERSION_CODES.S
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.Colors
-import androidx.compose.material3.MaterialTheme.colorScheme
-
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,60 +18,60 @@ import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserP
 import com.github.goldy1992.mp3player.commons.VersionUtils
 
 private const val LOG_TAG = "Theme"
-enum class Theme(
-    val displayName : String,
-    val lightColors : Colors,
-    val darkColors : Colors
-) {
-    BLUE("Blue", blueAppTheme, blueAppDarkTheme),
-    ORANGE("Orange", orangeAppTheme, orangeAppDarkTheme),
-}
+//enum class Theme(
+//    val displayName : String,
+//    val lightColors : ColorScheme,
+//    val darkColors : ColorScheme
+//) {
+//    BLUE("Blue", blueAppTheme, blueAppDarkTheme),
+//    ORANGE("Orange", orangeAppTheme, orangeAppDarkTheme),
+//}
+//
+//
+//val blueAppTheme = ColorScheme(
+//    primary = primaryBlue,
+//    primaryContainer = darkBlue,
+//    secondary = accentPink,
+//    secondaryContainer = darkPink,
+//    error = red,
+//
+//)
 
+//val blueAppDarkTheme = darkColors(
+//    primary = primaryBlue,
+//    primaryVariant = darkBlue,
+//    secondary = grey,
+//    error = red,
+//
+//)
 
-val blueAppTheme = lightColors(
-    primary = primaryBlue,
-    primaryVariant = darkBlue,
-    secondary = accentPink,
-    secondaryVariant = darkPink,
-    error = red,
-
-)
-
-val blueAppDarkTheme = darkColors(
-    primary = primaryBlue,
-    primaryVariant = darkBlue,
-    secondary = grey,
-    error = red,
-
-)
-
-val orangeAppTheme = lightColors(
-    primary = darkOrange,
-    primaryVariant = darkBlue,
-    secondary = accentOrange,
-    background = white,
-    error = red,
-    surface = white,
-    onPrimary = white,
-//    onSecondary = black,
-    onBackground = black,
-    onSurface = black,
+//val orangeAppTheme = lightColors(
+//    primary = darkOrange,
+//    primaryVariant = darkBlue,
+//    secondary = accentOrange,
+//    background = white,
+//    error = red,
+//    surface = white,
+//    onPrimary = white,
+////    onSecondary = black,
+//    onBackground = black,
+//    onSurface = black,
+////    onError = white
+//)
+//
+//val orangeAppDarkTheme = darkColors(
+//    primary = grey,
+//    primaryVariant = darkBlue,
+//    secondary = grey,
+//    background = black,
+//    error = red,
+//    surface = black,
+//    onPrimary = white,
+//    onSecondary = white,
+//    onBackground = white,
+//    onSurface = white,
 //    onError = white
-)
-
-val orangeAppDarkTheme = darkColors(
-    primary = grey,
-    primaryVariant = darkBlue,
-    secondary = grey,
-    background = black,
-    error = red,
-    surface = black,
-    onPrimary = white,
-    onSecondary = white,
-    onBackground = white,
-    onSurface = white,
-    onError = white
-)
+//)
 
 internal val LocalIsDarkMode = staticCompositionLocalOf { false }
 

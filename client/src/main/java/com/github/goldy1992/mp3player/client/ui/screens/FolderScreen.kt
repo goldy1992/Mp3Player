@@ -59,10 +59,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.data.PlaybackState
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
-import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -86,17 +85,8 @@ fun SharedTransitionScope.FolderScreen(
 
 ) {
     val scope = rememberCoroutineScope()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentSong},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() }
-    )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -145,9 +135,8 @@ fun SharedTransitionScope.FolderScreen(
     val screenContent : @Composable (PaddingValues) -> Unit = {
         FolderScreenContent(
             modifier = Modifier.padding(it),
-            isPlayingProvider = {isPlaying},
+            playbackStateProvider = {playbackState},
             folderProvider = { folder },
-            currentSong = { currentSong },
             onSongSelected = onSongSelected
         )
     }
@@ -199,11 +188,11 @@ private fun SmallFolderScreen(
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
                                 folderProvider : () -> Folder = { Folder() },
-                                isPlayingProvider : () -> Boolean = { false},
-                                currentSong : () -> Song = { Song() },
+                                playbackStateProvider : () -> PlaybackState = { PlaybackState.DEFAULT },
                                 onSongSelected : (Int, Playlist) -> Unit = { _, _->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
+        val playbackState = playbackStateProvider()
         val folderSongs = folder.playlist
         when (folderSongs.state) {
             State.LOADING -> {
@@ -218,8 +207,8 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                 Log.d(LOG_TAG, "FolderScreenContent() folder songs state LOADED, size: ${folderSongs.songs.size}")
                 LoadedSongsListWithHeader(
                     playlist = folderSongs,
-                    isPlayingProvider = isPlayingProvider,
-                    currentSong = currentSong(),
+                    isPlayingProvider = playbackState.isPlaying,
+                    currentSong = playbackState.currentSong,
                     onSongSelected = onSongSelected,
                     headerItem = { HeaderItem(folder = folder)}
                 )

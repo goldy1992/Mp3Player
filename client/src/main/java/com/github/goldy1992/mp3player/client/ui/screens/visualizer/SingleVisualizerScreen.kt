@@ -1,13 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,11 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.github.goldy1992.mp3player.client.data.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -51,17 +45,9 @@ fun SharedTransitionScope.SingleVisualizerScreen(
     animatedContentScope: AnimatedContentScope
 
 ) {
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val audioData by viewModel.audioData.state().collectAsState()
-    val playbackState = PlaybackState(
-        isPlayingProvider = {isPlaying},
-        currentSongProvider = {currentSong},
-        onClickPlay = { viewModel.play() },
-        onClickPause = {viewModel.pause() },
-        onClickSkipPrevious = { viewModel.skipToPrevious() },
-        onClickSkipNext = { viewModel.skipToNext() }
-    )
+
     val visualizerName = getVisualizerName(viewModel.visualizer, LocalContext.current)
     Scaffold(
         topBar = {
@@ -111,7 +97,7 @@ fun SharedTransitionScope.SingleVisualizerScreen(
                     FountainSpringVisualizer(
                         frequencyPhasesProvider = {audioData},
                         canvasSize = canvasSize,
-                        isPlayingProvider = { isPlaying },
+                        isPlayingProvider = { playbackState.isPlaying },
                         modifier = Modifier.sharedElement(
                             rememberSharedContentState(VisualizerType.FOUNTAIN),
                             animatedVisibilityScope = animatedContentScope
@@ -135,9 +121,6 @@ fun SharedTransitionScope.SingleVisualizerScreen(
                             animatedVisibilityScope = animatedContentScope
                         ),
                     )
-                }
-                else -> {
-                    Log.w(LOG_TAG, "Unrecognised Visualizer Type")
                 }
             }
         }
