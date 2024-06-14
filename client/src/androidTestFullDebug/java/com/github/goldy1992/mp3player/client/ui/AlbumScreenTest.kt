@@ -2,6 +2,8 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
 import android.util.Base64
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.lifecycle.SavedStateHandle
@@ -10,6 +12,7 @@ import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
+import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import com.github.goldy1992.mp3player.client.ui.screens.album.AlbumScreen
 import com.github.goldy1992.mp3player.client.ui.screens.album.AlbumScreenViewModel
 import kotlinx.coroutines.runBlocking
@@ -70,9 +73,15 @@ class AlbumScreenTest {
             )
 
         composeTestRule.setContent {
-            AlbumScreen(
-                viewModel = albumScreenViewModel
-            )
+
+            SharedElementComposable {
+                AlbumScreen(
+                    animatedContentScope = this,
+                    viewModel = albumScreenViewModel
+                )
+            }
+        }
+            }
         }
 
         runBlocking { composeTestRule.awaitIdle() }

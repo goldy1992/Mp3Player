@@ -8,7 +8,6 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferencesRepository
-import com.github.goldy1992.mp3player.client.ui.Theme
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.*
 import org.junit.After
@@ -64,24 +63,6 @@ class UserPreferencesRepositoryTest {
             repository.updateSystemDarkMode(true)
             assertTrue(result)
         }
-        collectJob.cancel()
-    }
-
-    @Test
-    fun testTheme() = testScope.runTest {
-        var result: Theme? = null
-        val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            repository.userPreferencesFlow().collect {
-                result = Theme.valueOf(it.theme)
-            }
-        }
-        runBlocking {
-            repository.updateTheme(Theme.BLUE)
-            assertEquals(Theme.BLUE, result)
-            repository.updateTheme(Theme.ORANGE)
-            assertEquals(Theme.ORANGE, result)
-        }
-
         collectJob.cancel()
     }
 
