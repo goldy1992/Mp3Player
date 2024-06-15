@@ -23,7 +23,6 @@ import com.github.goldy1992.mp3player.client.ui.DpPxSize
 import com.github.goldy1992.mp3player.client.utils.visualizer.FountainSpringUtils.calculateInitialVelocityGivenHMax
 import com.github.goldy1992.mp3player.client.utils.visualizer.FountainSpringUtils.generateSpringSpawnPoints
 import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 private const val logTag = "FountainSpringEqualizer"

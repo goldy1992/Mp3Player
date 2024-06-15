@@ -2,10 +2,18 @@ package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,10 +26,10 @@ import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Song
+import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.DEFAULT_PADDING
 import com.github.goldy1992.mp3player.client.ui.lists.NoPermissions
 import com.github.goldy1992.mp3player.client.ui.lists.NoResultsFound
-import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.SongUtils.isSongItemSelected
 import com.github.goldy1992.mp3player.commons.MediaItemType
 

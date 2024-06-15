@@ -59,8 +59,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
-import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE

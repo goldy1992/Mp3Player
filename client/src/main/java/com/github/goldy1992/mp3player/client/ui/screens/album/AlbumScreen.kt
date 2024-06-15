@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Album
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.buttons.AlbumPlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync

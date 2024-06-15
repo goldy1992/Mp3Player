@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
-import android.util.Log
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils
 import com.github.goldy1992.mp3player.commons.AudioSample

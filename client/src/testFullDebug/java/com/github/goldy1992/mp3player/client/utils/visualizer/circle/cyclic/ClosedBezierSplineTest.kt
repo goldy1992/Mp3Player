@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.utils.visualizer.circle.cyclic
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.cos
 import kotlin.math.sin

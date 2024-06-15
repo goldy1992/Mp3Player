@@ -8,7 +8,6 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.media.MediaActions
 import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable

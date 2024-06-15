@@ -3,10 +3,10 @@ package com.github.goldy1992.mp3player.client.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.MediaActions
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext

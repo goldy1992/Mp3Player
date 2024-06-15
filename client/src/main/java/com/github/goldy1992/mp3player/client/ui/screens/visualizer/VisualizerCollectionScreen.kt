@@ -39,7 +39,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType

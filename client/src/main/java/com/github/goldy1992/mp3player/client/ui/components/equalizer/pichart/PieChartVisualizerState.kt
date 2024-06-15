@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember

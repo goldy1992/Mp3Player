@@ -1,16 +1,11 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.cards
 
 import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.BoundsTransform
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.ArcMode
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.keyframes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
 
 //@Preview(name = "Bar Card",

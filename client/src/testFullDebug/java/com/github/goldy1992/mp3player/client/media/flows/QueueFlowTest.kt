@@ -6,7 +6,7 @@ import androidx.media3.common.util.UnstableApi
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnQueueChangedEventHolder
 import com.github.goldy1992.mp3player.commons.PlayerUtils.buildPlayerEvents
 import kotlinx.coroutines.test.advanceUntilIdle
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

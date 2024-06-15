@@ -16,7 +16,6 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
 import com.github.goldy1992.mp3player.client.utils.ExtrasUtils.hasPermissions
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filter

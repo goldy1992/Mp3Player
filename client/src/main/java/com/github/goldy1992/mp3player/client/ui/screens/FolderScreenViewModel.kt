@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.models.media.Folder

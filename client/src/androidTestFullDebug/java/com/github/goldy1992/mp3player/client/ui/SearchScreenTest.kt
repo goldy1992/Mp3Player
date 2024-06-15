@@ -5,27 +5,31 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.SearchResult
 import com.github.goldy1992.mp3player.client.models.media.SearchResults
-import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
-import com.github.goldy1992.mp3player.commons.MediaItemBuilder
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.io.File
 
 /**
  * Test class for [SearchScreen].
