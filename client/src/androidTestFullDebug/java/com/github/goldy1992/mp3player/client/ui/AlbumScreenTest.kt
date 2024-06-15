@@ -2,8 +2,6 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Context
 import android.util.Base64
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.lifecycle.SavedStateHandle
@@ -74,15 +72,14 @@ class AlbumScreenTest {
 
         composeTestRule.setContent {
 
-            SharedElementComposable {
+            SharedElementComposable { animatedVisibilityScope ->
                 AlbumScreen(
-                    animatedContentScope = this,
+                    animatedContentScope = animatedVisibilityScope,
                     viewModel = albumScreenViewModel
                 )
             }
         }
-            }
-        }
+
 
         runBlocking { composeTestRule.awaitIdle() }
         composeTestRule.onNodeWithText(expectedSong1Title).assertExists()

@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -18,6 +16,7 @@ import com.github.goldy1992.mp3player.client.models.SearchResultsChangedEvent
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
+import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreen
 import com.github.goldy1992.mp3player.client.ui.screens.search.SearchScreenViewModel
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -60,10 +59,13 @@ class SearchScreenTest {
     @Test
     fun testSearchBarOnValueChange() {
         composeTestRule.setContent {
-            SearchScreen(
-                viewModel = searchScreenViewModel,
-              //  windowSize = WindowSizeClass.calculateFromSize(WindowWidthSizeClass.Compact)
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+                SearchScreen(
+                    animatedContentScope = animatedVisibilityScope,
+                    viewModel = searchScreenViewModel,
+                    //  windowSize = WindowSizeClass.calculateFromSize(WindowWidthSizeClass.Compact)
+                )
+            }
         }
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)
 
@@ -85,16 +87,6 @@ class SearchScreenTest {
         val songSearchResult = SearchResult(id = searchQuery, type = MediaItemType.SONG, value = song)
 
         val folderName = "/c/folder1"
-        val libId = "3fk4"
-
-
-        val folderItem = MediaItemBuilder("a")
-            .setMediaItemType(MediaItemType.FOLDER)
-            .setTitle(folderName)
-            .setLibraryId(libId)
-            .setDirectoryFile(File(folderName))
-            .build()
-
         val folder = Folder(id = "a", name = folderName)
         val folderSearchResult = SearchResult(id = searchQuery, type = MediaItemType.FOLDER, value = folder)
 
@@ -106,22 +98,19 @@ class SearchScreenTest {
         val searchResultsColumn = context.resources.getString(R.string.search_results_column)
 
         composeTestRule.setContent {
-            SearchScreen(
-                viewModel = searchScreenViewModel,
-             //   windowSize = WindowSize.Compact
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+                SearchScreen(
+                    animatedContentScope = animatedVisibilityScope,
+                    viewModel = searchScreenViewModel,
+                )
+            }
         }
-
-        composeTestRule.onNodeWithContentDescription(searchResultsColumn)
-            .onChildAt(0)
-            .onChildren()
-            .assertAny(hasText(songTitle)
-        )
-
-        composeTestRule.onNodeWithContentDescription(searchResultsColumn)
-            .onChildAt(1)
-            .onChildren()
-            .assertAny(hasText(folderName))
+        val assertText = { text: String ->
+            composeTestRule.onNodeWithText(text).assertExists(
+                "Could not file $text in semantic tree.")
+        }
+        assertText(songTitle)
+        assertText(folderName)
     }
 
     /**
@@ -133,10 +122,12 @@ class SearchScreenTest {
     @Test
     fun testClearSearch() {
         composeTestRule.setContent {
-            SearchScreen(
-                viewModel = searchScreenViewModel,
-          //      windowSize = WindowSize.Compact
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+                SearchScreen(
+                    animatedContentScope = animatedVisibilityScope,
+                    viewModel = searchScreenViewModel,
+                )
+            }
         }
         val clearSearchButton = context.resources.getString(R.string.clear_search)
         val searchTextFieldName = context.resources.getString(R.string.search_text_field)

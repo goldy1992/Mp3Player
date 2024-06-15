@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
+import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreen
 import com.github.goldy1992.mp3player.client.ui.screens.nowplaying.NowPlayingScreenViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -39,9 +40,13 @@ class NowPlayingScreenTest {
         val expectedTitle = "MySong"
         testMediaRepository.currentMediaItemState.value = Song(id = songId, title = expectedTitle )
         composeTestRule.setContent {
-            NowPlayingScreen(
-                viewModel = nowPlayingScreenViewModel
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+
+                NowPlayingScreen(
+                    viewModel = nowPlayingScreenViewModel,
+                    animatedContentScope = animatedVisibilityScope
+                )
+            }
         }
         val titleNode = context.resources.getString(R.string.song_title)
         composeTestRule.onNodeWithContentDescription(titleNode).assert(hasText(expectedTitle))

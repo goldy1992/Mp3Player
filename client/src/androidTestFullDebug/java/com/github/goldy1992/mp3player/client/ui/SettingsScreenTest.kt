@@ -17,6 +17,7 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserPreferences
+import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
 import com.github.goldy1992.mp3player.client.repositories.permissions.FakePermissionsRepository
 import com.github.goldy1992.mp3player.client.repositories.preferences.FakeUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
@@ -39,9 +40,13 @@ class SettingsScreenTest {
     private val permissionsRepository : IPermissionsRepository = FakePermissionsRepository()
 
     private val userPreferencesRepository = FakeUserPreferencesRepository()
+    private val testMediaRepository = TestMediaRepository()
 
-    private val viewModel = SettingsScreenViewModel(userPreferencesRepository = userPreferencesRepository,
-    permissionsRepository = permissionsRepository)
+    private val viewModel = SettingsScreenViewModel(
+        userPreferencesRepository = userPreferencesRepository,
+        permissionsRepository = permissionsRepository,
+        mediaRepository = testMediaRepository
+    )
 
     private lateinit var context : Context
 

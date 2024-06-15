@@ -13,6 +13,7 @@ import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.repositories.media.TestMediaRepository
+import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreen
 import com.github.goldy1992.mp3player.client.ui.screens.library.LibraryScreenViewModel
 import com.github.goldy1992.mp3player.client.ui.screens.main.MainScreen
@@ -69,9 +70,13 @@ class LibraryScreenTest {
         testMediaRepository.onChildrenChangedState.value = ChildrenChangedEvent(TEST_ROOT_ID, itemCount = 1, Bundle())
 
         composeTestRule.setContent {
-            LibraryScreen(
-                viewModel = libraryScreenViewModel
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+
+                LibraryScreen(
+                    viewModel = libraryScreenViewModel,
+                    animatedContentScope = animatedVisibilityScope
+                )
+            }
         }
 
         runBlocking {

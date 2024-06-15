@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -48,8 +48,8 @@ const val LOG_TAG = "NowPlayingScreen"
 fun SharedTransitionScope.NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
     navController: NavController = rememberNavController(),
-    scope : CoroutineScope = rememberCoroutineScope(),
-    animatedContentScope: AnimatedContentScope
+    scope: CoroutineScope = rememberCoroutineScope(),
+    animatedContentScope: AnimatedVisibilityScope
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
     val playbackState by viewModel.playbackState.collectAsState()

@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.library
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -76,7 +76,7 @@ fun SharedTransitionScope.LibraryScreen(
     viewModel: LibraryScreenViewModel = viewModel(),
     windowSize: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
     scope: CoroutineScope = rememberCoroutineScope(),
-    animatedContentScope: AnimatedContentScope
+    animatedContentScope: AnimatedVisibilityScope
 
 ) {
     val selectedLibraryChip by viewModel.selectedChip.collectAsState()

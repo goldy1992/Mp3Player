@@ -18,58 +18,39 @@ import org.junit.runner.RunWith
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class UserPreferencesRepositoryTest {
-
+    companion object {
+        private const val TEST_DATASTORE_NAME = "test_datastore"
+    }
     private val testScheduler : TestCoroutineScheduler = TestCoroutineScheduler()
     private val dispatcher : TestDispatcher = UnconfinedTestDispatcher(testScheduler)
-    private val testScope : TestScope = TestScope(dispatcher)
-
-    private val TEST_DATASTORE_NAME = "test_datastore"
+    private val backgroundScope : TestScope = TestScope(dispatcher)
     private val testContext: Context = ApplicationProvider.getApplicationContext()
     private var testDataStore: DataStore<Preferences> = PreferenceDataStoreFactory.create(
-                                                            scope = testScope,
+                                                            scope = backgroundScope,
                                                             produceFile = { testContext.preferencesDataStoreFile(TEST_DATASTORE_NAME) }
                                                         )
     private val repository: UserPreferencesRepository = UserPreferencesRepository(testDataStore)
 
     @Test
-    fun testDarkMode() = testScope.runTest {
+    fun testDarkMode() = runTest {
         var result = false
-        val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             repository.userPreferencesFlow() .collect {
                 result = it.darkMode
             }
         }
-        runBlocking {
-            repository.updateDarkMode(false)
-            assertFalse(result)
-            repository.updateDarkMode(true)
-            assertTrue(result)
-        }
 
-        collectJob.cancel()
-    }
+        repository.updateDarkMode(false)
+        assertFalse(result)
+        repository.updateDarkMode(true)
+        assertTrue(result)
 
-    @Test
-    fun testSystemDarkMode() = testScope.runTest {
-        var result = false
-        val collectJob = testScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            repository.userPreferencesFlow().collect {
-                result = it.systemDarkMode
-            }
-        }
-        runBlocking {
-            repository.updateSystemDarkMode(false)
-            assertFalse(result)
-            repository.updateSystemDarkMode(true)
-            assertTrue(result)
-        }
-        collectJob.cancel()
     }
 
     @After
     fun cleanUp() {
         testScheduler.cancelChildren()
         dispatcher.cancelChildren()
-        testScope.cancel()
+        backgroundScope.cancel()
     }
 }

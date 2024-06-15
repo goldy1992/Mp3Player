@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.media.MediaActions
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOffButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleOnButton
@@ -35,7 +36,7 @@ class ShuffleButtonTest {
         // Set Shuffle Mode to be Off
         composeTestRule.setContent {
             ShuffleButton(
-                shuffleEnabledProvider = { shuffleEnabled },
+                isShuffleEnabled =  shuffleEnabled,
             )
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
@@ -57,7 +58,7 @@ class ShuffleButtonTest {
         val shuffleEnabled = true
         composeTestRule.setContent {
             ShuffleButton(
-                shuffleEnabledProvider = { shuffleEnabled },
+                isShuffleEnabled =  shuffleEnabled,
             )
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
