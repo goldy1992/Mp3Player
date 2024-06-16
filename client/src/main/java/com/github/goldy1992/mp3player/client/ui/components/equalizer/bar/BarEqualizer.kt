@@ -26,16 +26,14 @@ private const val MAX_AMPLITUDE = 400f
 private const val LOG_TAG = "BarEqualizer"
 private const val DEFAULT_BAR_HEIGHT = 5f
 
-//@Preview
 @Composable
 fun SharedTransitionScope.BarEqualizer(
     modifier: Modifier = Modifier,
     frequencyValues : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
     canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
     barColor : Color = MaterialTheme.colorScheme.secondary,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer
-                       ) {
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     Log.v(LOG_TAG, "BarEqualizer() recomposing")
     val frequencyPhases = frequencyValues().ifEmpty { (1..24).map { 0f }.toList() }
     /* recalculate the bar width when the number of frequencyPhases sent changes OR the canvas size changes.
@@ -106,9 +104,6 @@ private fun SharedTransitionScope.BarEqualizerCanvas(
     barColor: Color = MaterialTheme.colorScheme.secondary,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    //Log.i(LOG_TAG, "BarEqualizerCanvas() redraw: ${if (bars.isNotEmpty())  bars[0] else 0f} ")
-
-
     Canvas(
         modifier = modifier
             .sharedBounds(

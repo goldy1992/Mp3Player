@@ -58,7 +58,6 @@ fun SongListItem(
                 overflow = TextOverflow.Ellipsis,
             )},
         leadingContent = {
-//                val isPlaying = isPlayingProvider()
 //                // TODO: Move equalizer to overlay song album art image
 //                if (isPlaying) {
 //                    Equalizer(
@@ -166,19 +165,12 @@ fun LargeSongListItem(
             AlbumArtAsync(uri = song.albumArt, contentDescription = song.title)//, contentDescription = song.title, modifier = Modifier.size(40.dp))
 
         },
-        supportingContent = { Surface(color = Color.Blue) {
-Text("@supportinh")
-        }},
-//        trailingContent = {
-//            Row(modifier = Modifier.background(Color.Red), horizontalArrangement = Arrangement.SpaceEvenly) {
-//
-//
-//
-//            }
-//        }
+        supportingContent = { Surface(color = Color.Blue) {}
+        },
     )
-    HorizontalDivider(//startIndent = 72.dp,
-        color = MaterialTheme.colorScheme.surfaceVariant)
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.surfaceVariant
+    )
 }
 
 

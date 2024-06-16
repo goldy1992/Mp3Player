@@ -23,60 +23,6 @@ import com.github.goldy1992.mp3player.client.data.repositories.preferences.UserP
 import com.github.goldy1992.mp3player.commons.VersionUtils
 
 private const val LOG_TAG = "Theme"
-//enum class Theme(
-//    val displayName : String,
-//    val lightColors : ColorScheme,
-//    val darkColors : ColorScheme
-//) {
-//    BLUE("Blue", blueAppTheme, blueAppDarkTheme),
-//    ORANGE("Orange", orangeAppTheme, orangeAppDarkTheme),
-//}
-//
-//
-//val blueAppTheme = ColorScheme(
-//    primary = primaryBlue,
-//    primaryContainer = darkBlue,
-//    secondary = accentPink,
-//    secondaryContainer = darkPink,
-//    error = red,
-//
-//)
-
-//val blueAppDarkTheme = darkColors(
-//    primary = primaryBlue,
-//    primaryVariant = darkBlue,
-//    secondary = grey,
-//    error = red,
-//
-//)
-
-//val orangeAppTheme = lightColors(
-//    primary = darkOrange,
-//    primaryVariant = darkBlue,
-//    secondary = accentOrange,
-//    background = white,
-//    error = red,
-//    surface = white,
-//    onPrimary = white,
-////    onSecondary = black,
-//    onBackground = black,
-//    onSurface = black,
-////    onError = white
-//)
-//
-//val orangeAppDarkTheme = darkColors(
-//    primary = grey,
-//    primaryVariant = darkBlue,
-//    secondary = grey,
-//    background = black,
-//    error = red,
-//    surface = black,
-//    onPrimary = white,
-//    onSecondary = white,
-//    onBackground = white,
-//    onSurface = white,
-//    onError = white
-//)
 
 internal val LocalIsDarkMode = staticCompositionLocalOf { false }
 

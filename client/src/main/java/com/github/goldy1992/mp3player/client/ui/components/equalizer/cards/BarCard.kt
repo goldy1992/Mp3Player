@@ -8,9 +8,6 @@ import androidx.compose.ui.res.stringResource
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.bar.BarEqualizer
 
-//@Preview(name = "Bar Card",
-//widthDp = 200,
-//heightDp = 200)
 @Composable
 fun SharedTransitionScope.BarCard(
     animatedVisibilityScope: AnimatedVisibilityScope,

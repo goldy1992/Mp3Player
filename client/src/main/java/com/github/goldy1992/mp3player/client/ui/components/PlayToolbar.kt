@@ -81,17 +81,17 @@ fun SharedTransitionScope.PlayToolbar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     SkipToPreviousButton(
-                        modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
+                        modifier = Modifier.size(40.dp),
                         onClick = playbackState.actions.skipToPrevious
                     )
                     PlayPauseButton(
-                        modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
+                        modifier = Modifier.size(60.dp),
                         isPlaying = playbackState.isPlaying,
                         onClickPlay = playbackState.actions.play,
                         onClickPause = playbackState.actions.pause
                     )
                     SkipToNextButton(
-                        modifier = Modifier.size(40.dp),//.border(BorderStroke(1.dp, Color.Red)),
+                        modifier = Modifier.size(40.dp),
                         onClick = playbackState.actions.skipToNext
                     )
                 }

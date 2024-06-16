@@ -3,6 +3,10 @@ package com.github.goldy1992.mp3player.client.models.media
 import com.github.goldy1992.mp3player.client.models.RepeatMode
 import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 
+/**
+ * A data class to store all the callback functions to the [MediaViewModel] within one object.
+ * Allows the reduction of composable function parameters.
+ */
 data class MediaActions(
     val play: () -> Unit = {},
     val pause: () -> Unit = {},
