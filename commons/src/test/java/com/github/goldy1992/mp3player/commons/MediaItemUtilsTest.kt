@@ -20,10 +20,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.io.File
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
+@Config(shadows = [ShadowMediaItem::class])
 class MediaItemUtilsTest {
     @Test
     fun testGetExtrasNull() {
@@ -33,11 +35,12 @@ class MediaItemUtilsTest {
 
     @Test
     fun testGetExtrasNotNull() {
-        val mediaItem = MediaItemBuilder("id")
-                .setTitle("algo") // sets an extra
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            title = "algo"
+        ).build()
         val result = getExtras(mediaItem)
-        Assert.assertNotNull(result)
+        assertNotNull(result)
     }
 
     @Test
@@ -49,77 +52,86 @@ class MediaItemUtilsTest {
 
     @Test
     fun testGetTitleUnknown() {
-        val mediaItem = MediaItemBuilder("id")
-                .setTitle(null)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            title = null
+        ).build()
         assertUnknown(getTitle(mediaItem))
     }
 
     @Test
     fun testGetTitleNotNull() {
         val title = "TITLE"
-        val mediaItem = MediaItemBuilder("id")
-                .setTitle(title)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            title = title
+        ).build()
         assertEquals(title, getTitle(mediaItem))
     }
 
     @Test
     fun testGetArtistReturnsUnknownWhenSetToNull() {
-        val mediaItem = MediaItemBuilder("id")
-                .setArtist(null)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            artist = null
+        ).build()
         assertEquals(Constants.UNKNOWN, getArtist(mediaItem))
     }
 
     @Test
     fun testGetArtistNotNull() {
         val artist = "ARTIST"
-        val mediaItem = MediaItemBuilder("id")
-                .setArtist(artist)
+        val mediaItem = MediaItemBuilder(mediaId = "id",
+                artist = artist)
                 .build()
         assertEquals(artist, getArtist(mediaItem))
     }
 
     @Test
     fun testGetAlbumArtPathNull() {
-        val mediaItem = MediaItemBuilder("id")
-                .setAlbumArtUri(null)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            albumArtUri = null
+        ).build()
         assertNull(getAlbumArtPath(mediaItem))
     }
 
     @Test
     fun testGetAlbumArtPathNotNull() {
         val expectedPath = "sdsad"
-        val mediaItem = MediaItemBuilder("id")
-                .setAlbumArtUri(Uri.parse(expectedPath))
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            albumArtUri = Uri.parse(expectedPath)
+        ).build()
         assertEquals(expectedPath, getAlbumArtPath(mediaItem))
     }
 
     @Test
     fun testGetDirectoryNameUnknown() {
-        val mediaItem = MediaItemBuilder("id")
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id"
+        ).build()
         assertUnknown(getDirectoryName(mediaItem))
     }
 
     @Test
     fun testGetDirectoryNameNotNull() {
         val directoryName = "directoryName"
-        val mediaItem = MediaItemBuilder("id")
-                .setDirectoryFile(File("/sdsad/$directoryName"))
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            file = File("/sdsad/$directoryName"),
+            isBrowsable = true
+        ).build()
         assertEquals(directoryName, getDirectoryName(mediaItem))
     }
 
     @Test
     fun testGetMediaUri() {
         val uri = Mockito.mock(Uri::class.java)
-        val mediaItem = MediaItemBuilder("id")
-                .setMediaUri(uri)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            mediaUri = uri
+        ).build()
         val result = getMediaUri(mediaItem)
         assertEquals(uri, result)
     }
@@ -127,9 +139,10 @@ class MediaItemUtilsTest {
     @Test
     fun testGetDuration() {
         val expectedDuration = 231L
-        val mediaItem = MediaItemBuilder("id")
-                .setDuration(expectedDuration)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            duration = expectedDuration
+        ).build()
         val result = getDuration(mediaItem)
         assertEquals(expectedDuration, result)
     }
@@ -137,9 +150,10 @@ class MediaItemUtilsTest {
     @Test
     fun testGetMediaItemType() {
         val expectedMediaItemType = MediaItemType.SONGS
-        val mediaItem = MediaItemBuilder("id")
-                .setMediaItemType(expectedMediaItemType)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            mediaItemType = expectedMediaItemType
+        ).build()
         val result = getMediaItemType(mediaItem)
         assertEquals(expectedMediaItemType, result)
     }
@@ -147,27 +161,30 @@ class MediaItemUtilsTest {
     @Test
     fun testGetRootItemType() {
         val expectedMediaItemType = MediaItemType.FOLDER
-        val mediaItem = MediaItemBuilder("id")
-                .setRootItemType(expectedMediaItemType)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            rootMediaItemType = expectedMediaItemType
+        ).build()
         val result = getRootMediaItemType(mediaItem)
         assertEquals(expectedMediaItemType, result)
     }
 
     @Test
     fun testGetDescriptionNull() {
-        val mediaItem = MediaItemBuilder("id")
-                .setDescription(null)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            description = null
+        ).build()
         assertNull(getDescription(mediaItem))
     }
 
     @Test
     fun testGetDescriptionNotNull() {
         val description = "description"
-        val mediaItem = MediaItemBuilder("id")
-                .setDescription(description)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            description = description
+        ).build()
         assertEquals(description, getDescription(mediaItem))
     }
 
@@ -176,9 +193,10 @@ class MediaItemUtilsTest {
         val path = "a" + File.pathSeparator + "b" + File.pathSeparator + "c"
         val testFile = File(path)
         val expectedPath = testFile.absolutePath
-        val m : MediaItem = MediaItemBuilder("id")
-                .setDirectoryFile(testFile)
-                .build()
+        val m : MediaItem = MediaItemBuilder(
+            mediaId = "id",
+            file = testFile
+        ).build()
         val result = MediaItemUtils.getDirectoryPath(m)
         assertEquals(expectedPath, result)
     }
@@ -194,9 +212,10 @@ class MediaItemUtilsTest {
     @Test
     fun testGetAlbumArtUri() {
         val expectedAlbumArtUri : Uri = mock<Uri>()
-        val mediaItem : MediaItem = MediaItemBuilder()
-                .setAlbumArtUri(expectedAlbumArtUri)
-                .build()
+        val mediaItem : MediaItem = MediaItemBuilder(
+            mediaId = "id",
+            albumArtUri = expectedAlbumArtUri
+        ).build()
         val result = MediaItemUtils.getAlbumArtUri(mediaItem)
         assertEquals(expectedAlbumArtUri, result)
     }
@@ -204,11 +223,12 @@ class MediaItemUtilsTest {
     @Test
     fun testGetAlbumArtImage() {
         val expectedImage = ByteArray(4)
-        val mediaItem : MediaItem = MediaItemBuilder()
-                .setAlbumArtImage(expectedImage)
-                .build()
+        val mediaItem : MediaItem = MediaItemBuilder(
+            mediaId = "id",
+            albumArtData = expectedImage
+        ).build()
         val result = MediaItemUtils.getAlbumArtImage(mediaItem)
-        assertTrue(Arrays.equals(expectedImage, result))
+        assertTrue(expectedImage.contentEquals(result))
     }
 
     private fun assertUnknown(value : String?) {
