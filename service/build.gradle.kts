@@ -19,6 +19,10 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    lint {
+        disable.add("UnsafeOptInUsageError")
+    }
+
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
@@ -98,6 +102,7 @@ dependencies {
     testImplementation(libs.hilt.android.testing)
     //kspTest(libs.hilt.compiler)
 }
+
 
 
 sonarqube {
