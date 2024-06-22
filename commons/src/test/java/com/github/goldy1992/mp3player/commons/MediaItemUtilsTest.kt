@@ -20,12 +20,9 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 import java.io.File
-import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
-@Config(shadows = [ShadowMediaItem::class])
 class MediaItemUtilsTest {
     @Test
     fun testGetExtrasNull() {
@@ -190,11 +187,12 @@ class MediaItemUtilsTest {
 
     @Test
     fun testGetDirectoryPath() {
-        val path = "a" + File.pathSeparator + "b" + File.pathSeparator + "c"
+        val path = "a" + File.separator + "b" + File.separator + "c"
         val testFile = File(path)
         val expectedPath = testFile.absolutePath
         val m : MediaItem = MediaItemBuilder(
             mediaId = "id",
+            isBrowsable = true,
             file = testFile
         ).build()
         val result = MediaItemUtils.getDirectoryPath(m)

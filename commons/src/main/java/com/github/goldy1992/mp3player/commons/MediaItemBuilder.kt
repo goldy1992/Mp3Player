@@ -36,6 +36,8 @@ data class MediaItemBuilder(
         val extras = Bundle()
         extras.putString(Constants.LIBRARY_ID, libraryId)
         extras.putLong(MetaDataKeys.DURATION, duration)
+        extras.putSerializable(Constants.MEDIA_ITEM_TYPE, mediaItemType)
+        extras.putSerializable(Constants.ROOT_ITEM_TYPE, rootMediaItemType)
         if (file != null) {
             extras.putString(MetaDataKeys.META_DATA_KEY_FILE_NAME, file.name)
             if (file.isDirectory || isBrowsable) {
