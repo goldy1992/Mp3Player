@@ -25,12 +25,14 @@ class SongFromUriRetriever @Inject constructor(@ApplicationContext private val c
         if (uri != null && uri.scheme != null) {
             if (ContentResolver.SCHEME_CONTENT == uri.scheme) {
                 mmr.setDataSource(context, uri)
-                val mediaItemBuilder = MediaItemBuilder("1")
-                mediaItemBuilder.setMediaUri(uri)
-                mediaItemBuilder.setAlbumArtImage(mmr.embeddedPicture)
-                mediaItemBuilder.setTitle(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE))
-                mediaItemBuilder.setArtist(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST))
-                mediaItemBuilder.setDuration(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong())
+                val mediaItemBuilder = MediaItemBuilder(
+                    mediaId = "1",
+                    mediaUri = uri,
+                    albumArtData = mmr.embeddedPicture,
+                    title=mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE),
+                    artist=mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST),
+                    duration=mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)!!.toLong()
+                )
                 mmr.release()
                 return mediaItemBuilder.build()
             } else {

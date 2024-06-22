@@ -295,9 +295,15 @@ class DefaultMediaRepositoryTest {
     @Test
     fun testGetSearchResults() = runTest {
         val mediaItem1Id = "id1"
-        val mediaItem1 = MediaItemBuilder(mediaItem1Id).setMediaItemType(MediaItemType.SONG).build()
+        val mediaItem1 = MediaItemBuilder(
+            mediaId = mediaItem1Id,
+            mediaItemType =MediaItemType.SONG
+        ).build()
         val mediaItem2Id = "id2"
-        val mediaItem2 = MediaItemBuilder(mediaItem2Id).setMediaItemType(MediaItemType.SONG).build()
+        val mediaItem2 = MediaItemBuilder(
+            mediaId = mediaItem2Id,
+            mediaItemType = MediaItemType.SONG
+        ).build()
         val expectedSearchResult = listOf(mediaItem1, mediaItem2)
         val query = "query"
         fakeMediaDataSource.searchResultsState = expectedSearchResult

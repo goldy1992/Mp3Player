@@ -28,12 +28,14 @@ class MediaEntityParserTest {
     @Test
     fun testCanParseRootWithChildren() {
         val root : Root = Root.NOT_LOADED
-        val albums = MediaItemBuilder("albums")
-            .setMediaItemType(MediaItemType.ALBUMS)
-            .build()
-        val songs = MediaItemBuilder("songs")
-            .setMediaItemType(MediaItemType.SONGS)
-            .build()
+        val albums = MediaItemBuilder(
+            mediaId = "albums",
+            mediaItemType = MediaItemType.ALBUMS
+        ).build()
+        val songs = MediaItemBuilder(
+            mediaId = "songs",
+            mediaItemType=MediaItemType.SONGS
+        ).build()
         val mediaItems = listOf(songs, albums)
 
         val result = MediaEntityParser.parse(root, mediaItems)

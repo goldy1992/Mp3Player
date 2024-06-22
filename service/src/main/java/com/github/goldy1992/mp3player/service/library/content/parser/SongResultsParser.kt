@@ -64,19 +64,19 @@ class SongResultsParser
         val sArtworkUri = Uri.parse(ALBUM_ART_URI_PREFIX)
         val albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId)
 
-        return MediaItemBuilder(mediaId)
-                .setMediaUri(mediaContentUri)
-                .setTitle(title)
-                .setDuration(duration)
-                .setFileName(fileName)
-                .setDirectoryFile(directory)
-                .setArtist(artist)
-                .setMediaItemType(MediaItemType.SONG)
-                .setAlbumArtUri(albumArtUri)
-               // .setAlbumArtImage(albumImageByteArray)
-                .setIsPlayable(true)
-                .setFolderType(FOLDER_TYPE_NONE)
-                .build()
+        return MediaItemBuilder(
+            mediaId = mediaId,
+            mediaUri = mediaContentUri,
+            title=title,
+            duration=duration,
+            file=directory,
+            artist=artist,
+            mediaItemType=MediaItemType.SONG,
+            albumArtUri=albumArtUri,
+            // .setAlbumArtImage(albumImageByteArray)
+            isPlayable=true,
+            isBrowsable = true
+        ).build()
     }
 
     override fun compare(m1: MediaItem, m2: MediaItem): Int {

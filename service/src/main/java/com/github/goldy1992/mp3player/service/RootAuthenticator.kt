@@ -14,21 +14,20 @@ import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 import javax.inject.Inject
 import androidx.annotation.OptIn as AndroidXOptIn
 
-@AndroidXOptIn(UnstableApi::class)
 class RootAuthenticator @Inject constructor(ids: MediaItemTypeIds) {
     private val acceptedMediaId: String = ids.getId(MediaItemType.ROOT)
 
-    private val rootItem = MediaItemBuilder(acceptedMediaId)
-        .setFolderType(FOLDER_TYPE_NONE)
-        .setIsPlayable(false)
-        .setMediaItemType(MediaItemType.ROOT)
-        .build()
+    private val rootItem = MediaItemBuilder(
+        mediaId = acceptedMediaId,
+        isPlayable = false,
+        mediaItemType = MediaItemType.ROOT
+    ).build()
 
-    private val rejectedRootItem = MediaItemBuilder(REJECTED_MEDIA_ROOT_ID)
-        .setFolderType(FOLDER_TYPE_NONE)
-        .setIsPlayable(false)
-        .setMediaItemType(MediaItemType.ROOT)
-        .build()
+    private val rejectedRootItem = MediaItemBuilder(
+        mediaId = REJECTED_MEDIA_ROOT_ID,
+        isPlayable = false,
+        mediaItemType = MediaItemType.ROOT
+    ).build()
 
     fun authenticate(params : MediaLibraryService.LibraryParams): LibraryResult<MediaItem> {
         val clientPackageName : String = params.extras.getString(PACKAGE_NAME_KEY) ?: ""

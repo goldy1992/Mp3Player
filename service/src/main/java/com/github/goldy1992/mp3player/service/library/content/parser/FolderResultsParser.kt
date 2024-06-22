@@ -48,13 +48,14 @@ class FolderResultsParser
          *      Folder to reject: 'folder1extended' */
         val folder = directoryInfo.directory
         val filePath = folder.absolutePath + File.separator
-        return MediaItemBuilder(filePath)
-            .setMediaItemType(MediaItemType.FOLDER)
-            .setDirectoryFile(folder)
-            .setFileCount(directoryInfo.fileCount.get())
-            .setFolderType(FOLDER_TYPE_MIXED)
-            .setIsPlayable(false)
-            .build()
+        return MediaItemBuilder(
+            mediaId = filePath,
+            mediaItemType = MediaItemType.FOLDER,
+            file = folder,
+            isBrowsable = true,
+            fileCount = directoryInfo.fileCount.get(),
+            isPlayable = false
+        ).build()
     }
 
     private fun addToDirectoryMap(path : String, directoryPathMap : MutableMap<String, DirectoryInfo>) {

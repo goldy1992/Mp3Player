@@ -48,19 +48,22 @@ class MediaContentManagerTest {
     private val testScope = TestScope(dispatcher)
 
     private val testRootId = "rootId"
-    private val testRootItem = MediaItemBuilder(testRootId)
-        .setMediaItemType(MediaItemType.ROOT)
-        .build()
+    private val testRootItem = MediaItemBuilder(
+        mediaId = testRootId,
+        mediaItemType = MediaItemType.ROOT
+    ).build()
 
     private val testSongsId = "songsId"
-    private val testSongsMediaItem = MediaItemBuilder(testSongsId)
-        .setMediaItemType(MediaItemType.SONGS)
-        .build()
+    private val testSongsMediaItem = MediaItemBuilder(
+        mediaId = testSongsId,
+        mediaItemType = MediaItemType.SONGS
+    ).build()
 
     private val testSongsChildId = "songsChildId"
-    private val testSongsChildMediaItem = MediaItemBuilder(testSongsChildId)
-        .setMediaItemType(MediaItemType.SONGS)
-        .build()
+    private val testSongsChildMediaItem = MediaItemBuilder(
+        mediaId = testSongsChildId,
+        mediaItemType = MediaItemType.SONGS
+        ).build()
 
     @Before
     fun setup() {

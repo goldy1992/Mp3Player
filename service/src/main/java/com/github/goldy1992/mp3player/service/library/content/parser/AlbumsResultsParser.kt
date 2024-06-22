@@ -78,15 +78,16 @@ class AlbumsResultsParser
 
         val lastYearIndex = c.getColumnIndex(MediaStore.Audio.Albums.FIRST_YEAR)
         val lastYear = if (lastYearIndex >= 0) c.getLong(lastYearIndex) else 0
-        return MediaItemBuilder(albumId.toString())
-            .setAlbumTitle(albumTitle)
-            .setAlbumArtist(albumArtist)
-            .setAlbumArtUri(albumArtUri)
-            .setRecordingYear(firstYear.toInt())
-            .setReleaseYear(lastYear.toInt())
-            .setMediaItemType(MediaItemType.ALBUM)
-            .setIsPlayable(true)
-            .build()
+        return MediaItemBuilder(
+            mediaId = albumId.toString(),
+            albumTitle=albumTitle,
+            albumArtist=albumArtist,
+            albumArtUri=albumArtUri,
+            recordingYear=firstYear.toInt(),
+            releaseYear=lastYear.toInt(),
+            mediaItemType=MediaItemType.ALBUM,
+            isPlayable = true
+        ).build()
     }
 
 }

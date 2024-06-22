@@ -40,9 +40,10 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val expectedId = "23fsdf"
         val songTitle = "songTitle"
         val expectedValue = songTitle.uppercase(Locale.ROOT)
-        val mediaItem = MediaItemBuilder(expectedId)
-                .setTitle(expectedValue)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = expectedId,
+            title = expectedValue
+        ).build()
         argumentCaptor<Song>().apply {
             songDatabaseManager.insert(mediaItem)
             verify(songDao, times(1)).insert(capture())
@@ -56,9 +57,10 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     fun testReindexCheckDeleteOld() = testScope.runTest {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
-        val toReturn = MediaItemBuilder(expectedId)
-                .setTitle(title)
-                .build()
+        val toReturn = MediaItemBuilder(
+            mediaId = expectedId,
+            title = title
+        ).build()
         val cmr = ContentManagerResult(listOf(toReturn), 1, true)
         whenever(contentManager.getChildren(testRootItemId))
                 .thenReturn(cmr)
@@ -76,9 +78,10 @@ class SongDatabaseManagerTest : SearchDatabaseManagerTestBase() {
         val expectedId = "sdkjdsf"
         val title = "expectedTitle"
         val expectedTitle = title.uppercase(Locale.ROOT)
-        val toReturn = MediaItemBuilder(expectedId)
-                .setTitle(title)
-                .build()
+        val toReturn = MediaItemBuilder(
+            mediaId = expectedId,
+            title = title
+        ).build()
         val cmr = ContentManagerResult(listOf(toReturn), 1, true)
         whenever(contentManager.getChildren(testRootItemId))
                 .thenReturn(cmr)

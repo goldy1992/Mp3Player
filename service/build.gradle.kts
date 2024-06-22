@@ -19,6 +19,14 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=androidx.media3.common.util.UnstableApi"
+        )
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true

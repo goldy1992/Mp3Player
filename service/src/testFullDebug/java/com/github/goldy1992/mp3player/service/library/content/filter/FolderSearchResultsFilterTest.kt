@@ -22,21 +22,25 @@ class FolderSearchResultsFilterTest {
         val filterQuery = "abc"
         val expectedResultsSize = 2
         val file1ToKeep = File("/a/b/abc101")
-        val item1Keep = MediaItemBuilder("id")
-                .setDirectoryFile(file1ToKeep)
-                .build()
+        val item1Keep = MediaItemBuilder(
+            mediaId = "id",
+            file = file1ToKeep
+        ).build()
         val file2ToThrow = File("/a/b/1ac101")
-        val item2Throw = MediaItemBuilder("id")
-                .setDirectoryFile(file2ToThrow)
-                .build()
+        val item2Throw = MediaItemBuilder(
+            mediaId = "id",
+            file = file2ToThrow
+        ).build()
         val file3ToThrow = File("/a/abc/101")
-        val item3Throw = MediaItemBuilder("id")
-                .setDirectoryFile(file3ToThrow)
-                .build()
+        val item3Throw = MediaItemBuilder(
+            mediaId = "id",
+            file = file3ToThrow
+        ).build()
         val file4ToKeep = File("/a/abc/abc10abc1")
-        val item4Keep = MediaItemBuilder("id")
-                .setDirectoryFile(file4ToKeep)
-                .build()
+        val item4Keep = MediaItemBuilder(
+            mediaId = "id",
+            file = file4ToKeep
+        ).build()
         val resultsToProcess: MutableList<MediaItem> = ArrayList()
         resultsToProcess.add(item1Keep)
         resultsToProcess.add(item2Throw)

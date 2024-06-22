@@ -48,9 +48,10 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     @Test
     override fun testInsert() {
         val expectedId = testFile.absolutePath
-        val mediaItem = MediaItemBuilder(expectedId)
-                .setDirectoryFile(testFile)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = expectedId,
+            file = testFile
+        ).build()
         argumentCaptor<Folder>().apply {
             folderDatabaseManager.insert(mediaItem)
             verify(folderDao, times(1)).insert(capture())
@@ -64,9 +65,10 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     fun testReindexCheckDeleteOld() = testScope.runTest {
         val expectedId = testFile.absolutePath
 
-        val toReturn = MediaItemBuilder(expectedId)
-                .setDirectoryFile(testFile)
-                .build()
+        val toReturn = MediaItemBuilder(
+            mediaId = expectedId,
+            file = testFile
+        ).build()
         val cmr = ContentManagerResult(listOf(toReturn), 1, true)
         whenever(contentManager.getChildren(testRootItemId))
                 .thenReturn(cmr)
@@ -82,9 +84,10 @@ class FolderDatabaseManagerTest : SearchDatabaseManagerTestBase() {
     @Test
     fun testReindexCheckInsertAll() = testScope.runTest {
         val expectedId = testFile.absolutePath
-        val toReturn = MediaItemBuilder(expectedId)
-                .setDirectoryFile(testFile)
-                .build()
+        val toReturn = MediaItemBuilder(
+            mediaId = expectedId,
+           file = testFile
+        ).build()
         val cmr = ContentManagerResult(listOf(toReturn), 1, true)
         whenever(contentManager.getChildren(testRootItemId))
                 .thenReturn(cmr)
