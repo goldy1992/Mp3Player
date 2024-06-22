@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.lists.songs
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +37,7 @@ private const val logTag = "SongListItem"
 fun SongListItem(
     song : Song = Song(),
     isSelected : Boolean = false,
-    isPlayingProvider : () -> Boolean = {false},
+    isPlayingProvider : Boolean = false,
     expanded : Boolean = true,
     onClick: () -> Unit = {},
     containerColor : Color = if (isSelected) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
@@ -59,7 +58,6 @@ fun SongListItem(
                 overflow = TextOverflow.Ellipsis,
             )},
         leadingContent = {
-//                val isPlaying = isPlayingProvider()
 //                // TODO: Move equalizer to overlay song album art image
 //                if (isPlaying) {
 //                    Equalizer(
@@ -91,7 +89,7 @@ fun SongListItem(
             )
         }
         )
-    Divider(//startIndent = 72.dp,
+    HorizontalDivider(//startIndent = 72.dp,
         color = MaterialTheme.colorScheme.surfaceVariant)
 }
 
@@ -167,19 +165,12 @@ fun LargeSongListItem(
             AlbumArtAsync(uri = song.albumArt, contentDescription = song.title)//, contentDescription = song.title, modifier = Modifier.size(40.dp))
 
         },
-        supportingContent = { Surface(color = Color.Blue) {
-Text("@supportinh")
-        }},
-//        trailingContent = {
-//            Row(modifier = Modifier.background(Color.Red), horizontalArrangement = Arrangement.SpaceEvenly) {
-//
-//
-//
-//            }
-//        }
+        supportingContent = { Surface(color = Color.Blue) {}
+        },
     )
-    Divider(//startIndent = 72.dp,
-        color = MaterialTheme.colorScheme.surfaceVariant)
+    HorizontalDivider(
+        color = MaterialTheme.colorScheme.surfaceVariant
+    )
 }
 
 

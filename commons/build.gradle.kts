@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.buildconfig")
@@ -31,10 +31,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
@@ -58,7 +54,7 @@ dependencies {
 
 
     testImplementation(libs.robolectric) {
-        exclude(group = "com.google.auto.service", module = "auto-service")
+   //     exclude(group = "com.google.auto.service", module = "auto-service")
     }
     testImplementation(libs.junit4)
     testImplementation(libs.mockito.inline)

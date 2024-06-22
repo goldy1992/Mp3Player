@@ -50,22 +50,23 @@ class SongResultsParserTest : ResultsParserTestBase() {
         try {
             val mediaItem1 = temporaryFolder.newFile("uri1")
             val mediaItem2 = temporaryFolder.newFile("uri2")
-            expectedMediaItem1 = MediaItemBuilder(MEDIA_ID_1)
-                    .setMediaUri(Uri.parse(mediaItem1.absolutePath))
-                    .setDuration(23423L)
-                    .setArtist("artist1")
-                    .setTitle(COMMON_TITLE)
-                    .setFileName("fileName1")
-                    .setAlbumArtUri(Uri.parse(ALBUM_ID_1.toString() + ""))
-                    .build()
-            expectedMediaItem2 = MediaItemBuilder(MEDIA_ID_2)
-                    .setMediaUri(Uri.parse(mediaItem2.absolutePath))
-                    .setDuration(96406L)
-                    .setArtist("artist1")
-                    .setTitle(COMMON_TITLE)
-                    .setFileName("fileName2")
-                    .setAlbumArtUri(Uri.parse(ALBUM_ID_2.toString() + ""))
-                    .build()
+            expectedMediaItem1 = MediaItemBuilder(
+                mediaId = MEDIA_ID_1,
+                mediaUri = Uri.parse(mediaItem1.absolutePath),
+                duration = 23423L,
+                artist = "artist1",
+                title = COMMON_TITLE,
+               // .setFileName("fileName1")
+                albumArtUri = Uri.parse(ALBUM_ID_1.toString() + "")
+            ).build()
+            expectedMediaItem2 = MediaItemBuilder(
+                mediaId = MEDIA_ID_2,
+                mediaUri = Uri.parse(mediaItem2.absolutePath),
+                duration = 96406L,
+                artist = "artist1",
+                title = COMMON_TITLE,
+                albumArtUri = Uri.parse(ALBUM_ID_2.toString() + "")
+            ).build()
             resultsParser = SongResultsParser(contentResolver)
         } catch (e: IOException) {
             e.printStackTrace()

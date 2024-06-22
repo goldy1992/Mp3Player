@@ -1,10 +1,10 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
@@ -27,10 +27,10 @@ class FolderScreenViewModel
     @Inject
     constructor(
         savedStateHandle: SavedStateHandle,
-        override val mediaRepository: MediaRepository,
-    )  : ViewModel(), Pause, Play, PlayPlaylist, SkipToNext, SkipToPrevious, Subscribe {
+        mediaRepository: MediaRepository,
+    )  : MediaViewModel(mediaRepository), Pause, Play, PlayPlaylist, SkipToNext, SkipToPrevious, Subscribe {
 
-    override val scope = viewModelScope
+
     private val folderId : String = checkNotNull(savedStateHandle["folderId"])
     private val folderName : String = checkNotNull(savedStateHandle["folderName"])
     private val folderPath : String = checkNotNull(savedStateHandle["folderPath"])

@@ -4,6 +4,7 @@ import android.util.Log
 import com.github.goldy1992.mp3player.client.AudioDataProcessor
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandTwentyFour
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,11 +14,12 @@ import kotlinx.coroutines.launch
 class AudioDataViewModelState(
     mediaRepository: MediaRepository,
     audioDataProcessor: AudioDataProcessor,
-    isPlaying: StateFlow<Boolean>,
+    playbackState: StateFlow<PlaybackState>,
     scope: CoroutineScope
 ) : MediaViewModelState<List<Float>>(mediaRepository, scope) {
 
-    private val _audioDataState = MutableStateFlow(emptyList<Float>())
+    // Expose this data to allow initialisation when initialising the visualizer when paused
+     val audioDataState = MutableStateFlow(emptyList<Float>())
 
 
     init {
@@ -26,8 +28,8 @@ class AudioDataViewModelState(
             mediaRepository.audioData()
                 .collect {audioSample ->
                     Log.d(logTag(), "collecting audio data")
-                    if (isPlaying.value) {
-                        _audioDataState.value = audioDataProcessor.processAudioData(audioSample, FrequencyBandTwentyFour()).toList()
+                    if (playbackState.value.isPlaying) {
+                        audioDataState.value = audioDataProcessor.processAudioData(audioSample, FrequencyBandTwentyFour()).toList()
                         Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
                     } else {
                         Log.v(logTag(), "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
@@ -37,7 +39,7 @@ class AudioDataViewModelState(
     }
 
     override fun state(): StateFlow<List<Float>> {
-        return _audioDataState.asStateFlow()
+        return audioDataState.asStateFlow()
     }
 
     override fun logTag(): String {

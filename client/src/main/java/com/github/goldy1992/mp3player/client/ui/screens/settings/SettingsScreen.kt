@@ -1,5 +1,4 @@
 @file:OptIn(
-    ExperimentalAnimationApi::class,
     ExperimentalMaterial3Api::class
 )
 package com.github.goldy1992.mp3player.client.ui.screens.settings
@@ -14,7 +13,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,9 +24,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material.icons.automirrored.filled.Comment
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Construction
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -47,7 +66,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
 import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
@@ -60,7 +78,7 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.Navigation
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
 import com.github.goldy1992.mp3player.commons.Screen
 import kotlinx.coroutines.CoroutineScope
-import java.util.*
+import java.util.EnumMap
 
 private const val logTag = "SettingsScreen"
 
@@ -68,14 +86,14 @@ private const val logTag = "SettingsScreen"
 /**
  * The Settings Screen
  */
-@OptIn(ExperimentalAnimationApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun SettingsScreen(
+fun SharedTransitionScope.SettingsScreen(
     viewModel : SettingsScreenViewModel = viewModel(),
     navController : NavController = rememberNavController(),
     scope : CoroutineScope = rememberCoroutineScope(),
-    windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE)
+    windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
+    animatedContentScope: AnimatedContentScope
+
 ) {
 
     val settings by viewModel.settings.collectAsState()
@@ -86,7 +104,6 @@ fun SettingsScreen(
         viewModel.setDarkMode(newDarkMode)
     }
     settingsOnClickMap[Settings.Type.USE_SYSTEM_DARK_MODE] = { useSystemDarkMode : Boolean -> viewModel.setUseSystemDarkMode(useSystemDarkMode)}
-    settingsOnClickMap[Settings.Type.THEME] = { newTheme : Theme -> viewModel.setTheme(newTheme)}
     settingsOnClickMap[Settings.Type.DYNAMIC_COLOR] = { useDynamicColor : Boolean -> viewModel.setUseDynamicColor(useDynamicColor)}
     settingsOnClickMap[Settings.Type.LANGUAGE] = { language : String ->
         Log.d(logTag, "settingsOnClickMap() setting language to $language")
@@ -115,7 +132,7 @@ fun SettingsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LargeSettingsScreen(
+private fun SharedTransitionScope.LargeSettingsScreen(
     navController: NavController,
     scope: CoroutineScope,
     settingsProvider: () -> Settings,
@@ -154,7 +171,7 @@ private fun LargeSettingsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SmallSettingsScreen(
+private fun SharedTransitionScope.SmallSettingsScreen(
     settingsProvider: () -> Settings,
     permissionsProvider: () -> Map<String, Boolean>,
     settingsOnClickMap: EnumMap<Settings.Type, Any>,
@@ -197,7 +214,7 @@ private fun SmallSettingsScreen(
 
 @Suppress("UNCHECKED_CAST")
 @Composable
-fun SettingsScreenContent(
+fun SharedTransitionScope.SettingsScreenContent(
     settingsOnClickMap : EnumMap<Settings.Type, Any>,
     modifier: Modifier = Modifier,
     settingsProvider: () -> Settings = {Settings()},
@@ -236,7 +253,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
         item {
             SubHeader(title = stringResource(id = R.string.permissions))
@@ -274,7 +291,7 @@ fun SettingsScreenContent(
             )
         }
         item {
-            Divider()
+            HorizontalDivider()
         }
         item {
             SubHeader(title = stringResource(id = R.string.input))
@@ -286,7 +303,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
 
         item {
@@ -304,7 +321,7 @@ fun SettingsScreenContent(
         }
 
         item {
-            Divider()
+            HorizontalDivider()
         }
 
         item {
@@ -458,7 +475,7 @@ private fun FeedbackMenuItem() {
         modifier = Modifier.clickable {
             openFeedbackDialog = true
         },
-        leadingContent = { Icon(Icons.Filled.Comment, contentDescription = feedbackText) },
+        leadingContent = { Icon(Icons.AutoMirrored.Filled.Comment, contentDescription = feedbackText) },
         headlineContent = {
             Column {
                 Text(feedbackText)

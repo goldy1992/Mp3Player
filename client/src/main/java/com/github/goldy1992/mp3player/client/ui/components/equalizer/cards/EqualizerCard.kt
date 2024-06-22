@@ -36,45 +36,43 @@ fun EqualizerCard(
 
     Card(
         modifier = modifier,
-        elevation = CardDefaults.outlinedCardElevation()) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        elevation = CardDefaults.outlinedCardElevation()
+    ) {
 
-            var equalizerSize by remember {
-                mutableStateOf(
-                    DpPxSize.createDpPxSizeFromPx(
-                        0f, 0f, density
-                    )
+
+        var equalizerSize by remember {
+            mutableStateOf(
+                DpPxSize.createDpPxSizeFromPx(
+                    0f, 0f, density
                 )
-            }
+            )
+        }
 
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(8f)
-                    .onSizeChanged {
-                        equalizerSize = DpPxSize.createDpPxSizeFromPx(
-                            it.width.toFloat(),
-                            it.height.toFloat(),
-                            density
-                        )
-                    }) {
-                    equalizer(
-                        canvasSize = equalizerSize,
-                        modifier = Modifier.fillMaxSize()
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .weight(8f)
+                .onSizeChanged {
+                    equalizerSize = DpPxSize.createDpPxSizeFromPx(
+                        it.width.toFloat(),
+                        it.height.toFloat(),
+                        density
                     )
-            }
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .weight(2f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(text = title,
-                    style = MaterialTheme.typography.titleMedium)
-            }
+                }) {
+                equalizer(
+                    equalizerSize,
+                    Modifier.fillMaxSize()
+                )
+        }
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .weight(2f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = title,
+                style = MaterialTheme.typography.titleMedium)
         }
     }
 }

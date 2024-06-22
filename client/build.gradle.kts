@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
+    alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
 android {
@@ -15,9 +16,6 @@ android {
         compose = true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
-    }
     packaging {
         resources {
             excludes += "**/attach_hotspot_windows.dll"
@@ -29,7 +27,6 @@ android {
             excludes += "META-INF/LGPL2.1"
         }
     }
-
 
     defaultConfig {
         minSdk = libs.versions.minSdk.get().toInt()
@@ -67,9 +64,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 
     testOptions {
         animationsDisabled = false
@@ -81,16 +75,34 @@ android {
 
 
     namespace = "com.github.goldy1992.mp3player.client"
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=kotlin.RequiresOptIn",
+            // Enable experimental coroutines APIs, including Flow
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            // Enable experimental compose APIs
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+            "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
+            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
+            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi"
+        )
+
+    }
 
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
     val composeBom = platform(libs.androidx.compose.bom)
 
     implementation(composeBom)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    //implementation(libs.accompanist.insets)
-    //implementation(libs.accompanist.navigation.animation)
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.kotlin)
@@ -101,13 +113,14 @@ dependencies {
     implementation(libs.apache.commons.math3)
     implementation(libs.androidx.activity.kotlin)
     implementation(libs.androidx.compose.activity)
+    implementation(libs.androidx.compose.animation.beta)
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
-    implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.windowsizes)
     implementation(libs.androidx.compose.material.icons.core)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.preview)
@@ -117,7 +130,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.lifecycle.viewmodel.kotlin)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.compose.navigation)
     implementation(libs.coil.compose)
     implementation(libs.google.play.review)
     implementation(libs.google.play.review.ktx)
@@ -131,7 +143,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     ksp(libs.hilt.compiler)
-    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(composeBom)
     androidTestImplementation(libs.androidx.compose.ui.test)

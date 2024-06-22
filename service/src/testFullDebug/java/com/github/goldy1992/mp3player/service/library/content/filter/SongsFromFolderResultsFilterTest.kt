@@ -23,12 +23,14 @@ class SongsFromFolderResultsFilterTest {
     fun testFilterValidQuery() {
         val query = File.pathSeparator + "a" + File.pathSeparator + "b" + File.pathSeparator + "c"
         val expectedDirectory = File(query)
-        val dontFilter = MediaItemBuilder("fds")
-                .setDirectoryFile(expectedDirectory)
-                .build()
-        val toFilter = MediaItemBuilder("fds")
-                .setDirectoryFile(File("/a/otherDir"))
-                .build()
+        val dontFilter = MediaItemBuilder(
+            mediaId = "fds",
+            file = expectedDirectory
+        ).build()
+        val toFilter = MediaItemBuilder(
+            mediaId = "fds",
+            file = File("/a/otherDir")
+        ).build()
         val items: MutableList<MediaItem> = ArrayList()
         items.add(dontFilter)
         items.add(toFilter)

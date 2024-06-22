@@ -31,9 +31,10 @@ class SongsRetrieverTest : ContentResolverRetrieverTestBase<SongsRetriever?>() {
     fun testGetChildren() {
         val id = "xyz"
         val title = "title"
-        val mediaItem = MediaItemBuilder(id)
-                .setTitle(title)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = id,
+           title = title
+        ).build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, MediaStore.Audio.Media.IS_MUSIC + " = 1", null, null)).thenReturn(cursor)
         whenever(resultsParser.create(cursor)).thenReturn(expectedResult)

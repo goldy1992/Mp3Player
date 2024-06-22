@@ -1,10 +1,9 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
-import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -38,17 +36,18 @@ import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "SingleVisualizerScreen"
 
-@OptIn(ExperimentalAnimationApi::class,
-    ExperimentalMaterial3Api::class)
-@Preview
+
 @Composable
-fun SingleVisualizerScreen(
+fun SharedTransitionScope.SingleVisualizerScreen(
     navController: NavController = rememberNavController(),
     viewModel: SingleVisualizerScreenViewModel = viewModel(),
-    scope : CoroutineScope = rememberCoroutineScope()
+    scope : CoroutineScope = rememberCoroutineScope(),
+    animatedContentScope: AnimatedContentScope
+
 ) {
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val audioData by viewModel.audioData.state().collectAsState()
+
     val visualizerName = getVisualizerName(viewModel.visualizer, LocalContext.current)
     Scaffold(
         topBar = {
@@ -59,11 +58,8 @@ fun SingleVisualizerScreen(
         },
         bottomBar = {
             PlayToolbar(
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = {viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
+                animatedVisibilityScope = animatedContentScope,
+                playbackState = playbackState,
                 onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
             )
 
@@ -86,34 +82,45 @@ fun SingleVisualizerScreen(
                 VisualizerType.BAR -> {
                     BarEqualizer(
                         canvasSize = canvasSize,
-                        frequencyValues = { audioData }
+                        frequencyValues = { audioData },
+                        animatedVisibilityScope = animatedContentScope
                     )
                 }
                 VisualizerType.LINE -> {
                     SmoothLineEqualizer(
                         frequencyPhasesState = { audioData },
                         canvasSize = canvasSize,
+                        animatedVisibilityScope = animatedContentScope
                     )
                 }
                 VisualizerType.FOUNTAIN -> {
                     FountainSpringVisualizer(
                         frequencyPhasesProvider = {audioData},
                         canvasSize = canvasSize,
-                        isPlayingProvider = { isPlaying }
+                        isPlayingProvider = { playbackState.isPlaying },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.FOUNTAIN),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 VisualizerType.CIRCULAR -> {
                     CircleEqualizerUsingPolikarpotchkin(
                         frequencyPhasesState = { audioData },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.CIRCULAR),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
                 }
                 VisualizerType.PIE_CHART -> {
                     PieChartVisualizer(
                         frequencyPhasesState = { audioData },
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(VisualizerType.PIE_CHART),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     )
-                }
-                else -> {
-                    Log.w(LOG_TAG, "Unrecognised Visualizer Type")
                 }
             }
         }

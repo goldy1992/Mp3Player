@@ -133,7 +133,7 @@ class MediaLibrarySessionCallback
         customCommand: SessionCommand,
         args: Bundle
     ): ListenableFuture<SessionResult> {
-        Log.v(logTag(), "onCustomCommand() invoked with command: ${customCommand}, args: $args")
+       // Log.v(logTag(), "onCustomCommand() invoked with command: ${customCommand}, args: $args")
         if (CHANGE_PLAYBACK_SPEED == customCommand.customAction) {
             Log.d(logTag(), "onCustomCommand() identified as CHANGE_PLAYBACK_SPEED")
             changeSpeedProvider.changeSpeed(session.player, args)

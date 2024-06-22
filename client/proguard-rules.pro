@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn com.github.goldy1992.mp3player.commons.LogTagger
+-dontwarn com.github.goldy1992.mp3player.commons.MediaItemType
+-dontwarn com.github.goldy1992.mp3player.commons.PermissionsUtils
+-dontwarn com.github.goldy1992.mp3player.commons.Screen
+-dontwarn com.github.goldy1992.mp3player.commons.TimerUtils
+-dontwarn com.github.goldy1992.mp3player.commons.VersionUtils
+-dontwarn com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
+-dontwarn java.lang.invoke.StringConcatFactory

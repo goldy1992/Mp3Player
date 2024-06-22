@@ -8,15 +8,9 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.MediaReposi
 import com.github.goldy1992.mp3player.client.models.media.SearchResults
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
-import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
-import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
+import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlayPlaylist
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.PlaySong
-import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
-import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
-import com.github.goldy1992.mp3player.client.ui.viewmodel.state.CurrentSongViewModelState
-import com.github.goldy1992.mp3player.client.ui.viewmodel.state.IsPlayingViewModelState
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,11 +26,10 @@ import javax.inject.Inject
 class SearchScreenViewModel
     @Inject
     constructor(
-        override val mediaRepository: MediaRepository
+        mediaRepository: MediaRepository,
     )
-    : Pause, Play, PlayPlaylist, PlaySong, SkipToNext, SkipToPrevious, ViewModel(), LogTagger {
+    : PlayPlaylist, PlaySong, MediaViewModel(mediaRepository) {
 
-    override val scope = viewModelScope
     private val _searchQuery = MutableStateFlow("")
     val searchQuery : StateFlow<String> = _searchQuery
 
@@ -81,9 +74,6 @@ class SearchScreenViewModel
             }
         }
     }
-
-    val isPlaying = IsPlayingViewModelState(mediaRepository, viewModelScope)
-    val currentSong = CurrentSongViewModelState(mediaRepository, viewModelScope)
 
     fun play(song: Song) {
         viewModelScope.launch {

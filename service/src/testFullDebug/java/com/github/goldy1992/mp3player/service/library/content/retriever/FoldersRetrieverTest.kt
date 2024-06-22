@@ -37,9 +37,10 @@ class FoldersRetrieverTest : ContentResolverRetrieverTestBase<FoldersRetriever?>
         val file = mock<File>()
         whenever(file.absolutePath).thenReturn(directoryPath)
         whenever(file.name).thenReturn(directoryName)
-        val mediaItem = MediaItemBuilder("id")
-                .setDirectoryFile(file)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = "id",
+            file = file
+        ).build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, retriever!!.projection, null, null, null)).thenReturn(cursor)
         whenever(resultsParser.create(cursor)).thenReturn(expectedResult)

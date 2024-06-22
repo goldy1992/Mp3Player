@@ -1,17 +1,51 @@
 package com.github.goldy1992.mp3player.client.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Close
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Folder
+import androidx.compose.material.icons.outlined.OpenInFull
+import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -26,8 +60,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.models.media.Folder
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.models.media.Playlist
-import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.UiConstants.DEFAULT_DP_SIZE
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
@@ -41,19 +75,17 @@ import kotlinx.coroutines.launch
 
 private const val LOG_TAG = "FolderScreen"
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalFoundationApi::class
-)
+
 @Composable
-fun FolderScreen(
+fun SharedTransitionScope.FolderScreen(
     navController: NavController = rememberNavController(),
     windowSize : WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
-    viewModel: FolderScreenViewModel = viewModel()
+    viewModel: FolderScreenViewModel = viewModel(),
+    animatedContentScope: AnimatedContentScope
+
 ) {
     val scope = rememberCoroutineScope()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val folder : Folder by viewModel.folder.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -62,12 +94,9 @@ fun FolderScreen(
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
-            isPlayingProvider = { isPlaying },
-            onClickPlay = { viewModel.play() },
-            onClickPause = {viewModel.pause() },
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickSkipNext = { viewModel.skipToNext() },
-            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+            animatedVisibilityScope = animatedContentScope,
+            playbackState = playbackState,
+            onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)},
         )
     }
 
@@ -89,7 +118,7 @@ fun FolderScreen(
                         navController.popBackStack()
                     }
                 }) {
-                    Icon(Icons.Filled.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
             },
             actions = {},
@@ -106,9 +135,8 @@ fun FolderScreen(
     val screenContent : @Composable (PaddingValues) -> Unit = {
         FolderScreenContent(
             modifier = Modifier.padding(it),
-            isPlayingProvider = {isPlaying},
+            playbackStateProvider = {playbackState},
             folderProvider = { folder },
-            currentSong = { currentSong },
             onSongSelected = onSongSelected
         )
     }
@@ -160,11 +188,11 @@ private fun SmallFolderScreen(
 @Composable
 private fun FolderScreenContent(modifier : Modifier = Modifier,
                                 folderProvider : () -> Folder = { Folder() },
-                                isPlayingProvider : () -> Boolean = { false},
-                                currentSong : () -> Song = { Song() },
+                                playbackStateProvider : () -> PlaybackState = { PlaybackState.DEFAULT },
                                 onSongSelected : (Int, Playlist) -> Unit = { _, _->}) {
     Column(modifier = modifier) {
         val folder = folderProvider()
+        val playbackState = playbackStateProvider()
         val folderSongs = folder.playlist
         when (folderSongs.state) {
             State.LOADING -> {
@@ -179,8 +207,8 @@ private fun FolderScreenContent(modifier : Modifier = Modifier,
                 Log.d(LOG_TAG, "FolderScreenContent() folder songs state LOADED, size: ${folderSongs.songs.size}")
                 LoadedSongsListWithHeader(
                     playlist = folderSongs,
-                    isPlayingProvider = isPlayingProvider,
-                    currentSong = currentSong(),
+                    isPlayingProvider = playbackState.isPlaying,
+                    currentSong = playbackState.currentSong,
                     onSongSelected = onSongSelected,
                     headerItem = { HeaderItem(folder = folder)}
                 )
@@ -221,7 +249,7 @@ private fun HeaderItem(
         )
     }
     Card(modifier.padding(16.dp)) {
-        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        HorizontalDivider(Modifier.padding(start = 4.dp, end = 4.dp))
         Row(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -265,7 +293,7 @@ private fun HeaderItem(
 
             }
         }
-        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        HorizontalDivider(Modifier.padding(start = 4.dp, end = 4.dp))
         Row(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom=8.dp),
             verticalAlignment = Alignment.CenterVertically) {
@@ -280,7 +308,7 @@ private fun HeaderItem(
             )
 
         }
-        Divider(Modifier.padding(start = 4.dp, end = 4.dp))
+        HorizontalDivider(Modifier.padding(start = 4.dp, end = 4.dp))
     }
 
 }

@@ -35,7 +35,7 @@ class ShuffleButtonTest {
         // Set Shuffle Mode to be Off
         composeTestRule.setContent {
             ShuffleButton(
-                shuffleEnabledProvider = { shuffleEnabled },
+                isShuffleEnabled =  shuffleEnabled,
             )
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()
@@ -57,7 +57,7 @@ class ShuffleButtonTest {
         val shuffleEnabled = true
         composeTestRule.setContent {
             ShuffleButton(
-                shuffleEnabledProvider = { shuffleEnabled },
+                isShuffleEnabled =  shuffleEnabled,
             )
         }
         composeTestRule.onNodeWithContentDescription(expected, useUnmergedTree = true).assertExists()

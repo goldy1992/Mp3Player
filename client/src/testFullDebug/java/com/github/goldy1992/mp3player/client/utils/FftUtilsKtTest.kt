@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.utils
 
 import com.github.goldy1992.mp3player.client.data.audiobands.FrequencyBandFive
 import org.apache.commons.math3.complex.Complex
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.sqrt
 

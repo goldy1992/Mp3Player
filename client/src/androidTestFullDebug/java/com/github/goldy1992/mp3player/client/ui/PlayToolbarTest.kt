@@ -8,7 +8,9 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performTouchInput
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
+import com.github.goldy1992.mp3player.client.models.media.PlaybackState
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.components.SharedElementComposable
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -33,12 +35,15 @@ class PlayToolbarTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.play)
         val isPlaying = false
+        val playbackState = PlaybackState(isPlaying = isPlaying)
         composeTestRule.setContent {
-            PlayToolbar(
-                isPlayingProvider = { isPlaying }
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+                PlayToolbar(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    playbackState = playbackState
+                )
+            }
         }
-
         composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true).assertExists()
         val playButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
         playButton.assertExists()
@@ -54,10 +59,14 @@ class PlayToolbarTest {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         val expected = context.resources.getString(R.string.pause)
         val isPlaying = true
+        val playbackState = PlaybackState(isPlaying = isPlaying)
         composeTestRule.setContent {
-            PlayToolbar(
-                isPlayingProvider = { isPlaying },
-            )
+            SharedElementComposable { animatedVisibilityScope ->
+                PlayToolbar(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    playbackState = playbackState
+                )
+            }
         }
         val pauseButton = composeTestRule.onNode(hasContentDescription(expected), useUnmergedTree = true)
         pauseButton.assertExists()
@@ -71,7 +80,13 @@ class PlayToolbarTest {
         val bottomAppBarDescr = InstrumentationRegistry.getInstrumentation().context.getString(R.string.bottom_app_bar)
         val mockOnClick = MockOnClick()
         composeTestRule.setContent {
-            PlayToolbar(onClickBar = { mockOnClick.onClick()})
+            SharedElementComposable { animatedVisibilityScope ->
+                PlayToolbar(
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    playbackState = PlaybackState.DEFAULT,
+                    onClickBar = { mockOnClick.onClick() }
+                )
+            }
         }
         composeTestRule.onNodeWithContentDescription(bottomAppBarDescr).performTouchInput {
             this.click(this.percentOffset(0.9f, 0.9f))

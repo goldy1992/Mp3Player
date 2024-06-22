@@ -33,9 +33,10 @@ class SongsFromFolderRetrieverTest : ContentResolverRetrieverTestBase<SongsFromF
     fun testGetChildren() {
         val id = "xyz"
         val title = "title"
-        val mediaItem = MediaItemBuilder(id)
-                .setTitle(title)
-                .build()
+        val mediaItem = MediaItemBuilder(
+            mediaId = id,
+            title = title
+        ).build()
         expectedResult.add(mediaItem)
         whenever(contentResolver.query(any(), any(), any(), any(), eq(null))).thenReturn(cursor)
         whenever(resultsParser.create(cursor)).thenReturn(expectedResult)

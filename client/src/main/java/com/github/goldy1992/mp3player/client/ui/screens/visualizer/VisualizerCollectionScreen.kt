@@ -1,16 +1,31 @@
 package com.github.goldy1992.mp3player.client.ui.screens.visualizer
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.BoundsTransform
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.ArcMode
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.Scaffold
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -38,16 +53,17 @@ import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "VisualizerScreen"
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun VisualizerCollectionScreen(
+fun SharedTransitionScope.VisualizerCollectionScreen(
     navController : NavController = rememberNavController(),
     viewModel: VisualizerCollectionViewModel = viewModel(),
-    scope : CoroutineScope = rememberCoroutineScope()) {
+    scope : CoroutineScope = rememberCoroutineScope(),
+    animatedContentScope: AnimatedContentScope
+) {
 
     val audioMagnitudes by viewModel.audioData.state().collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it) }
+    val playbackState by viewModel.playbackState.collectAsState()
+    val onClickCard : (VisualizerType) -> Unit = { NavigationUtils.navigate(navController, it, audioMagnitudes) }
 
     Scaffold(
         topBar = {
@@ -60,26 +76,23 @@ fun VisualizerCollectionScreen(
          },
         bottomBar = {
             PlayToolbar(
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = {viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
-                onClickBar = { navController.navigate(Screen.NOW_PLAYING.name)}
+                animatedVisibilityScope = animatedContentScope,
+                playbackState = playbackState,
+                onClickBar = { navController.navigate(Screen.NOW_PLAYING.name) },
             )
         },
     ) {
         VisualizerContentCardCollection(
             modifier = Modifier.padding(it),
             audioMagnitudes = {audioMagnitudes},
-            isPlaying = { isPlaying },
+            isPlaying = { playbackState.isPlaying },
+            animatedContentScope = animatedContentScope,
             onClickCard = onClickCard
         )
     }
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun TopBar(navIcon: @Composable () -> Unit = {}) {
@@ -101,13 +114,13 @@ private fun TopBar(navIcon: @Composable () -> Unit = {}) {
     )
 }
 
-@Preview
 @Composable
-fun VisualizerContentCardCollection(
+fun SharedTransitionScope.VisualizerContentCardCollection(
     modifier: Modifier = Modifier,
     audioMagnitudes : () -> List<Float> = { listOf(100f, 200f, 300f, 150f)},
     isPlaying : () -> Boolean = {false},
     onClickCard : (VisualizerType) -> Unit = {_->},
+    animatedContentScope: AnimatedContentScope,
     scope: CoroutineScope = rememberCoroutineScope()) {
 
     val density = LocalDensity.current
@@ -123,9 +136,9 @@ fun VisualizerContentCardCollection(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+            //     .background(MaterialTheme.colorScheme.surface)
             .onSizeChanged { gridSizePx = it }) {
         item {
             BarCard(
@@ -133,8 +146,9 @@ fun VisualizerContentCardCollection(
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
-                       onClickCard(VisualizerType.BAR)
+                        onClickCard(VisualizerType.BAR)
                     },
+                animatedVisibilityScope = animatedContentScope,
                 frequencyValues = audioMagnitudes,
             )
         }
@@ -147,12 +161,17 @@ fun VisualizerContentCardCollection(
                         onClickCard(VisualizerType.LINE)
                     },
                 frequencyPhases = audioMagnitudes,
+                animatedVisibilityScope = animatedContentScope
             )
         }
 
         item {
             FountainSpringCard(
                 modifier = Modifier
+                    .sharedElement(
+                        rememberSharedContentState(VisualizerType.FOUNTAIN),
+                        animatedVisibilityScope = animatedContentScope
+                    )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -166,6 +185,10 @@ fun VisualizerContentCardCollection(
         item {
             CircularEqualizerCard(
                 modifier = Modifier
+                    .sharedElement(
+                        rememberSharedContentState(VisualizerType.CIRCULAR),
+                        animatedVisibilityScope = animatedContentScope
+                    )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -178,6 +201,17 @@ fun VisualizerContentCardCollection(
         item {
             PieChartCard(
                 modifier = Modifier
+                    .sharedElement(
+                        rememberSharedContentState(VisualizerType.PIE_CHART),
+                        animatedVisibilityScope = animatedContentScope,
+                        boundsTransform = BoundsTransform { initialBounds, targetBounds ->
+                            keyframes {
+                                durationMillis = 4000
+                                initialBounds at 0 using ArcMode.ArcBelow using FastOutSlowInEasing
+                                targetBounds at 4000
+                            }
+                        }
+                    )
                     .width(cardLengthDp)
                     .height(cardLengthDp)
                     .clickable {
@@ -190,25 +224,6 @@ fun VisualizerContentCardCollection(
 
 }
 
-
-
-@Preview
-@Composable
-fun TestPadding() {
-    Box(modifier = Modifier
-        .width(200.dp)
-        .height(200.dp)
-        .background(Color.Red)) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(Color.Green)
-                .padding(10.dp)
-                ) {
-
-        }
-    }
-}
 
 
 

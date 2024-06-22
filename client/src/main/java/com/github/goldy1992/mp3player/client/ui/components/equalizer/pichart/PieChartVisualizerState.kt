@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -33,16 +32,16 @@ fun rememberPieChartVisualizerState(
 class PieChartVisualizerState(
     val scope: CoroutineScope,
     val insetPx : Float,
-    val isDarkMode : Boolean,
-    val baseColor: Color
+    private val isDarkMode : Boolean,
+    private val baseColor: Color
 ) : LogTagger {
 
     var canvasSize: IntSize = IntSize.Zero
-    var maxRadius = 10f
-    var defaultRadius = maxRadius * 0.8f
-    var frequencyRange = maxRadius - defaultRadius
-    var defaultOffset = Offset((canvasSize.width / 2f), (canvasSize.height / 2f))
-    val colorRange = createColorRange(baseColor)
+    private var maxRadius = 10f
+    private var defaultRadius = maxRadius * 0.8f
+    private var frequencyRange = maxRadius - defaultRadius
+    private var defaultOffset = Offset((canvasSize.width / 2f), (canvasSize.height / 2f))
+    private val colorRange = createColorRange(baseColor)
 
 
     private val _pieSegments = MutableStateFlow<List<PieSegment>>(emptyList())
@@ -110,17 +109,11 @@ class PieChartVisualizerState(
             targetG = baseColor.green - (colorRange.green * fractionOfAmplification)
             targetB = baseColor.blue - (colorRange.blue * fractionOfAmplification)
         }
-        Log.v(
-            logTag(),
-            "rRange: ${colorRange.red}, gRange: ${colorRange.green}, bRange: ${colorRange.blue}, fractionOfAmplification: $fractionOfAmplification"
-        )
         return Color(red = targetR, green = targetG, blue = targetB)
 
     }
 
     private fun createColorRange(baseColor: Color): ColorRange {
-
-
         val rRange = if (isDarkMode) 1 - baseColor.red else baseColor.red
         val gRange = if (isDarkMode) 1 - baseColor.green else baseColor.green
         val bRange = if (isDarkMode) 1 - baseColor.blue else baseColor.blue

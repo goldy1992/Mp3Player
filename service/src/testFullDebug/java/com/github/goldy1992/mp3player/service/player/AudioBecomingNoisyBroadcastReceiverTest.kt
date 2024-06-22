@@ -1,8 +1,12 @@
 package com.github.goldy1992.mp3player.service.player
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Assert
@@ -11,8 +15,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.*
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@SuppressLint("UnspecifiedRegisterReceiverFlag")
 @RunWith(RobolectricTestRunner::class)
+@Config(minSdk = 26)
 class AudioBecomingNoisyBroadcastReceiverTest {
 
     private val exoPlayer: ExoPlayer = mock<ExoPlayer>()

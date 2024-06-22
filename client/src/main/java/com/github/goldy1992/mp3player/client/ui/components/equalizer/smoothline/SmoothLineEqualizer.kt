@@ -1,5 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,16 +21,19 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.github.goldy1992.mp3player.client.ui.DpPxSize
+import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 
 private const val logTag = "SmoothEqualizer"
 
 @Composable
-fun SmoothLineEqualizer(modifier: Modifier = Modifier,
-                        frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
-                        canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
-                        insetPx : Float = 10f,
-                        surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
-                        lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
+fun SharedTransitionScope.SmoothLineEqualizer(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier,
+    frequencyPhasesState : () -> List<Float> = {listOf(100f, 200f, 300f, 150f)},
+    canvasSize : DpPxSize = DpPxSize.createDpPxSizeFromDp(200.dp, 200.dp, LocalDensity.current),
+    insetPx : Float = 10f,
+    surfaceColor : Color = MaterialTheme.colorScheme.primaryContainer,
+    lineColor : Color = MaterialTheme.colorScheme.onPrimaryContainer,
 ) {
     val frequencyPhases = frequencyPhasesState()
     val numberOfPhases: Int = frequencyPhases.size
@@ -93,7 +98,12 @@ fun SmoothLineEqualizer(modifier: Modifier = Modifier,
             }
             .toList()
 
-    Canvas(modifier = modifier
+    Canvas( modifier = modifier
+        .sharedBounds(
+            rememberSharedContentState(VisualizerType.LINE),
+            animatedVisibilityScope = animatedVisibilityScope,
+            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+        )
         .fillMaxSize()
 
     ) {

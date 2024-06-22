@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.github.goldy1992.mp3player.client.ui.Theme
 import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,12 +19,16 @@ import javax.inject.Singleton
 data class UserPreferences(
     val darkMode: Boolean = true,
     val systemDarkMode : Boolean = false,
-    val theme: String = "None",
     val useDynamicColor: Boolean = false,
     val language : String = "en"
 )  {
     companion object {
-        val DEFAULT = UserPreferences(darkMode = false, systemDarkMode = false, theme = "None", useDynamicColor = true, language = "en")
+        val DEFAULT = UserPreferences(
+            darkMode = false,
+            systemDarkMode = false,
+            useDynamicColor = true,
+            language = "en"
+        )
     }
 }
 
@@ -59,8 +62,6 @@ open class UserPreferencesRepository
             }
         }.map { preferences : Preferences ->
             // Get the sort order from preferences and convert it to a [SortOrder] object
-            val themeString : String? = preferences[PreferencesKeys.THEME]
-            val theme : Theme = if (themeString != null) Theme.valueOf(themeString) else Theme.BLUE
 
             // Get our show completed value, defaulting to false if not set:
             val darkMode : Boolean = preferences[PreferencesKeys.DARK_MODE] ?: false
@@ -68,7 +69,7 @@ open class UserPreferencesRepository
             val systemDarkMode : Boolean = preferences[PreferencesKeys.USE_SYSTEM_DARK_MODE] ?: true
             val useDynamicColor : Boolean = preferences[PreferencesKeys.USE_DYNAMIC_COLOR] ?: true
             val language : String = preferences[PreferencesKeys.LANGUAGE] ?: "en"
-            val userPreferences = UserPreferences(darkMode, systemDarkMode, theme.name, useDynamicColor, language)
+            val userPreferences = UserPreferences(darkMode, systemDarkMode, useDynamicColor, language)
 
             Log.d(logTag(), "userPreferencesFlow: preferences mapped to $userPreferences")
             userPreferences
@@ -78,11 +79,7 @@ open class UserPreferencesRepository
         return userPreferencesFlow
     }
 
-    override suspend fun updateTheme(newTheme: Theme) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKeys.THEME] = newTheme.name
-        }
-    }
+
 
     override suspend fun updateDarkMode(useDarkMode: Boolean) {
         dataStore.edit { preferences ->

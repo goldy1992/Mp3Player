@@ -2,13 +2,9 @@ package com.github.goldy1992.mp3player.client.ui
 
 import android.content.Intent
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -37,7 +33,6 @@ import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCol
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
 import com.github.goldy1992.mp3player.commons.Screen
-import kotlinx.coroutines.InternalCoroutinesApi
 
 private const val LOG_TAG = "ComposeApp"
 
@@ -47,121 +42,134 @@ private const val LOG_TAG = "ComposeApp"
  * @param windowSize The [WindowSizeClass].
  * @param startScreen The [Screen] to begin with.
  */
-@OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalComposeUiApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterialApi::class,
-    ExperimentalMaterial3WindowSizeClassApi::class,
-    InternalCoroutinesApi::class,
-)
 @Composable
 fun ComposeApp(
     userPreferencesRepository: IUserPreferencesRepository,
     windowSize: WindowSizeClass,
     startScreen : Screen
 ) {
+
     val navController = rememberNavController()
     AppTheme(userPreferencesRepository = userPreferencesRepository) {
-        NavHost(
-            navController = navController,
-            startDestination = startScreen.name
-        ) {
 
-            composable(Screen.MAIN.name) {
-                val viewModel = hiltViewModel<MainScreenViewModel>()
-                MainScreen(
-                    navController,
-                    windowSize = windowSize,
-                    viewModel = viewModel
-                )
-            }
-            composable(Screen.LIBRARY.name) {
-                val viewModel = hiltViewModel<LibraryScreenViewModel>()
-                LibraryScreen(
-                    navController = navController,
-                    viewModel = viewModel,
-                    windowSize = windowSize
-                )
-
-            }
-            composable(Screen.NOW_PLAYING.name,
-                deepLinks = listOf(navDeepLink {
-                    uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
-                    action = Intent.ACTION_VIEW })
+        SharedTransitionLayout {
+            NavHost(
+                navController = navController,
+                startDestination = startScreen.name
             ) {
-                val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
-                NowPlayingScreen(
-                    navController = navController,
-                    viewModel = viewModel
-                )
-            }
-            composable(Screen.SEARCH.name) {
-                val viewModel = hiltViewModel<SearchScreenViewModel>()
-                SearchScreen(
-                    navController = navController,
-                    windowSize = windowSize,
-                    viewModel = viewModel
-                )
-            }
-            composable(
-                route = Screen.FOLDER.name + "/{folderId}/{folderName}/{folderPath}",
-                arguments = listOf(
-                    navArgument("folderId") {type = NavType.StringType},
-                    navArgument("folderName") {type = NavType.StringType},
-                    navArgument("folderPath") {type = NavType.StringType}
-            )) {
-                val viewModel = hiltViewModel<FolderScreenViewModel>()
-                FolderScreen(
-                     navController = navController,
-                    windowSize = windowSize,
-                    viewModel = viewModel
-                )
 
-            }
-            composable(
-                route = Screen.ALBUM.name + "/{albumId}/{albumTitle}/{albumArtist}/{albumArtUri}",
-                arguments = listOf(
-                    navArgument("albumId") { type = NavType.StringType },
-                    navArgument("albumTitle") { type = NavType.StringType },
-                    navArgument("albumArtist") { type = NavType.StringType },
-                    navArgument("albumArtUri") { type = NavType.StringType },
-                )) {
-                val viewModel = hiltViewModel<AlbumScreenViewModel>()
-                AlbumScreen(
-                    navController = navController,
-                    viewModel = viewModel
-                )
+                composable(Screen.MAIN.name) {
+                    val viewModel = hiltViewModel<MainScreenViewModel>()
+                    MainScreen(
+                        navController,
+                        windowSize = windowSize,
+                        viewModel = viewModel,
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedContentScope = this@composable
 
-            }
+                    )
+                }
+                composable(Screen.LIBRARY.name) {
+                    val viewModel = hiltViewModel<LibraryScreenViewModel>()
+                    LibraryScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        windowSize = windowSize,
+                        animatedContentScope = this@composable
+                    )
+
+                }
+                composable(
+                    Screen.NOW_PLAYING.name,
+                    deepLinks = listOf(navDeepLink {
+                        uriPattern = "${ROOT_APP_URI_PATH}/${Screen.NOW_PLAYING.name}"
+                        action = Intent.ACTION_VIEW
+                    })
+                ) {
+                    val viewModel = hiltViewModel<NowPlayingScreenViewModel>()
+                    NowPlayingScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
+                    )
+                }
+                composable(Screen.SEARCH.name) {
+                    val viewModel = hiltViewModel<SearchScreenViewModel>()
+                    SearchScreen(
+                        navController = navController,
+                        windowSize = windowSize,
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
+                    )
+                }
+                composable(
+                    route = Screen.FOLDER.name + "/{folderId}/{folderName}/{folderPath}",
+                    arguments = listOf(
+                        navArgument("folderId") { type = NavType.StringType },
+                        navArgument("folderName") { type = NavType.StringType },
+                        navArgument("folderPath") { type = NavType.StringType }
+                    )) {
+                    val viewModel = hiltViewModel<FolderScreenViewModel>()
+                    FolderScreen(
+                        navController = navController,
+                        windowSize = windowSize,
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
+                    )
+
+                }
+                composable(
+                    route = Screen.ALBUM.name + "/{albumId}/{albumTitle}/{albumArtist}/{albumArtUri}",
+                    arguments = listOf(
+                        navArgument("albumId") { type = NavType.StringType },
+                        navArgument("albumTitle") { type = NavType.StringType },
+                        navArgument("albumArtist") { type = NavType.StringType },
+                        navArgument("albumArtUri") { type = NavType.StringType },
+                    )
+                ) {
+                    val viewModel = hiltViewModel<AlbumScreenViewModel>()
+                    AlbumScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
+                    )
+
+                }
                 composable(Screen.SETTINGS.name) {
                     val viewModel = hiltViewModel<SettingsScreenViewModel>()
                     SettingsScreen(
                         navController = navController,
                         viewModel = viewModel,
-                        windowSize = windowSize
+                        windowSize = windowSize,
+                        animatedContentScope = this@composable
                     )
                 }
                 composable(
-                    route = Screen.SINGLE_VISUALIZER.name + "/{visualizer}",
+                    route = Screen.SINGLE_VISUALIZER.name + "/{visualizer}/{audioData}",
                     arguments = listOf(
-                        navArgument("visualizer"){ type = NavType.StringType }
+                        navArgument("visualizer") { type = NavType.StringType },
+                        navArgument("audioData") {type = NavType.StringType}
                     )
                 ) {
+
                     val viewModel = hiltViewModel<SingleVisualizerScreenViewModel>()
                     SingleVisualizerScreen(
                         navController = navController,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
                     )
                 }
-                composable(Screen.VISUALIZER_COLLECTION.name){
+                composable(Screen.VISUALIZER_COLLECTION.name) {
                     val viewModel = hiltViewModel<VisualizerCollectionViewModel>()
                     VisualizerCollectionScreen(
                         navController = navController,
-                        viewModel = viewModel)
+                        viewModel = viewModel,
+                        animatedContentScope = this@composable
+                    )
                 }
             }
         }
-        Log.v(LOG_TAG, "ComposeApp() invocation complete")
     }
+        Log.v(LOG_TAG, "ComposeApp() invocation complete")
+}
 

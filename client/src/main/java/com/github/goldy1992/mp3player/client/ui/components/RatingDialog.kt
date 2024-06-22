@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
@@ -19,7 +19,7 @@ import com.github.goldy1992.mp3player.client.R
 fun RatingDialog(
     closeDialog : (Int?) -> Unit = {_->}
 ) {
-    var currentRating by remember { mutableStateOf(5) } // default to 5 stars
+    var currentRating by remember { mutableIntStateOf(5) } // default to 5 stars
     AlertDialog(
         title = { Text(stringResource(id = R.string.rating_dialog_title))},
         confirmButton = {

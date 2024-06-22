@@ -12,6 +12,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.goldy1992.mp3player.client.R
+import java.util.Locale
 
 @Preview
 @Composable
@@ -29,9 +31,9 @@ fun SpeedController(modifier : Modifier = Modifier,
 
     val sliderPosition = playbackSpeedProvider()
 
-    var uiSliderPosition : Float by remember { mutableStateOf(sliderPosition)  }
+    var uiSliderPosition : Float by remember { mutableFloatStateOf(sliderPosition)  }
     var isTouchTracking by remember { mutableStateOf(false)   }
-    var touchTrackingPosition : Float by remember { mutableStateOf(0f) }
+    var touchTrackingPosition : Float by remember { mutableFloatStateOf(0f) }
 
     Column(modifier = modifier,
     horizontalAlignment = Alignment.CenterHorizontally) {
@@ -55,7 +57,7 @@ fun SpeedController(modifier : Modifier = Modifier,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.weight(1f)) {
             Text(
-                text = "${String.format("%.2f", sliderPosition)}x",
+                text = "${String.format(Locale.getDefault(), "%.2f", sliderPosition)}x",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier

@@ -4,7 +4,7 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.eventholder
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @ExperimentalCoroutinesApi

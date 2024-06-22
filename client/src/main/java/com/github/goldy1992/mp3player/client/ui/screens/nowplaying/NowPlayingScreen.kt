@@ -1,7 +1,7 @@
 package com.github.goldy1992.mp3player.client.ui.screens.nowplaying
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,53 +31,46 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.buttons.NavUpButton
+import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.RepeatButton
 import com.github.goldy1992.mp3player.client.ui.buttons.ShuffleButton
-import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
+import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.client.ui.components.SpeedController
 import com.github.goldy1992.mp3player.client.ui.components.ViewPager
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.SeekBar
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
 
 const val LOG_TAG = "NowPlayingScreen"
-@OptIn(
-    ExperimentalAnimationApi::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class,
-)
-@InternalCoroutinesApi
+
 @Composable
-fun NowPlayingScreen(
+fun SharedTransitionScope.NowPlayingScreen(
     viewModel: NowPlayingScreenViewModel = viewModel(),
     navController: NavController = rememberNavController(),
-    scope : CoroutineScope = rememberCoroutineScope(),
+    scope: CoroutineScope = rememberCoroutineScope(),
+    animatedContentScope: AnimatedVisibilityScope
 ) {
     val songTitleDescription = stringResource(id = R.string.song_title)
-    val playbackPosition by viewModel.playbackPosition.state().collectAsState()
-    val playbackSpeed by viewModel.playbackSpeed.state().collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
+    val playbackState by viewModel.playbackState.collectAsState()
     val queue by viewModel.queue.state().collectAsState()
-    val shuffleEnabled by viewModel.shuffleMode.state().collectAsState()
-    val repeatMode by viewModel.repeatMode.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
 
     Scaffold (
         topBar = {
             TopAppBar (
                 title = {
-                    val title : String = currentSong.title
-                    val artist : String = currentSong.artist
+                    val title : String = playbackState.currentSong.title
+                    val artist : String = playbackState.currentSong.artist
                     Column {
-                        Text(text = title,
+                        Text(
+                            text = title,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             overflow = TextOverflow.Ellipsis,
                             modifier = Modifier.semantics {
                                 contentDescription = songTitleDescription
                             }
-                            )
+                        )
                         Text(text = artist,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.titleSmall,
@@ -91,16 +84,6 @@ fun NowPlayingScreen(
                 },
                 actions = {},
                 windowInsets = TopAppBarDefaults.windowInsets
-            )
-        },
-        bottomBar = {
-            PlayToolbar(
-                isPlayingProvider = { isPlaying },
-                onClickPlay = { viewModel.play() },
-                onClickPause = { viewModel.pause() },
-                onClickSkipPrevious = { viewModel.skipToPrevious() },
-                onClickSkipNext = { viewModel.skipToNext() },
-                currentSongProvider = { currentSong }
             )
         },
 
@@ -117,32 +100,52 @@ fun NowPlayingScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SpeedController(
-                    playbackSpeedProvider = { playbackSpeed },
+                    playbackSpeedProvider = { playbackState.playbackSpeed },
                     changePlaybackSpeed = { newSpeed : Float -> viewModel.changePlaybackSpeed(newSpeed)},
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 48.dp, end = 48.dp)
                 )
+
                 ViewPager(
-                    currentSongProvider = { currentSong },
-                    queue =  queue,
-                    skipToNext = { viewModel.skipToNext()},
+                    currentSongProvider = { playbackState.currentSong },
+                    queue = queue,
+                    skipToNext = { viewModel.skipToNext() },
                     skipToPrevious = { viewModel.skipToPrevious() },
-                    modifier = Modifier.weight(4f))
+                    modifier = Modifier.Companion
+                        .sharedElement(
+                            rememberSharedContentState(key = playbackState.currentSong.id),
+                            animatedVisibilityScope = animatedContentScope
+                        )
+                        .weight(4f)
+                    )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(top = 2.dp, bottom = 2.dp)
                         .weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
                     ShuffleButton(
-                        shuffleEnabledProvider = { shuffleEnabled },
+                        isShuffleEnabled = playbackState.shuffleEnabled,
                         onClick = { isEnabled -> viewModel.setShuffleEnabled(isEnabled) }
                     )
+                    SkipToPreviousButton{
+                        viewModel.skipToPrevious()
+                    }
+                    PlayPauseButton(
+                        modifier = Modifier.size(60.dp),//.border(BorderStroke(1.dp, Color.Red)),
+                        isPlaying = playbackState.isPlaying,
+                        onClickPlay = playbackState.actions.play,
+                        onClickPause = playbackState.actions.pause
+                    )
+                    SkipToNextButton {
+                        viewModel.skipToNext()
+                    }
                     RepeatButton(
-                        repeatModeProvider = { repeatMode },
+                        repeatModeProvider = { playbackState.repeatMode },
                         onClick = { currentRepeatMode -> viewModel.setRepeatMode(RepeatModeUtils.getNextRepeatMode(currentRepeatMode)) }
                     )
                 }
@@ -153,10 +156,10 @@ fun NowPlayingScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     SeekBar(
-                        playbackSpeedProvider = { playbackSpeed },
-                        currentSongProvider = {  currentSong },
-                        isPlayingProvider = { isPlaying },
-                        playbackPositionProvider = {  playbackPosition },
+                        playbackSpeedProvider = { playbackState.playbackSpeed },
+                        currentSongProvider = {  playbackState.currentSong },
+                        isPlayingProvider = { playbackState.isPlaying },
+                        playbackPositionProvider = {  playbackState.playbackPosition },
                         seekTo = { value -> viewModel.seekTo(value)})
                 }
             }

@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     id("mp3player.android.room")
     id("mp3player.android.library.jacoco")
@@ -17,6 +17,18 @@ android {
         Ensures app's state is completely cleared between tests. */
         //testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    lint {
+        disable.add("UnsafeOptInUsageError")
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += listOf(
+            "-Xcontext-receivers",
+            "-opt-in=androidx.media3.common.util.UnstableApi"
+        )
     }
 
     buildTypes {
@@ -46,7 +58,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions { jvmTarget = "17" }
 
     testOptions {
         unitTests {
@@ -89,8 +100,9 @@ dependencies {
     ksp(libs.hilt.compiler)
     testImplementation(libs.hilt.android.core)
     testImplementation(libs.hilt.android.testing)
-    kspTest(libs.hilt.compiler)
+    //kspTest(libs.hilt.compiler)
 }
+
 
 
 sonarqube {

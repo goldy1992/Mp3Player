@@ -2,17 +2,16 @@ package com.github.goldy1992.mp3player.client.utils;
 
 import android.net.Uri
 import android.util.Base64
-import org.mockito.kotlin.mock
-import androidx.navigation.NavController;
+import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
 import com.github.goldy1992.mp3player.commons.Screen
 import org.junit.Assert.assertEquals
-
-import org.junit.Test;
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.robolectric.RobolectricTestRunner
@@ -60,7 +59,7 @@ class NavigationUtilsTest {
         val expectedVisualizerType = VisualizerType.BAR
 
         argumentCaptor<String>().apply {
-            NavigationUtils.navigate(mockNavController, expectedVisualizerType)
+            NavigationUtils.navigate(mockNavController, expectedVisualizerType, listOf(0.05f))
             verify(mockNavController, times(1)).navigate(this.capture(), eq(null), eq(null))
 
             val result = this.firstValue

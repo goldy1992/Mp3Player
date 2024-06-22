@@ -1,24 +1,43 @@
 package com.github.goldy1992.mp3player.client.ui.screens.search
 
 import android.util.Log
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,9 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import coil.annotation.ExperimentalCoilApi
 import com.github.goldy1992.mp3player.client.R
-import com.github.goldy1992.mp3player.client.data.*
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.Playlist
@@ -54,25 +71,23 @@ import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.Screen
 import org.apache.commons.lang3.StringUtils
-import java.util.*
+import java.util.EnumMap
 
 private const val logTag = "SearchScreen"
 
-@ExperimentalMaterial3WindowSizeClassApi
-@ExperimentalAnimationApi
-@ExperimentalComposeUiApi
-@ExperimentalFoundationApi
+
 @Composable
-fun SearchScreen(
+fun SharedTransitionScope.SearchScreen(
     navController: NavController = rememberNavController(),
     windowSize: WindowSizeClass = WindowSizeClass.calculateFromSize(DEFAULT_DP_SIZE),
-    viewModel : SearchScreenViewModel = viewModel()) {
-
+    viewModel: SearchScreenViewModel = viewModel(),
+    animatedContentScope: AnimatedVisibilityScope
+) {
     Log.i(logTag,"composing search screen")
+    val playbackState by viewModel.playbackState.collectAsState()
     val searchResults by viewModel.searchResults.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val isPlaying by viewModel.isPlaying.state().collectAsState()
-    val currentSong by viewModel.currentSong.state().collectAsState()
+
 
     Log.i(logTag,"state_collected")
     val onSelectedMap = {
@@ -111,16 +126,11 @@ fun SearchScreen(
 
     val bottomBar : @Composable () -> Unit = {
         PlayToolbar(
-            isPlayingProvider = { isPlaying },
-            onClickSkipNext = { viewModel.skipToNext() },
-            onClickSkipPrevious = { viewModel.skipToPrevious() },
-            onClickPause = { viewModel.pause() },
-            onClickPlay = { viewModel.play() },
+            playbackState = playbackState,
             onClickBar = {navController.navigate(Screen.NOW_PLAYING.name)},
-            currentSongProvider = { currentSong }
+            animatedVisibilityScope = animatedContentScope
        )
     }
-
 
     val isLargeScreen = windowSize.widthSizeClass == WindowWidthSizeClass.Expanded
     if (isLargeScreen) {
@@ -186,7 +196,7 @@ private fun LargeSearchResults(
     }
 }
 
-@ExperimentalComposeUiApi
+
 @Composable
 fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" },
               onNavUpPressed : () -> Unit = {},
@@ -234,7 +244,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
             },
             leadingIcon = {
                 IconButton(onClick = onNavUpPressed) {
-                    Icon(Icons.Filled.ArrowBack, "Back")
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
                 }
             },
             trailingIcon = {
@@ -262,9 +272,6 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
 
 }
 
-@OptIn(ExperimentalCoilApi::class)
-@ExperimentalComposeUiApi
-@ExperimentalFoundationApi
 @Composable
 fun SearchResultsContent(
     modifier : Modifier = Modifier,

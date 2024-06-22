@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.zIndex
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart.PieChartVisualizer
 
@@ -19,7 +20,7 @@ fun PieChartCard(
     ) { canvasSize, containerModifier ->
         PieChartVisualizer(
             frequencyPhasesState = frequencyPhases,
-            modifier = containerModifier
+            modifier = containerModifier.zIndex(0f)
         )
     }
 

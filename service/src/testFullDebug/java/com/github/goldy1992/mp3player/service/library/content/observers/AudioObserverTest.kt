@@ -77,9 +77,10 @@ class AudioObserverTest {
         val expectedDir = File("/a/b/c")
         var uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         uri = ContentUris.withAppendedId(uri, expectedId)
-        val result = MediaItemBuilder("sf")
-                .setDirectoryFile(expectedDir)
-                .build()
+        val result = MediaItemBuilder(
+            mediaId = "sf",
+            file = expectedDir
+        ).build()
         whenever(contentManager.getContentById(expectedId.toString())).thenReturn(result)
         audioObserver.onChange(true, uri)
         verify(contentManager, times(1)).getContentById(expectedId.toString())
