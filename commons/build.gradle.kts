@@ -54,7 +54,7 @@ dependencies {
 
 
     testImplementation(libs.robolectric) {
-        exclude(group = "com.google.auto.service", module = "auto-service")
+   //     exclude(group = "com.google.auto.service", module = "auto-service")
     }
     testImplementation(libs.junit4)
     testImplementation(libs.mockito.inline)
