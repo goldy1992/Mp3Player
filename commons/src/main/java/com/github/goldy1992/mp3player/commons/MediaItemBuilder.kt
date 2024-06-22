@@ -41,9 +41,7 @@ data class MediaItemBuilder(
         extras.putSerializable(Constants.ROOT_ITEM_TYPE, rootMediaItemType)
         if (file != null) {
             extras.putString(MetaDataKeys.META_DATA_KEY_FILE_NAME, file.name)
-            if (file.isDirectory || isBrowsable) {
-                extras.putSerializable(MetaDataKeys.META_DATA_DIRECTORY, file)
-            }
+            extras.putSerializable(MetaDataKeys.META_DATA_DIRECTORY, file)
             extras.putInt(Constants.FILE_COUNT, fileCount)
 
         }
