@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/goldy1992/Mp3Player/compare/v3.6.1...v3.7.0) (2024-06-22)
+
+
+### Features
+
+* **transition:** Added support for shared element transition. ([7a0229c](https://github.com/goldy1992/Mp3Player/commit/7a0229c843089a4209bbd1b9a95b1dbd20daa370))
+
 ## [3.6.1](https://github.com/goldy1992/Mp3Player/compare/v3.6.0...v3.6.1) (2024-03-30)
 
 
