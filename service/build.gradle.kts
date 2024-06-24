@@ -30,6 +30,7 @@ android {
             "-opt-in=androidx.media3.common.util.UnstableApi"
         )
     }
+    namespace = "com.github.goldy1992.mp3player.service"
 
     buildTypes {
         getByName("release") {

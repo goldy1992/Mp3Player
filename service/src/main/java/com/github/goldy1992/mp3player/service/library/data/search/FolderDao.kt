@@ -21,5 +21,5 @@ interface FolderDao : SearchDao<Folder> {
     override fun deleteOld(ids: List<String?>?)
 
     @Query("SELECT * FROM folders WHERE value like '%' || :value || '%'")
-    override fun query(value: String?): List<Folder>?
+    override fun query(value: String?): List<Folder>
 }

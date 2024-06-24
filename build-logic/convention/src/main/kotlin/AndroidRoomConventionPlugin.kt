@@ -1,3 +1,4 @@
+import androidx.room.gradle.RoomExtension
 import com.github.goldy1992.mp3player.libs
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
@@ -14,13 +15,18 @@ class AndroidRoomConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
+            pluginManager.apply("androidx.room")
             pluginManager.apply("com.google.devtools.ksp")
 
             extensions.configure<KspExtension> {
+                arg("room.generateKotlin", "true")
+            }
+
+            extensions.configure<RoomExtension> {
                 // The schemas directory contains a schema file for each version of the Room database.
                 // This is required to enable Room auto migrations.
                 // See https://developer.android.com/reference/kotlin/androidx/room/AutoMigration.
-                arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+                schemaDirectory("$projectDir/schemas")
             }
 
             dependencies {

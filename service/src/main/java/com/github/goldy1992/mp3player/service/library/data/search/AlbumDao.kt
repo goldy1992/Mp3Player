@@ -21,5 +21,5 @@ interface AlbumDao : SearchDao<Album> {
     override fun deleteOld(ids: List<String?>?)
 
     @Query("SELECT * FROM albums WHERE value like '%' || :value || '%'")
-    override fun query(value: String?): List<Album>?
+    override fun query(value: String?): List<Album>
 }

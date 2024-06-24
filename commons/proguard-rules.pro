@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class com.github.goldy1992.mp3player.commons.**
+-keep public class hilt_aggregated_deps.**
+-dontwarn java.lang.invoke.StringConcatFactory

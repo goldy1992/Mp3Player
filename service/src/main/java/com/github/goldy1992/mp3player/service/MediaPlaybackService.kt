@@ -21,9 +21,8 @@ import androidx.annotation.OptIn as AndroidXOptIn
  * list, the service will continue to run in the background and only be destroyed by the operating
  * system.
  */
-@AndroidXOptIn(UnstableApi::class)
 @AndroidEntryPoint
-open class MediaPlaybackService : MediaLibraryService(),
+class MediaPlaybackService : MediaLibraryService(),
         LogTagger {
 
     @Inject

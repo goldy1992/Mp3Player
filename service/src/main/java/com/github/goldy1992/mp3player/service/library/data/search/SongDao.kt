@@ -20,5 +20,5 @@ interface SongDao : SearchDao<Song> {
     override fun deleteOld(ids: List<String?>?)
 
     @Query("SELECT * FROM songs WHERE value like '%' || :value || '%'")
-    override fun query(value: String?): List<Song>?
+    override fun query(value: String?): List<Song>
 }
