@@ -32,7 +32,6 @@
   public static *** e(...);
 }
 
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 -keep public class com.github.goldy1992.mp3player.**
 -keep public interface com.github.goldy1992.mp3player.**
--keep public class hilt_aggregated_deps.**
--keep public class dagger.**

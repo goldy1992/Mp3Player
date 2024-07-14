@@ -20,5 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep public class com.github.goldy1992.mp3player.commons.**
--keep public class hilt_aggregated_deps.**
+-keep public final class com.github.goldy1992.mp3player.commons.**
+-keep public interface com.github.goldy1992.mp3player.commons.**
 -dontwarn java.lang.invoke.StringConcatFactory

@@ -21,4 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn java.lang.invoke.StringConcatFactory
 -keep public class com.github.goldy1992.mp3player.client.**
--keep public class hilt_aggregated_deps.**
+-keep public interface com.github.goldy1992.mp3player.client.**

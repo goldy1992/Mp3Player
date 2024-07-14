@@ -11,8 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
-
-
 @InstallIn(SingletonComponent::class)
 @Module
 object SingletonScopedCoroutineScopeModule {
