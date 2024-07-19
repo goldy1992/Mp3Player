@@ -26,6 +26,8 @@ import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateAnimationTime
 import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.calculateCurrentPosition
+import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.validPlaybackPosition
+import com.github.goldy1992.mp3player.client.utils.SeekbarUtils.validSong
 import com.github.goldy1992.mp3player.client.utils.TimeUtils.formatTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -60,6 +62,7 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
         durationDescription = durationDescription,
         currentPositionDescription = currentPositionDescription,
         scope = scope,
+        song = song,
         seekTo = seekTo
     )
 }
@@ -70,30 +73,37 @@ fun SeekBar(isPlayingProvider: () -> Boolean = {true},
 @Composable
 fun PlaybackPositionAnimation(
     isPlaying: Boolean = true,
-    song: Song =  Song.DEFAULT,
+    song: Song = Song.DEFAULT,
     playbackSpeed :  Float = 1.0f,
     playbackPositionEvent :  PlaybackPositionEvent = PlaybackPositionEvent.DEFAULT,
     content: @Composable (Float) -> Unit
 ) {
+    if (validPlaybackPosition(song, playbackPositionEvent)) {
+        Log.v(LOG_TAG, "SeekBar() recomposed")
+        val duration = song.duration.toFloat()
+        val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
+        Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
+        val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
 
-    Log.v(LOG_TAG, "SeekBar() recomposed")
-    val duration = song.duration.toFloat()
-    val currentPosition = calculateCurrentPosition(playbackPositionEvent).toFloat()
-    Log.v(LOG_TAG, "SeekBar() current playback position: $currentPosition")
-    val animationTimeInMs = calculateAnimationTime(currentPosition, duration, playbackSpeed)
+        val currentProgress = currentPosition / duration
+        val seekBarAnimation =
+            remember(animationTimeInMs) { mutableStateOf(Animatable(currentProgress)) }
+        val canPlay = isPlaying && validSong(song)
 
-    val currentProgress = currentPosition / duration
-    val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentProgress)) }
-
-
-    if (isPlaying) {
-        LaunchedEffect(seekBarAnimation) {
-            Log.i(LOG_TAG, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
-            seekBarAnimation.value.animateTo(1.0f,
-                animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing))
+        if (canPlay) {
+            LaunchedEffect(seekBarAnimation) {
+                Log.i(
+                    LOG_TAG,
+                    "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs"
+                )
+                seekBarAnimation.value.animateTo(
+                    1.0f,
+                    animationSpec = FloatTweenSpec(animationTimeInMs, 0, LinearEasing)
+                )
+            }
         }
+        content(seekBarAnimation.value.value)
     }
-    content(seekBarAnimation.value.value)
 }
 
 
@@ -105,11 +115,14 @@ private fun SeekBarUi(currentPosition : Float,
                       durationDescription : String,
                       currentPositionDescription : String,
                       scope: CoroutineScope,
+                      song: Song,
                       seekTo : (value : Long) -> Unit
                     ) {
     val seekBarAnimation = remember(animationTimeInMs) { mutableStateOf(Animatable(currentPosition)) }
 
-    if (isPlaying) {
+    val canPlay = isPlaying && validSong(song)
+
+    if (canPlay) {
         LaunchedEffect(seekBarAnimation) {
             Log.i(LOG_TAG, "animating to duration: $duration, currentPos: $currentPosition, animationTimeMs: $animationTimeInMs")
             seekBarAnimation.value.animateTo(duration,

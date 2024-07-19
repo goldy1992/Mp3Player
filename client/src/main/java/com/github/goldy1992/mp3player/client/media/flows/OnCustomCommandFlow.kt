@@ -42,7 +42,7 @@ private constructor(scope: CoroutineScope,
                 command: SessionCommand,
                 args: Bundle
             ): ListenableFuture<SessionResult> {
-                Log.v(logTag(), "onCustomCommand() invoked")
+                //Log.v(logTag(), "onCustomCommand() invoked")
                 trySend(SessionCommandEventHolder(command, args))
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }

@@ -19,7 +19,7 @@ class CurrentMediaItemFlowTest : PlayerMediaFlowTestBase<MediaItem>() {
         val metadataFlow = MutableStateFlow(MediaMetadata.EMPTY)
 
         val expectedMediaItemId = "TestMediaItemId"
-        CurrentMediaItemFlow.create(testScope, metadataFlow, controllerFuture, dispatcher, collectLambda)
+        CurrentMediaItemFlow.create(testScope, controllerFuture, dispatcher, collectLambda)
         val testData = MediaItem.Builder().setMediaId(expectedMediaItemId).build()
         testPlayer.setCurrentMediaItem(testData)
         val triggerFlowMetadata = MediaMetadata.Builder().setTitle("new_title").build()

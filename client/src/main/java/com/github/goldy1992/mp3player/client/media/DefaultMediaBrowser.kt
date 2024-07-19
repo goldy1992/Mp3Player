@@ -31,7 +31,6 @@ import com.github.goldy1992.mp3player.client.media.flows.AudioDataFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentMediaItemFlow
 import com.github.goldy1992.mp3player.client.media.flows.CurrentPlaylistMetadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.IsPlayingFlow
-import com.github.goldy1992.mp3player.client.media.flows.MetadataFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnChildrenChangedFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnCustomCommandFlow
 import com.github.goldy1992.mp3player.client.media.flows.OnSearchResultsChangedFlow
@@ -94,14 +93,13 @@ class DefaultMediaBrowser
         scope.launch {
             Log.d(logTag(), "scope.launch")
             _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
-                val playerf = it as ListenableFuture<Player>
+                it as ListenableFuture<Player>
                 Log.d(logTag(), "collecting from mediaBrowserLFSF")
                 AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
                 PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }
-                CurrentMediaItemFlow.create(scope, _metadataMutableStateFlow, playerf, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
+                CurrentMediaItemFlow.create(scope, it, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
                 CurrentPlaylistMetadataFlow.create(scope, it, mainDispatcher) { v -> _currentPlaylistMetadataMutableStateFlow.value = v }
                 IsPlayingFlow.create(scope, it, mainDispatcher) { v -> _isPlayingMutableStateFlow.value = v }
-                MetadataFlow.create(scope, it, mainDispatcher) { m -> _metadataMutableStateFlow.value = m }
                 OnChildrenChangedFlow.create(scope, addListener, removeListener ) { v -> _onChildrenChangedMutableSharedFlow.emit(v) }
                 OnCustomCommandFlow.create(scope, addListener, removeListener) { c -> _customCommandMutableStateFlow.emit(c) }
                 OnSearchResultsChangedFlow.create(scope, addListener, removeListener) { v -> _onSearchResultsChangedMutableStateFlow.value = v }
@@ -138,11 +136,6 @@ class DefaultMediaBrowser
     private val _shuffleModeMutableStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
     override fun isShuffleModeEnabled(): Flow<Boolean> {
         return _shuffleModeMutableStateFlow.asStateFlow()
-    }
-
-    private val _metadataMutableStateFlow = MutableStateFlow(MediaMetadata.EMPTY)
-    override fun metadata(): Flow<MediaMetadata> {
-        return _metadataMutableStateFlow.asStateFlow()
     }
 
     // use a SharedFlow for onChildrenChanged

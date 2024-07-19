@@ -31,8 +31,6 @@ interface IMediaBrowser {
 
     fun isShuffleModeEnabled() : Flow<Boolean>
 
-    fun metadata() : Flow<MediaMetadata>
-
     fun onChildrenChanged() : Flow<OnChildrenChangedEventHolder>
 
     fun onCustomCommand() : Flow<SessionCommandEventHolder>

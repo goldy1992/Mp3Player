@@ -11,9 +11,8 @@ import kotlinx.coroutines.launch
  * @param scope The coroutine scope to operate the flow on
  * @param onCollect The lambda to invoke when the flow is collected from.
  */
-abstract class FlowBase<F>
-    constructor(
-        protected  val scope: CoroutineScope,
+abstract class FlowBase<F>(
+        protected val scope: CoroutineScope,
         protected val onCollect: suspend (F) -> Unit
     ) : LogTagger
 

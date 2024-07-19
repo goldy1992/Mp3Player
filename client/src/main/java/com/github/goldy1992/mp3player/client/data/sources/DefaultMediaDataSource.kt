@@ -58,9 +58,6 @@ class DefaultMediaDataSource
         return mediaBrowser.isShuffleModeEnabled()
     }
 
-    override fun metadata(): Flow<MediaMetadata> {
-        return mediaBrowser.metadata()
-    }
 
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return mediaBrowser.onChildrenChanged()

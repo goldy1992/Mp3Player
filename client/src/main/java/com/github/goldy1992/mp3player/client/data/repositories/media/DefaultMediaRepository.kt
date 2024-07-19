@@ -28,14 +28,15 @@ import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getLibraryParams
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.getRepeatMode
+import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.scopes.ActivityRetainedScoped
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
@@ -45,20 +46,17 @@ import javax.inject.Inject
 class DefaultMediaRepository
     @Inject
     constructor(
-        private val mediaDataSource : MediaDataSource
+        private val mediaDataSource : MediaDataSource,
+        @ActivityCoroutineScope private val scope: CoroutineScope
     ) : MediaRepository, LogTagger {
 
     override fun audioData(): Flow<AudioSample> {
         return mediaDataSource.audioData()
     }
 
-    @UnstableApi
     override fun currentSong(): Flow<Song> {
         return mediaDataSource.currentMediaItem()
-            .filter {
-                val metadata = it.mediaMetadata
-                !(metadata.isBrowsable ?: false) && (metadata.isPlayable ?: false)
-            }.map {
+        .map {
             createSong(it)
         }
     }

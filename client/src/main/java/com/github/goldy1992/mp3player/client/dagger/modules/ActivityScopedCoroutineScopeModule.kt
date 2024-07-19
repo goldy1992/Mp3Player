@@ -5,18 +5,18 @@ import com.github.goldy1992.mp3player.commons.DefaultDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.scopes.ActivityScoped
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
-@InstallIn(ActivityComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 @Module
 object ActivityScopedCoroutineScopeModule {
 
     @ActivityCoroutineScope
-    @ActivityScoped
+    @ActivityRetainedScoped
     @Provides
     fun providesCoroutineScope(
         @DefaultDispatcher defaultDispatcher: CoroutineDispatcher
