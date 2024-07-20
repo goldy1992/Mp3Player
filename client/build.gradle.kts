@@ -73,28 +73,30 @@ android {
         }
     }
 
+    lint {
+        disable.add("UnsafeOptInUsageError")
+    }
+
 
     namespace = "com.github.goldy1992.mp3player.client"
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
-            "-Xcontext-receivers",
-            "-opt-in=kotlin.RequiresOptIn",
-            // Enable experimental coroutines APIs, including Flow
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            // Enable experimental compose APIs
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            // Enable experimental  APIs
+            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
-            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi"
+            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            "-opt-in=androidx.media3.common.util.UnstableApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlin.RequiresOptIn",
+            "-Xcontext-receivers",
         )
-
     }
-
 }
 
 dependencies {
@@ -167,10 +169,10 @@ dependencies {
 sonarqube {
     setAndroidVariant("fullDebug")
     properties {
-        property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/fullDebug/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebug")
-        property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
-        property("sonar.junit.reportPaths", "${project.buildDir}/test-results/testFullDebugUnitTest/TEST-*.xml")
-        property("sonar.androidLint.reportPaths", "${buildDir}/reports/lint-results-fullDebug.xml")
+        property("sonar.java.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebug/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebug")
+        property("sonar.java.test.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebugUnitTest/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebugUnitTest")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory}/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
+        property("sonar.junit.reportPaths", "${project.layout.buildDirectory}/test-results/testFullDebugUnitTest/TEST-*.xml")
+        property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory}/reports/lint-results-fullDebug.xml")
     }
 }

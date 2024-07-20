@@ -1,7 +1,6 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
 import android.os.Bundle
-import android.util.Log
 import androidx.media3.session.MediaBrowser
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionCommand
@@ -42,7 +41,6 @@ private constructor(scope: CoroutineScope,
                 command: SessionCommand,
                 args: Bundle
             ): ListenableFuture<SessionResult> {
-                Log.v(logTag(), "onCustomCommand() invoked")
                 trySend(SessionCommandEventHolder(command, args))
                 return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))
             }

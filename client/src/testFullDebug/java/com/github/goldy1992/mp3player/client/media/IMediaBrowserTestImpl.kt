@@ -43,10 +43,6 @@ class IMediaBrowserTestImpl() : IMediaBrowser {
         return flow { emit(false)}
     }
 
-    override fun metadata(): Flow<MediaMetadata> {
-        return flow { emit(MediaMetadata.EMPTY) }
-    }
-
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return flow { emit(OnChildrenChangedEventHolder.DEFAULT)}
     }

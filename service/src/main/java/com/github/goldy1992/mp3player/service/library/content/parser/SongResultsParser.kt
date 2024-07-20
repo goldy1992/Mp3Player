@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata.FOLDER_TYPE_NONE
 import com.github.goldy1992.mp3player.commons.ComparatorUtils.Companion.uppercaseStringCompare
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.MediaItemBuilder
@@ -75,7 +74,7 @@ class SongResultsParser
             albumArtUri=albumArtUri,
             // .setAlbumArtImage(albumImageByteArray)
             isPlayable=true,
-            isBrowsable = true
+            isBrowsable=false
         ).build()
     }
 

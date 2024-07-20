@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
@@ -35,12 +34,10 @@ import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 
-@UnstableApi
 @ActivityRetainedScoped
 class DefaultMediaRepository
     @Inject
@@ -52,13 +49,9 @@ class DefaultMediaRepository
         return mediaDataSource.audioData()
     }
 
-    @UnstableApi
     override fun currentSong(): Flow<Song> {
         return mediaDataSource.currentMediaItem()
-            .filter {
-                val metadata = it.mediaMetadata
-                !(metadata.isBrowsable ?: false) && (metadata.isPlayable ?: false)
-            }.map {
+        .map {
             createSong(it)
         }
     }

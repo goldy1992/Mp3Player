@@ -67,6 +67,7 @@ abstract class MediaViewModel(
         scope.launch {
             mediaRepository.currentSong()
                 .collect {
+                    Log.v(logTag(), "currentSong collected with id: ${it.title}")
                     _playbackState.value = PlaybackState(
                         isPlaying = playbackState.value.isPlaying,
                         currentSong = it,

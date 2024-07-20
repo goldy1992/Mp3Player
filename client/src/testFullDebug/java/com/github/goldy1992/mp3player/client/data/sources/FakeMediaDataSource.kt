@@ -48,11 +48,6 @@ class FakeMediaDataSource : MediaDataSource {
         return isShuffleEnabledState
     }
 
-    val metadataState = MutableStateFlow(MediaMetadata.EMPTY)
-    override fun metadata(): Flow<MediaMetadata> {
-        return metadataState
-    }
-
     val onChildrenChangedState = MutableStateFlow(OnChildrenChangedEventHolder.DEFAULT)
     override fun onChildrenChanged(): Flow<OnChildrenChangedEventHolder> {
         return onChildrenChangedState

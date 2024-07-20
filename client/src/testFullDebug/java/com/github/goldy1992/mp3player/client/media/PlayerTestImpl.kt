@@ -384,6 +384,7 @@ class PlayerTestImpl : Player {
     var currentTestMediaItem: MediaItem? =null
     fun setCurrentMediaItem(mediaItem: MediaItem) {
         this.currentTestMediaItem = mediaItem
+        updateListeners { it.onMediaMetadataChanged(mediaItem.mediaMetadata) }
     }
     override fun getCurrentMediaItem(): MediaItem? {
         return currentTestMediaItem

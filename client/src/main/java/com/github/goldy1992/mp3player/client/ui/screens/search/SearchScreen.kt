@@ -272,6 +272,7 @@ fun SearchBar(currentSearchQuery : () -> String = { "No search query specified" 
 
 }
 
+@Suppress("UNCHECKED_CAST")
 @Composable
 fun SearchResultsContent(
     modifier : Modifier = Modifier,
