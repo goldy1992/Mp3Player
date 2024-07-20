@@ -78,23 +78,21 @@ android {
     kotlinOptions {
         jvmTarget = "17"
         freeCompilerArgs += listOf(
-            "-Xcontext-receivers",
-            "-opt-in=kotlin.RequiresOptIn",
-            // Enable experimental coroutines APIs, including Flow
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            // Enable experimental compose APIs
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            // Enable experimental  APIs
+            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
             "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
             "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
-            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi"
+            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+            "-opt-in=androidx.media3.common.util.UnstableApi",
+            "-opt-in=coil.annotation.ExperimentalCoilApi",
+            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-opt-in=kotlin.RequiresOptIn",
+            "-Xcontext-receivers",
         )
-
     }
-
 }
 
 dependencies {

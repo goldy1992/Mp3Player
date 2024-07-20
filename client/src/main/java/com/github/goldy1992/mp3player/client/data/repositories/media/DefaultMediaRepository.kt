@@ -3,7 +3,6 @@ package com.github.goldy1992.mp3player.client.data.repositories.media
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaLibraryService
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createAlbum
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaEntityUtils.createFolder
@@ -28,20 +27,17 @@ import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.utils.MediaLibraryParamUtils.getLibraryParams
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.getRepeatMode
-import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
 import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.apache.commons.collections4.CollectionUtils
 import javax.inject.Inject
 
-@UnstableApi
 @ActivityRetainedScoped
 class DefaultMediaRepository
     @Inject
