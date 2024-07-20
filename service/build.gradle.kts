@@ -109,10 +109,10 @@ dependencies {
 sonarqube {
     setAndroidVariant("fullDebug")
     properties {
-        property("sonar.java.binaries", "${project.buildDir}/intermediates/javac/fullDebug/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebug")
-        property("sonar.java.test.binaries", "${project.buildDir}/intermediates/javac/fullDebugUnitTest/classes, ${project.buildDir}/tmp/kotlin-classes/fullDebugUnitTest")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
-        property("sonar.junit.reportPaths", "${project.buildDir}/test-results/testFullDebugUnitTest/TEST-*.xml")
-        property("sonar.androidLint.reportPaths", "${buildDir}/reports/lint-results-fullDebug.xml")
+        property("sonar.java.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebug/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebug")
+        property("sonar.java.test.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebugUnitTest/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebugUnitTest")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory}/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
+        property("sonar.junit.reportPaths", "${project.layout.buildDirectory}/test-results/testFullDebugUnitTest/TEST-*.xml")
+        property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory}/reports/lint-results-fullDebug.xml")
     }
 }
