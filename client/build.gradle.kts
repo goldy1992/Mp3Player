@@ -73,6 +73,10 @@ android {
         }
     }
 
+    lint {
+        disable.add("UnsafeOptInUsageError")
+    }
+
 
     namespace = "com.github.goldy1992.mp3player.client"
     kotlinOptions {
