@@ -1,3 +1,10 @@
+## [3.7.1](https://github.com/goldy1992/Mp3Player/compare/v3.7.0...v3.7.1) (2024-07-20)
+
+
+### Bug Fixes
+
+* **seek:** Fixed RuntimeException caused by invalid data passed to the SeekBar ([28583e0](https://github.com/goldy1992/Mp3Player/commit/28583e0710135d3ae124c073ccc648b4ed72c2bb))
+
 # [3.7.0](https://github.com/goldy1992/Mp3Player/compare/v3.6.1...v3.7.0) (2024-06-22)
 
 
