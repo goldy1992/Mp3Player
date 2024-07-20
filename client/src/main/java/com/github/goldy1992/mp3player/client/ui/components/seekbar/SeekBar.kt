@@ -89,7 +89,7 @@ fun PlaybackPositionAnimation(
         val seekBarAnimation =
             remember(animationTimeInMs) { mutableStateOf(Animatable(currentProgress)) }
         val canPlay = isPlaying && validSong(song)
-
+        Log.i(LOG_TAG, "canPlay: $canPlay")
         if (canPlay) {
             LaunchedEffect(seekBarAnimation) {
                 Log.i(

@@ -25,7 +25,7 @@ object SeekbarUtils {
     }
 
     fun validSong(song: Song) : Boolean {
-        return song != Song.DEFAULT && song.state == State.LOADED
+        return song != Song.DEFAULT
     }
 
     fun validPlaybackPosition(song: Song, playbackPositionEvent: PlaybackPositionEvent) : Boolean {

@@ -46,8 +46,7 @@ import javax.inject.Inject
 class DefaultMediaRepository
     @Inject
     constructor(
-        private val mediaDataSource : MediaDataSource,
-        @ActivityCoroutineScope private val scope: CoroutineScope
+        private val mediaDataSource : MediaDataSource
     ) : MediaRepository, LogTagger {
 
     override fun audioData(): Flow<AudioSample> {
