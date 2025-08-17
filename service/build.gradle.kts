@@ -5,6 +5,8 @@ plugins {
     id("mp3player.android.room")
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
+    id("mp3player.android.library.buildconfig")
+//    id("mp3player.java.toolchain")
 }
 
 android {
@@ -23,13 +25,13 @@ android {
         disable.add("UnsafeOptInUsageError")
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            "-Xcontext-receivers",
-            "-opt-in=androidx.media3.common.util.UnstableApi"
-        )
-    }
+//    kotlinOptions {
+//        jvmTarget = "17"
+//        freeCompilerArgs += listOf(
+//            "-Xcontext-receivers",
+//            "-opt-in=androidx.media3.common.util.UnstableApi"
+//        )
+//    }
     namespace = "com.github.goldy1992.mp3player.service"
 
     buildTypes {
@@ -53,11 +55,11 @@ android {
                     dimension = "mode"
                 }
             }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+//
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_17
+//        targetCompatibility = JavaVersion.VERSION_17
+//    }
 
 
     testOptions {

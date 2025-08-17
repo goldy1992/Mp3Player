@@ -1,11 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("mp3player.android.library.buildconfig")
+//    id("mp3player.java.toolchain")
 }
 
 android {
@@ -59,11 +61,11 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_17
+//        targetCompatibility = JavaVersion.VERSION_17
+//    }
+//
 
     testOptions {
         animationsDisabled = false
@@ -80,7 +82,7 @@ android {
 
     namespace = "com.github.goldy1992.mp3player.client"
     kotlinOptions {
-        jvmTarget = "17"
+//        jvmTarget = "17"
         freeCompilerArgs += listOf(
             // Enable experimental  APIs
             "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",

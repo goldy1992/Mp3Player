@@ -145,7 +145,7 @@ object MediaItemUtils : LogTagger {
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
         Log.v(logTag(), "getDuration() item: $item, duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}, metadata: ${item.mediaMetadata}, extras: ${item.mediaMetadata.extras}")
-        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 0L
+        return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 1L
     }
 
     @Suppress("DEPRECATION")

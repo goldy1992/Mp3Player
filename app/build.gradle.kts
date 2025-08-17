@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
@@ -30,7 +32,16 @@ android {
         testInstrumentationRunner = "com.github.goldy1992.mp3player.Mp3PlayerHiltTestRunner"
         missingDimensionStrategy("fullUnittest", "fullDebug")
     }
-
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(21))
+        }
+    }
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
+    }
     signingConfigs {
         create("release") {
             storeFile = file(providers.gradleProperty("full_release_storeFile").get())
@@ -69,10 +80,10 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_17
+//        targetCompatibility = JavaVersion.VERSION_17
+//    }
 
     lint {
         abortOnError = false

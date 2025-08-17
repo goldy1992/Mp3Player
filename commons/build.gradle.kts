@@ -5,6 +5,7 @@ plugins {
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.buildconfig")
     id("mp3player.android.library.variant_filter")
+//    id("mp3player.java.toolchain")
 }
 
 android {
@@ -26,10 +27,10 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+//    compileOptions {
+//        sourceCompatibility = JavaVersion.VERSION_17
+//        targetCompatibility = JavaVersion.VERSION_17
+//    }
 
     testOptions {
         unitTests {
