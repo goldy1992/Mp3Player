@@ -116,7 +116,3 @@ dependencies {
     "androidTestAutomationImplementation"(libs.androidx.compose.ui.test.junit4)
 
 }
-
-sonarqube {
-    this.isSkipProject = true
-}

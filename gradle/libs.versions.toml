@@ -37,7 +37,6 @@ mockitoInline = "5.2.0"
 mockitoKotlin = "6.0.0"
 room = "2.7.2"
 robolectric = "4.16"
-sonarqube = "4.2.1.3168"
 targetSdk= "36"
 uiAutomator = "2.3.0-beta01"
 roomGradlePlugin = "2.7.2"
@@ -122,4 +121,3 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
-sonarqube = { id = "org.sonarqube", version.ref="sonarqube" }

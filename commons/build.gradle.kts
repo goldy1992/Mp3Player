@@ -63,14 +63,3 @@ dependencies {
     testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.kotlin)
 }
-
-sonarqube {
-    setAndroidVariant("debug")
-    properties {
-        property("sonar.java.binaries", "${project.layout.buildDirectory}/intermediates/javac/debug/classes,${project.layout.buildDirectory}/tmp/kotlin-classes/debug")
-        property("sonar.java.test.binaries", "${project.layout.buildDirectory}/intermediates/javac/debugUnitTest/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/debugUnitTest")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory}/reports/jacoco/jacocoTestDebugUnitTestReport/jacocoTestDebugUnitTestReport.xml")
-        property("sonar.junit.reportPaths", "${project.layout.buildDirectory}/test-results/testDebugUnitTest/TEST-*.xml")
-        property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory}/reports/lint-results-debug.xml")
-    }
-}
