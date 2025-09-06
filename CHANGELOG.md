@@ -1,3 +1,10 @@
+## [3.7.2](https://github.com/goldy1992/Mp3Player/compare/v3.7.1...v3.7.2) (2025-09-06)
+
+
+### Bug Fixes
+
+* **sdk:** applied the target version of SDK 36, migrated deprecated libraries and simplified the CI/CD pipeline ([7391cbb](https://github.com/goldy1992/Mp3Player/commit/7391cbb0798465f92510a48d3e911d6ccec04b2c))
+
 ## [3.7.1](https://github.com/goldy1992/Mp3Player/compare/v3.7.0...v3.7.1) (2024-07-20)
 
 
