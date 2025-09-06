@@ -42,7 +42,9 @@ android {
     namespace = "com.github.goldy1992.mp3player.commons"
 
 }
-
+tasks.withType<Test> {
+    failOnNoDiscoveredTests = false
+}
 dependencies {
 
     implementation(libs.apache.commons.lang3)
