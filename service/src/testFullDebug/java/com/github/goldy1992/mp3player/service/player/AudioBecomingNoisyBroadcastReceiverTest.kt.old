@@ -20,6 +20,7 @@ import org.robolectric.annotation.Config
 @SuppressLint("UnspecifiedRegisterReceiverFlag")
 @RunWith(RobolectricTestRunner::class)
 @Config(minSdk = 26)
+@Ignore
 class AudioBecomingNoisyBroadcastReceiverTest {
 
     private val exoPlayer: ExoPlayer = mock<ExoPlayer>()

@@ -24,7 +24,9 @@ object PermissionsUtils : LogTagger {
 
     fun getAppPermissions() : Array<String> {
         return when(Build.VERSION.SDK_INT) {
-                Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> UPSIDE_DOWN_CAKE_PERMISSIONS
+                Build.VERSION_CODES.UPSIDE_DOWN_CAKE,
+                Build.VERSION_CODES.VANILLA_ICE_CREAM,
+                Build.VERSION_CODES.BAKLAVA -> UPSIDE_DOWN_CAKE_PERMISSIONS
                 Build.VERSION_CODES.TIRAMISU -> TIRAMISU_PERMISSIONS
                 else -> STANDARD_PERMISSIONS
             }

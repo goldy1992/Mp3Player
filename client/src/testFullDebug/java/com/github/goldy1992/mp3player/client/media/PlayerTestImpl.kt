@@ -229,25 +229,17 @@ class PlayerTestImpl : Player {
         TODO("Not yet implemented")
     }
 
-    override fun hasPrevious(): Boolean {
-        TODO("Not yet implemented")
-    }
 
-    override fun hasPreviousWindow(): Boolean {
-        TODO("Not yet implemented")
-    }
+
+
 
     override fun hasPreviousMediaItem(): Boolean {
         TODO("Not yet implemented")
     }
 
-    override fun previous() {
-        TODO("Not yet implemented")
-    }
 
-    override fun seekToPreviousWindow() {
-        TODO("Not yet implemented")
-    }
+
+
 
     override fun seekToPreviousMediaItem() {
         TODO("Not yet implemented")
@@ -261,23 +253,7 @@ class PlayerTestImpl : Player {
         TODO("Not yet implemented")
     }
 
-    override fun hasNext(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasNextWindow(): Boolean {
-        TODO("Not yet implemented")
-    }
-
     override fun hasNextMediaItem(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun next() {
-        TODO("Not yet implemented")
-    }
-
-    override fun seekToNextWindow() {
         TODO("Not yet implemented")
     }
 

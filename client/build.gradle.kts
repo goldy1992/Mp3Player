@@ -1,11 +1,16 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
     id("mp3player.android.library.variant_filter")
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    id("mp3player.android.library.buildconfig")
+    id("mp3player.android.test")
 }
 
 android {
@@ -59,9 +64,33 @@ android {
         }
     }
 
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+            freeCompilerArgs.addAll(
+                 listOf(
+                    // Enable experimental  APIs
+                    "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
+                    "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                    "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
+                    "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                    "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                    "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
+                    "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+                    "-opt-in=androidx.media3.common.util.UnstableApi",
+                    "-opt-in=coil.annotation.ExperimentalCoilApi",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-Xcontext-receivers"
+                )
+            )
+        }
+    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+
     }
 
 
@@ -77,26 +106,7 @@ android {
         disable.add("UnsafeOptInUsageError")
     }
 
-
     namespace = "com.github.goldy1992.mp3player.client"
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            // Enable experimental  APIs
-            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
-            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-            "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
-            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
-            "-opt-in=androidx.media3.common.util.UnstableApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi",
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlin.RequiresOptIn",
-            "-Xcontext-receivers",
-        )
-    }
 }
 
 dependencies {
@@ -164,15 +174,4 @@ dependencies {
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
 
-}
-
-sonarqube {
-    setAndroidVariant("fullDebug")
-    properties {
-        property("sonar.java.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebug/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebug")
-        property("sonar.java.test.binaries", "${project.layout.buildDirectory}/intermediates/javac/fullDebugUnitTest/classes, ${project.layout.buildDirectory}/tmp/kotlin-classes/fullDebugUnitTest")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory}/reports/jacoco/jacocoTestFullDebugUnitTestReport/jacocoTestFullDebugUnitTestReport.xml")
-        property("sonar.junit.reportPaths", "${project.layout.buildDirectory}/test-results/testFullDebugUnitTest/TEST-*.xml")
-        property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory}/reports/lint-results-fullDebug.xml")
-    }
 }

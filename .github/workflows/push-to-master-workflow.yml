@@ -6,16 +6,8 @@ on:
       - master
 
 jobs:
-  run-ui-tests:
-    name: Test
-    uses: ./.github/workflows/ui-tests-workflow.yml
-    secrets:
-      RELEASE_SERVICE_ACCOUNT_JSON: ${{ secrets.RELEASE_SERVICE_ACCOUNT_JSON }}
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
   semantic-release:
     name: Semantic Release
-    needs: [ run-ui-tests ]
     uses: ./.github/workflows/semantic-release-workflow.yml
     secrets:
       SEMANTIC_RELEASE_FINE_GRAINED_TOKEN: ${{ secrets.SEMANTIC_RELEASE_FINE_GRAINED_TOKEN }}

@@ -82,7 +82,7 @@ fun ViewPager(
                 .semantics {
                     contentDescription = "viewPagerColumn"
                 },
-            beyondBoundsPageCount = 2,
+            beyondViewportPageCount = 2,
             key = { page : Int -> queue.items[page].id }
 
         ) { pageIndex ->

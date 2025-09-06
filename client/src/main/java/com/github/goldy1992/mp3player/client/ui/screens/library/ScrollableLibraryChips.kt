@@ -74,7 +74,7 @@ fun ScrollableLibraryChips(
                 IconButton(modifier = Modifier
                     .padding(5.dp)
                     .alpha(currentRowItem.opacity)
-                    .animateItemPlacement(),
+                    .animateItem(),
                     onClick = {
                         onSelected(SelectedLibraryItem.NONE)
                     }) {
@@ -86,7 +86,7 @@ fun ScrollableLibraryChips(
                     modifier = Modifier
                         .padding(5.dp)
                         .alpha(currentRowItem.opacity)
-                        .animateItemPlacement() ,
+                        .animateItem() ,
                     onClick = { onSelected(e) },
                     label = {
                         Text(getChipName(e, context))
@@ -130,7 +130,7 @@ fun TestShuffle() {
             }
         }
         items(list.size, key = { list[it] }) {
-            Text("Item ${list[it]}", Modifier.animateItemPlacement(tween(2000)))
+            Text("Item ${list[it]}", Modifier.animateItem(tween(2000)))
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.github.goldy1992.mp3player.client.ui.components
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.basicMarquee
@@ -37,7 +38,7 @@ import com.github.goldy1992.mp3player.client.ui.buttons.PlayPauseButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToNextButton
 import com.github.goldy1992.mp3player.client.ui.buttons.SkipToPreviousButton
 import com.github.goldy1992.mp3player.client.ui.components.seekbar.PlaybackPositionAnimation
-
+private const val LOG_TAG = "PlayToolbar"
 //@Preview(uiMode = UI_MODE_NIGHT_MASK)
 @Composable
 fun SharedTransitionScope.PlayToolbar(
@@ -47,6 +48,7 @@ fun SharedTransitionScope.PlayToolbar(
     windowSizeClass: WindowSizeClass = DEFAULT_WINDOW_CLASS_SIZE,
     onClickBar : () -> Unit = {}
 ) {
+    Log.i(LOG_TAG, "Creating Playtoolbar")
     val bottomAppBarDescr = stringResource(id = R.string.bottom_app_bar)
     Surface(
         modifier = modifier
@@ -64,12 +66,16 @@ fun SharedTransitionScope.PlayToolbar(
                 playbackSpeed = playbackState.playbackSpeed,
                 playbackPositionEvent = playbackState.playbackPosition,
             ) {
-                LinearProgressIndicator(
-                    progress = { it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(2.dp),
-                )
+
+                Log.i(LOG_TAG,"current progress: $it")
+                if (it != Float.NaN) {
+                    LinearProgressIndicator(
+                        progress = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(2.dp),
+                    )
+                }
             }
             var height by remember { mutableStateOf(0.dp) }
             Row(

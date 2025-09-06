@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     `kotlin-dsl`
@@ -6,15 +7,15 @@ plugins {
 
 group = "com.github.goldy1992.mp3player.buildlogic"
 
-// Configure the build-logic plugins to target JDK 17
+// Configure the build-logic plugins to target JDK 21
 // This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions{
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -46,6 +47,14 @@ gradlePlugin {
         register("androidLibraryBuildConfig") {
             id = "mp3player.android.library.buildconfig"
             implementationClass = "AndroidLibraryBuildConfigConventionPlugin"
+        }
+        register("javaToolchainConventionPlugin") {
+            id = "mp3player.java.toolchain"
+            implementationClass = "JavaToolchainConventionPlugin"
+        }
+        register("testConventionPlugin") {
+            id = "mp3player.android.test"
+            implementationClass = "TestConventionPlugin"
         }
     }
 }

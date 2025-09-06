@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.assertIsEnabled
@@ -193,7 +194,7 @@ class SettingsScreenTest {
     private fun TestWrapper(
         content: @Composable SharedTransitionScope.(AnimatedContentScope) -> Unit) {
         AnimatedContent(targetState = true, label = "") {
-            SharedTransitionScope {
+            SharedTransitionLayout {
                 content(this@AnimatedContent)
             }
         }
