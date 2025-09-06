@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -8,11 +7,11 @@ plugins {
 
 group = "com.github.goldy1992.mp3player.buildlogic"
 
-// Configure the build-logic plugins to target JDK 17
+// Configure the build-logic plugins to target JDK 21
 // This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions{

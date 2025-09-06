@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
@@ -61,11 +64,35 @@ android {
         }
     }
 
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_17
-//        targetCompatibility = JavaVersion.VERSION_17
-//    }
-//
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+            freeCompilerArgs.addAll(
+                 listOf(
+                    // Enable experimental  APIs
+                    "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
+                    "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                    "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
+                    "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                    "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                    "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
+                    "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
+                    "-opt-in=androidx.media3.common.util.UnstableApi",
+                    "-opt-in=coil.annotation.ExperimentalCoilApi",
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-opt-in=kotlin.RequiresOptIn",
+                    "-Xcontext-receivers"
+                )
+            )
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+
+    }
+
 
     testOptions {
         animationsDisabled = false
@@ -79,26 +106,7 @@ android {
         disable.add("UnsafeOptInUsageError")
     }
 
-
     namespace = "com.github.goldy1992.mp3player.client"
-    kotlinOptions {
-//        jvmTarget = "17"
-        freeCompilerArgs += listOf(
-            // Enable experimental  APIs
-            "-opt-in=androidx.compose.animation.core.ExperimentalAnimationSpecApi",
-            "-opt-in=androidx.compose.animation.ExperimentalAnimationApi",
-            "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi",
-            "-opt-in=androidx.lifecycle.compose.ExperimentalLifecycleComposeApi",
-            "-opt-in=androidx.media3.common.util.UnstableApi",
-            "-opt-in=coil.annotation.ExperimentalCoilApi",
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlin.RequiresOptIn",
-            "-Xcontext-receivers",
-        )
-    }
 }
 
 dependencies {
