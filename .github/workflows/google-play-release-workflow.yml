@@ -1,11 +1,7 @@
 name: Google Play Store Release Workflow
 run-name: Google Play Store Release
 on:
-  push:
-    branches:
-      - master
-    tags:
-      - v*
+  release:
   workflow_dispatch:
   workflow_call:
     secrets:
