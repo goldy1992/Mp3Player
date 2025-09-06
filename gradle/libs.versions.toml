@@ -32,10 +32,11 @@ kotlinCoroutines = "1.10.2"
 media3 = "1.8.0"
 ksp = "2.2.10-2.0.2"
 minSdk = "23"
-mockitoInline = "3.7.7"
-mockitoKotlin = "4.1.0"
+mockitoCore = "5.19.0"
+mockitoInline = "5.2.0"
+mockitoKotlin = "6.0.0"
 room = "2.7.2"
-robolectric = "4.12.2"
+robolectric = "4.16"
 sonarqube = "4.2.1.3168"
 targetSdk= "36"
 uiAutomator = "2.3.0-beta01"
@@ -107,6 +108,7 @@ kotlin-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coro
 kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinCoroutines" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
+mockito-core= { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 androidx-room-gradle-plugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "roomGradlePlugin" }
