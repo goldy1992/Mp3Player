@@ -1,4 +1,9 @@
 {
+  "name": "MP3 Player",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goldy1992/Mp3Player.git"
+  },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/exec": "6.0.3",
