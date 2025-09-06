@@ -11,7 +11,6 @@ plugins {
     id("mp3player.android.library.variant_filter")
     id("mp3player.android.library.buildconfig")
     id("mp3player.android.test")
-//    id("mp3player.java.toolchain")
 }
 
 android {

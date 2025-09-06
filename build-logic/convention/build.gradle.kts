@@ -52,9 +52,9 @@ gradlePlugin {
             id = "mp3player.java.toolchain"
             implementationClass = "JavaToolchainConventionPlugin"
         }
-        register("androidTestConvention") {
+        register("testConventionPlugin") {
             id = "mp3player.android.test"
-            implementationClass = "AndroidTestConvention"
+            implementationClass = "TestConventionPlugin"
         }
     }
 }
