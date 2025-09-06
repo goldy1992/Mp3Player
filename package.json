@@ -3,8 +3,8 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "9.0.3",
-    "semantic-release": "21.0.5",
+    "@semantic-release/github": "11.0.5",
+    "semantic-release": "24.2.7",
     "trim-newlines": "5.0.0",
     "normalize-url": "8.0.0"
   },
