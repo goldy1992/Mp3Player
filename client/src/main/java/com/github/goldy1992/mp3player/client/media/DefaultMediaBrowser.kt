@@ -20,6 +20,7 @@ import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionCommands
+import androidx.media3.session.SessionError
 import androidx.media3.session.SessionResult
 import androidx.media3.session.SessionToken
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.OnChildrenChangedEventHolder
@@ -386,7 +387,7 @@ class DefaultMediaBrowser
     ): ListenableFuture<SessionResult> {
         listeners.forEach { listener -> listener.onSetCustomLayout(controller, layout)
         }
-        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
+        return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
     }
 
     override fun onAvailableSessionCommandsChanged(
@@ -399,7 +400,7 @@ class DefaultMediaBrowser
         controller: MediaController, command: SessionCommand, args: Bundle
     ): ListenableFuture<SessionResult> {
         listeners.forEach { listener -> listener.onCustomCommand(controller, command, args) }
-        return Futures.immediateFuture(SessionResult(SessionResult.RESULT_ERROR_NOT_SUPPORTED))
+        return Futures.immediateFuture(SessionResult(SessionError.ERROR_NOT_SUPPORTED))
     }
 
     override fun onExtrasChanged(controller: MediaController, extras: Bundle) {
