@@ -36,7 +36,7 @@ jobs:
           validate-wrappers: true
 
       - name: Build all Debug flavors
-        run: ./gradlew assemble -x app:signFullReleaseBundle -x app:validateSigningFullRelease testFullDebugUnitTest testDebugUnitTest
+        run: ./gradlew assemble -x app:packageFullRelease -x app:signFullReleaseBundle -x app:validateSigningFullRelease testFullDebugUnitTest testDebugUnitTest
 
       - name: Gradle and create coverage report
         run: ./gradlew jacocoTestReport
