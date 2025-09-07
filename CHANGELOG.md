@@ -1,3 +1,10 @@
+## [3.7.3](https://github.com/goldy1992/Mp3Player/compare/v3.7.2...v3.7.3) (2025-09-07)
+
+
+### Bug Fixes
+
+* **cicd:** updated the CICD scripts as well as upgrade to AGP 8.13.0 ([9d26032](https://github.com/goldy1992/Mp3Player/commit/9d2603223f9a2b506e2823c5b14aae3f2ca5bd1c))
+
 ## [3.7.2](https://github.com/goldy1992/Mp3Player/compare/v3.7.1...v3.7.2) (2025-09-06)
 
 
