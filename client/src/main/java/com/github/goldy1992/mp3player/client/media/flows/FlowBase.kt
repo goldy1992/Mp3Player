@@ -1,6 +1,5 @@
 package com.github.goldy1992.mp3player.client.media.flows
 
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -14,7 +13,7 @@ import kotlinx.coroutines.launch
 abstract class FlowBase<F>(
         protected val scope: CoroutineScope,
         protected val onCollect: suspend (F) -> Unit
-    ) : LogTagger
+    )
 
 {
 

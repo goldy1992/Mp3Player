@@ -9,7 +9,7 @@ import com.github.goldy1992.mp3player.client.models.media.Folders
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import java.util.EnumMap
 
 private const val LOG_TAG = "MediaItemSelectedUtils"

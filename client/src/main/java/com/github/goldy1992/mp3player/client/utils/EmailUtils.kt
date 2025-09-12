@@ -9,9 +9,9 @@ import android.widget.Toast
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.models.Email
 import com.github.goldy1992.mp3player.client.utils.ContextUtils.getActivity
-import com.github.goldy1992.mp3player.commons.LogTagger
 
-object EmailUtils : LogTagger {
+object EmailUtils {
+    const val LOG_TAG = "EmailUtils"
     private const val email = "goldy131992@gmail.com"
     private const val email_title_template = "MP3 Player Bug Report - Please Give a Bug Description"
 
@@ -41,7 +41,7 @@ object EmailUtils : LogTagger {
 
     private fun sendEmail(email: Email, context: Context) {
         Log.v(
-            logTag(),
+            LOG_TAG,
             "sendEmail() invoked with subject: ${email.subject}, toAddresses: ${email.toAddresses} and ccAddresses: ${email.ccAddresses}"
         )
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
@@ -54,7 +54,7 @@ object EmailUtils : LogTagger {
                 val sendEmailTitle = context.getString(R.string.send_email)
                 context.startActivity(Intent.createChooser(emailIntent, sendEmailTitle))
             } catch (ex : ActivityNotFoundException) {
-                Log.e(logTag(), "No email client found on device")
+                Log.e(LOG_TAG, "No email client found on device")
                 Toast.makeText(
                     context,
                     "Could not find an email application on your device",
@@ -62,11 +62,4 @@ object EmailUtils : LogTagger {
                 ).show()
             }
         }
-
-    override fun logTag(): String {
-        return "EmailUtils"
-    }
-
-
-
 }

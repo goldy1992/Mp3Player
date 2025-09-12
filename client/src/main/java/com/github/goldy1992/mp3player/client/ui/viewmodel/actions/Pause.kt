@@ -4,10 +4,12 @@ import android.util.Log
 import kotlinx.coroutines.launch
 
 interface Pause : MediaViewModelBase {
-
+    companion object {
+        const val LOG_TAG = "Pause"
+    }
     fun pause() {
         scope.launch {
-            Log.v(logTag(), "play() invoked")
+            Log.v(LOG_TAG, "play() invoked")
             mediaRepository.pause() }
     }
 }

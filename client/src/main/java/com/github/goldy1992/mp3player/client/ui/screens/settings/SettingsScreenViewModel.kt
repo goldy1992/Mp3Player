@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.github.goldy1992.mp3player.client.data.repositories.media.MediaRepository
 import com.github.goldy1992.mp3player.client.data.repositories.preferences.IUserPreferencesRepository
 import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +22,11 @@ class SettingsScreenViewModel
         private val userPreferencesRepository: IUserPreferencesRepository,
         private val permissionsRepository: IPermissionsRepository,
         mediaRepository: MediaRepository
-    ) : MediaViewModel(mediaRepository), LogTagger {
+    ) : MediaViewModel(mediaRepository) {
 
+    companion object {
+        const val logTag = "SettingsScreenViewModel"
+    }
     private val _permissionsState : MutableStateFlow<Map<String, Boolean>> = MutableStateFlow(
         emptyMap()
     )
@@ -68,13 +70,9 @@ class SettingsScreenViewModel
     }
 
     fun setLanguage(language : String) {
-        Log.d(logTag(), "Updating language to $language")
+        Log.d(LOG_TAG, "Updating language to $language")
         viewModelScope.launch { userPreferencesRepository.updateLanguage(language) }
     }
 
-
-    override fun logTag(): String {
-        return "SettingsScreenViewModel"
-    }
 
 }

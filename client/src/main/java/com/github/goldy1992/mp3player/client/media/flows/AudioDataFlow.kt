@@ -40,10 +40,6 @@ class AudioDataFlow private constructor(
     }
 
 
-    override fun logTag(): String {
-        return "AudioDataFlow"
-    }
-    
     override fun getFlow(): Flow<AudioSample> = onCustomCommandFlow
         .filter {
             Constants.AUDIO_DATA == it.command.customAction

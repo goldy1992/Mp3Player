@@ -7,22 +7,19 @@ import java.io.Serializable
  * Represents an Audio Sample that will be sent from the Audio Processor within the Media Playback
  * Service.
  */
-data class AudioSample
-    constructor(
+data class AudioSample(
         val phase : Array<Double> = emptyArray(),
         val magnitude : Array<Double> = emptyArray(),
         val waveformData : FloatArray = FloatArray(0),
         val sampleHz : Int = 128000,
         val channelCount : Int = 2
-    ) : Serializable, LogTagger {
+    ) : Serializable {
 
     companion object {
        val NONE = AudioSample(emptyArray(), emptyArray())
+        const val LOG_TAG = "AUDIO_SAMPLE"
     }
 
-    override fun logTag(): String {
-        return "AudioSample"
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -67,7 +64,7 @@ data class AudioSample
         result = 31 * result + waveformData.contentHashCode()
         result = 31 * result + sampleHz
         result = 31 * result + channelCount
-        Log.v(logTag(), "hashCode() hashCode: ${result}")
+        Log.v(LOG_TAG, "hashCode() hashCode: ${result}")
         return result
     }
 

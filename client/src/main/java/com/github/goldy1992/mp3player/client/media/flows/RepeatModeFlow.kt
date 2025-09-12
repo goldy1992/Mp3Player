@@ -47,7 +47,4 @@ class RepeatModeFlow
         }
     }
 
-    override fun logTag(): String {
-        return "RepeatModeFlow"
-    }
 }

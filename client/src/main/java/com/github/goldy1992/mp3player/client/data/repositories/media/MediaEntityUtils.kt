@@ -14,13 +14,12 @@ import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import java.util.EnumMap
 
-object MediaEntityUtils : LogTagger {
-
+object MediaEntityUtils {
+    const val LOG_TAG = "MediaEntityUtils"
     fun createRootChildren(root: Root, mediaItems : List<MediaItem>) : Root {
         return if (mediaItems.isEmpty()) {
             Root(
@@ -185,11 +184,8 @@ object MediaEntityUtils : LogTagger {
             ) as T
         }
 
-        Log.w(logTag(), "setStateNoPermissions() invoked with unsupported MediaEntity: ${mediaEntity.javaClass}, returning the original object!")
+        Log.w(LOG_TAG, "setStateNoPermissions() invoked with unsupported MediaEntity: ${mediaEntity.javaClass}, returning the original object!")
         return mediaEntity
     }
 
-    override fun logTag(): String {
-        return "MediaEntityUtils"
-    }
 }

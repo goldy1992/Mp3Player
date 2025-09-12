@@ -26,6 +26,7 @@ private constructor(
 ) : FlowBase<MediaMetadata>(scope, onCollect) {
 
     companion object {
+        const val LOG_TAG = "CurrentPlaylistMetadataFlow"
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
             controllerFuture : ListenableFuture<Player>,
@@ -45,7 +46,7 @@ private constructor(
         val messageListener = object : Player.Listener {
             override fun onPlaylistMetadataChanged(mediaMetadata: MediaMetadata) {
                 Log.v(
-                    logTag(),
+                    LOG_TAG,
                     "onPlaylistMetadataChanged() invoked with playlistId: ${
                         mediaMetadata.extras?.getString(Constants.PLAYLIST_ID) ?: Constants.UNKNOWN
                     }"
@@ -61,8 +62,5 @@ private constructor(
         }
     }
 
-    override fun logTag(): String {
-        return "CurrentPlaylistMetadataFlow"
-    }
 
 }

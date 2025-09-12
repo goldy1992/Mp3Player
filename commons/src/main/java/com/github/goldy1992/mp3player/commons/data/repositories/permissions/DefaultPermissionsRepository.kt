@@ -2,6 +2,7 @@ package com.github.goldy1992.mp3player.commons.data.repositories.permissions
 
 import android.Manifest
 import android.os.Build
+import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import com.github.goldy1992.mp3player.commons.VersionUtils.isTiramisuOrHigher
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Keep
 @Singleton
 class DefaultPermissionsRepository
 

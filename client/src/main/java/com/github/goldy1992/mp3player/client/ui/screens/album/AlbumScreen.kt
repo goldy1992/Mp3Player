@@ -50,7 +50,7 @@ import com.github.goldy1992.mp3player.client.ui.components.AlbumArtAsync
 import com.github.goldy1992.mp3player.client.ui.components.PlayToolbar
 import com.github.goldy1992.mp3player.client.utils.SongUtils
 import com.github.goldy1992.mp3player.client.utils.TimeUtils
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

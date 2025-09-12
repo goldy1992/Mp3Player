@@ -48,7 +48,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.Fount
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.PieChartCard
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.cards.SmoothLineCard
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "VisualizerScreen"

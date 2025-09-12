@@ -14,15 +14,17 @@ class RepeatModeViewModelState (
     mediaRepository: MediaRepository,
     scope: CoroutineScope
 ) : MediaViewModelState<RepeatMode>(mediaRepository, scope) {
-
+    companion object {
+        const val LOG_TAG = "RepeatModeViewModelState"
+    }
     private val _repeatModeState = MutableStateFlow(RepeatMode.OFF)
 
     init {
-        Log.v(logTag(), "init")
+        Log.v(LOG_TAG, "init")
         scope.launch {
             mediaRepository.repeatMode()
                 .collect {
-                    Log.d(logTag(), "state collect: $it")
+                    Log.d(LOG_TAG, "state collect: $it")
                     _repeatModeState.value = it
                 }
         }
@@ -30,10 +32,6 @@ class RepeatModeViewModelState (
 
     override fun state(): StateFlow<RepeatMode> {
         return _repeatModeState.asStateFlow()
-    }
-
-    override fun logTag(): String {
-        return "IsPlayingViewModelState"
     }
 
 }

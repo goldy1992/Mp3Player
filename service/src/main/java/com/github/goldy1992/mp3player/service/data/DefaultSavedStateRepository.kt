@@ -21,7 +21,9 @@ import javax.inject.Inject
 open class DefaultSavedStateRepository
     @Inject
     constructor(private val dataStore : DataStore<Preferences>) : ISavedStateRepository {
-
+    companion object {
+        const val LOG_TAG = "DefaultSavedStateRepository"
+    }
     private object PreferencesKeys {
         val PLAYLIST = stringPreferencesKey("playlist")
         val CURRENT_TRACK = stringPreferencesKey("current_track")
@@ -36,7 +38,7 @@ open class DefaultSavedStateRepository
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
-                Log.e(logTag(), "savedStateFlow Error reading preferences.", exception)
+                Log.e(LOG_TAG, "savedStateFlow Error reading preferences.", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -76,12 +78,12 @@ open class DefaultSavedStateRepository
 
     override suspend fun updateSavedState(savedState: SavedState) {
         dataStore.edit { preferences ->
-            Log.v(logTag(), "updateSavedState() datastore.edit invoked")
+            Log.v(LOG_TAG, "updateSavedState() datastore.edit invoked")
             preferences[PreferencesKeys.PLAYLIST] = savedState.playlist.joinToString(",")
             preferences[PreferencesKeys.CURRENT_TRACK] = savedState.currentTrack
             preferences[PreferencesKeys.CURRENT_TRACK_POSITION] = savedState.currentTrackPosition
             preferences[PreferencesKeys.CURRENT_TRACK_POSITION] = savedState.currentTrackPosition
-            Log.v(logTag(), "updateSavedState() datastore.edit invocation complete")
+            Log.v(LOG_TAG, "updateSavedState() datastore.edit invocation complete")
         }
     }
 
@@ -105,9 +107,6 @@ open class DefaultSavedStateRepository
     /**
      * @return the name of the log tag given to the class
      */
-    override fun logTag(): String {
-        return "DefaultSavedtateRepo"
-    }
 
     private fun preferencesToSavedState(preferences : Preferences) : SavedState {
         val playlistString : String? = preferences[PreferencesKeys.PLAYLIST]
@@ -122,7 +121,7 @@ open class DefaultSavedStateRepository
         val currentTrackIndex : Int = preferences[PreferencesKeys.CURRENT_TRACK_INDEX] ?: -1
 
         val currentTrackPosition : Long = preferences[PreferencesKeys.CURRENT_TRACK_POSITION] ?: 0L
-        Log.d(logTag(), "preferencesToSavedState() Mapping preferences to saved state :- currentTrack: $currentTrack, currentTrackIndex: $currentTrackIndex, currentTrackPosition: $currentTrackPosition")
+        Log.d(LOG_TAG, "preferencesToSavedState() Mapping preferences to saved state :- currentTrack: $currentTrack, currentTrackIndex: $currentTrackIndex, currentTrackPosition: $currentTrackPosition")
         return SavedState(
             playlist = playlist,
             currentTrack = currentTrack,

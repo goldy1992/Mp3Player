@@ -15,14 +15,17 @@ constructor(mediaRepository: MediaRepository,
             scope: CoroutineScope
 ) : MediaViewModelState<PlaybackPositionEvent>(mediaRepository, scope) {
 
+    companion object {
+        const val LOG_TAG = "PlaybackPositionViewModelState"
+    }
     private val _playbackPositionState = MutableStateFlow(PlaybackPositionEvent.DEFAULT)
 
     init {
-        Log.v(logTag(), "init isPlaying")
+        Log.v(LOG_TAG, "init isPlaying")
         scope.launch {
             mediaRepository.playbackPosition()
                 .collect {
-                    Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
+                    Log.d(LOG_TAG, "mediaRepository.isPlaying() collect: current isPlaying: $it")
                     _playbackPositionState.value = it
                 }
         }
@@ -32,8 +35,5 @@ constructor(mediaRepository: MediaRepository,
         return _playbackPositionState.asStateFlow()
     }
 
-    override fun logTag(): String {
-        return "PlaybackPositionViewModelState"
-    }
 
 }

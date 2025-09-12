@@ -13,7 +13,6 @@ import androidx.media3.session.MediaSession
 import androidx.media3.session.SessionCommand
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants.AUDIO_DATA
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ServiceScoped
 import java.lang.Long.max
 import java.nio.ByteBuffer
@@ -26,7 +25,7 @@ import androidx.annotation.OptIn as AndroidXOptIn
 class FFTAudioProcessor
 
     @Inject
-    constructor() : AudioProcessor, LogTagger {
+    constructor() : AudioProcessor {
 
     var mediaSession : MediaSession? = null
     companion object {
@@ -241,7 +240,4 @@ class FFTAudioProcessor
         }
     }
 
-    override fun logTag(): String {
-        return "FFTAudioProcessor"
-    }
 }

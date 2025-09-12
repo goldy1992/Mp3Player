@@ -5,7 +5,7 @@ import android.util.Base64
 import androidx.navigation.NavController
 import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

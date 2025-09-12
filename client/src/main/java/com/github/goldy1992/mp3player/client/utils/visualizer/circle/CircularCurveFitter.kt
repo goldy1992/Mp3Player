@@ -3,11 +3,14 @@ package com.github.goldy1992.mp3player.client.utils.visualizer.circle
 import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.circular.CubicBezierCurveOffset
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlin.math.cos
 import kotlin.math.sin
 
-interface CircularCurveFitter : LogTagger {
+interface CircularCurveFitter {
+
+    companion object {
+        const val LOG_TAG = "CircularCurveFitter"
+    }
 
     val center: Offset
     val minRadius : Float
@@ -33,7 +36,7 @@ interface CircularCurveFitter : LogTagger {
             }
            // toReturn.add(toReturn[0])
         } else {
-            Log.v(logTag(), "Empty frequency list, using default")
+            Log.v(LOG_TAG, "Empty frequency list, using default")
             val spacing = ((2 * Math.PI) / 15).toFloat()
             for (i in 1..15) {
                 val x = (minRadius * cos(angle)).toFloat() + center.x

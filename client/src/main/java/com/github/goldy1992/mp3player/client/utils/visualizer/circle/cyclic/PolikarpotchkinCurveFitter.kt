@@ -29,7 +29,4 @@ class PolikarpotchkinCurveFitter(
         TODO("Not yet implemented")
     }
 
-    override fun logTag(): String {
-        return "PolikarpotchkinCurveFitter"
-    }
 }

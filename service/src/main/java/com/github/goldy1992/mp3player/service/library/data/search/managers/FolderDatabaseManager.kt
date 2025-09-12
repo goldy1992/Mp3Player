@@ -32,7 +32,4 @@ class FolderDatabaseManager
         return entry.id
     }
 
-    override fun logTag(): String {
-        return "FolderDatabaseManager"
-    }
 }

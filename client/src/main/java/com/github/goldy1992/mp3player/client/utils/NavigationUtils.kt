@@ -10,20 +10,21 @@ import com.github.goldy1992.mp3player.client.models.media.Album
 import com.github.goldy1992.mp3player.client.models.media.Folder
 import com.github.goldy1992.mp3player.client.models.media.MediaEntity
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.VisualizerType
-import com.github.goldy1992.mp3player.commons.LogTagger
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 
 /**
  * Util object for navigating to different screens given a [MediaEntity].
  */
-object NavigationUtils : LogTagger{
+object NavigationUtils {
+
+    const val LOG_TAG = "NavigationUtils"
 
     fun navigate(navController: NavController, album: Album) {
         val albumId = album.id
         val albumTitle = album.title
         val albumArtist = album.artist
         val albumArtUriBase64 = Base64.encodeToString(album.artworkUri.toString().encodeToByteArray(), Base64.DEFAULT)
-        Log.d(logTag(), "onAlbumSelected() Album $albumTitle uri: ${album.artworkUri}")
+        Log.d(LOG_TAG, "onAlbumSelected() Album $albumTitle uri: ${album.artworkUri}")
         navController.navigate(
     Screen.ALBUM.name
             + "/" + albumId
@@ -37,7 +38,7 @@ object NavigationUtils : LogTagger{
         val encodedFolderLibraryId = folder.encodedLibraryId
         val encodedFolderPath = folder.encodedPath
         val folderName = folder.name
-        Log.d(logTag(), "navigate() invoked with folder: $folder")
+        Log.d(LOG_TAG, "navigate() invoked with folder: $folder")
         navController.navigate(
             Screen.FOLDER.name
                     + "/" + encodedFolderLibraryId
@@ -50,7 +51,7 @@ object NavigationUtils : LogTagger{
         val visualizerTypeString = visualizerType.name
         var audioDataString = currentData.joinToString(",") { it.toString() }
         audioDataString = audioDataString.ifEmpty { "empty" }
-        Log.d(logTag(), "navigate() invoked with visualizerType: $visualizerType")
+        Log.d(LOG_TAG, "navigate() invoked with visualizerType: $visualizerType")
         navController.navigate(
     Screen.SINGLE_VISUALIZER.name
             + "/" + visualizerTypeString
@@ -70,8 +71,5 @@ object NavigationUtils : LogTagger{
 
     fun showNavRail(windowSize: WindowSizeClass) : Boolean {
         return navRailSizes.contains(windowSize.widthSizeClass)
-    }
-    override fun logTag(): String {
-        return "NavigationUtils"
     }
 }

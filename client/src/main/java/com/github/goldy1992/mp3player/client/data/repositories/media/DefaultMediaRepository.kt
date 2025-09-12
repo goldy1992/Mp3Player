@@ -29,7 +29,6 @@ import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils
 import com.github.goldy1992.mp3player.client.utils.RepeatModeUtils.getRepeatMode
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -43,8 +42,10 @@ class DefaultMediaRepository
     @Inject
     constructor(
         private val mediaDataSource : MediaDataSource
-    ) : MediaRepository, LogTagger {
-
+    ) : MediaRepository{
+    companion object {
+        const val LOG_TAG = "DefaultMediaRepository"
+    }
     override fun audioData(): Flow<AudioSample> {
         return mediaDataSource.audioData()
     }
@@ -60,7 +61,7 @@ class DefaultMediaRepository
         return mediaDataSource.currentPlaylistMetadata().map {
             val extras = it.extras
             val playlistId = extras?.getString(Constants.PLAYLIST_ID) ?: Constants.UNKNOWN
-            Log.d(logTag(), "mediaRepository.currentPlaylistMetadata() collect: new playlist metadata retrieved: $playlistId")
+            Log.d(LOG_TAG, "mediaRepository.currentPlaylistMetadata() collect: new playlist metadata retrieved: $playlistId")
             playlistId
         }
     }
@@ -273,7 +274,4 @@ class DefaultMediaRepository
         mediaDataSource.subscribe(id)
     }
 
-    override fun logTag(): String {
-        return "DefaultMediaBrowserRepo"
-    }
 }

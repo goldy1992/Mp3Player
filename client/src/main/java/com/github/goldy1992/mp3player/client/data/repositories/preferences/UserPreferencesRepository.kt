@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -38,7 +37,12 @@ data class UserPreferences(
 @Singleton
 open class UserPreferencesRepository
     @Inject
-    constructor(private val dataStore: DataStore<Preferences>) : IUserPreferencesRepository, LogTagger {
+    constructor(private val dataStore: DataStore<Preferences>) : IUserPreferencesRepository {
+
+
+    companion object {
+        const val LOG_TAG = "UserPreferencesRepository"
+    }
 
     private object PreferencesKeys {
         val THEME = stringPreferencesKey("theme")
@@ -55,7 +59,7 @@ open class UserPreferencesRepository
         .catch { exception ->
             // dataStore.data throws an IOException when an error is encountered when reading data
             if (exception is IOException) {
-                Log.e(logTag(), "userPreferencesFlow: IOException reading preferences.", exception)
+                Log.e(LOG_TAG, "userPreferencesFlow: IOException reading preferences.", exception)
                 emit(emptyPreferences())
             } else {
                 throw exception
@@ -71,7 +75,7 @@ open class UserPreferencesRepository
             val language : String = preferences[PreferencesKeys.LANGUAGE] ?: "en"
             val userPreferences = UserPreferences(darkMode, systemDarkMode, useDynamicColor, language)
 
-            Log.d(logTag(), "userPreferencesFlow: preferences mapped to $userPreferences")
+            Log.d(LOG_TAG, "userPreferencesFlow: preferences mapped to $userPreferences")
             userPreferences
         }
 
@@ -108,7 +112,4 @@ open class UserPreferencesRepository
     /**
      * @return the name of the log tag given to the class
      */
-    override fun logTag(): String {
-        return "USER_PREFS_REPO"
-    }
 }

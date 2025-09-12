@@ -12,15 +12,17 @@ class PlaybackSpeedViewModelState (
     mediaRepository: MediaRepository,
     scope: CoroutineScope
 ) : MediaViewModelState<Float>(mediaRepository, scope) {
-
+    companion object {
+        const val LOG_TAG = "PlaybackSpeedViewModelState"
+    }
     private val _playbackSpeedState = MutableStateFlow(1f)
 
     init {
-        Log.v(logTag(), "init isPlaying")
+        Log.v(LOG_TAG, "init isPlaying")
         scope.launch {
             mediaRepository.playbackSpeed()
                 .collect {
-                    Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
+                    Log.d(LOG_TAG, "mediaRepository.isPlaying() collect: current isPlaying: $it")
                     _playbackSpeedState.value = it
                 }
         }
@@ -30,8 +32,5 @@ class PlaybackSpeedViewModelState (
         return _playbackSpeedState.asStateFlow()
     }
 
-    override fun logTag(): String {
-        return "PlaybackSpeedViewModelState"
-    }
 
 }

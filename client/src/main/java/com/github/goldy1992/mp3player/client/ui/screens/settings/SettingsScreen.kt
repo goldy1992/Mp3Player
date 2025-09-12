@@ -76,7 +76,7 @@ import com.github.goldy1992.mp3player.client.ui.components.LanguageSelectionDial
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.utils.VersionUtils
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 import java.util.EnumMap
 

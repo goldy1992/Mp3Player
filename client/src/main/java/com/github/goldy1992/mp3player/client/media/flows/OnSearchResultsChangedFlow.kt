@@ -50,7 +50,4 @@ private constructor(scope: CoroutineScope,
         }
     }
 
-    override fun logTag(): String {
-        return "OnSearchResultsFlow"
-    }
 }

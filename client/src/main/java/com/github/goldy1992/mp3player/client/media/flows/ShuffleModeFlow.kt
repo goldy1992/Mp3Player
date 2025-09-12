@@ -48,7 +48,4 @@ private constructor(
         }
     }
 
-    override fun logTag(): String {
-        return "ShuffleModeFlow"
-    }
 }

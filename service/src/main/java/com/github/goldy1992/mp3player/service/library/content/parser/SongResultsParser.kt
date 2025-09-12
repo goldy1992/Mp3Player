@@ -83,12 +83,6 @@ class SongResultsParser
         return if (result == 0) getMediaUri(m1)!!.compareTo(getMediaUri(m2)) else result
     }
 
-    /**
-     * @return the name of the log tag given to the class
-     */
-    override fun logTag(): String {
-        return "Sngs_Res_Prser"
-    }
 
     companion object {
         const val ALBUM_ART_URI_PREFIX = "content://media/external/audio/albumart"

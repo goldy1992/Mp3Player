@@ -22,9 +22,11 @@ import androidx.annotation.OptIn as AndroidXOptIn
  * system.
  */
 @AndroidEntryPoint
-class MediaPlaybackService : MediaLibraryService(),
-        LogTagger {
+class MediaPlaybackService : MediaLibraryService() {
 
+    companion object {
+        const val LOG_TAG = "MEDIA_PLAYBACK_SERVICE"
+    }
     @Inject
     lateinit var componentClassMapper: ComponentClassMapper
 
@@ -48,12 +50,12 @@ class MediaPlaybackService : MediaLibraryService(),
     lateinit var playerStateManager: PlayerStateManager
 
     override fun onCreate() {
-        Log.v(logTag(), "onCreate() invoked.")
+        Log.v(LOG_TAG, "onCreate() invoked.")
         super.onCreate()
-        Log.v(logTag(), "onCreate() super.onCreate() execution complete")
+        Log.v(LOG_TAG, "onCreate() super.onCreate() execution complete")
 
         if (mediaSession == null) {
-            Log.d(logTag(), "onCreate() mediaSession is null, calling MediaSessionCreator.create()")
+            Log.d(LOG_TAG, "onCreate() mediaSession is null, calling MediaSessionCreator.create()")
             mediaSession = mediaSessionCreator.create(this)
         }
 
@@ -61,43 +63,43 @@ class MediaPlaybackService : MediaLibraryService(),
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        Log.v(logTag(), "onBind() invoked with intent: ${intent?.action}")
+        Log.v(LOG_TAG, "onBind() invoked with intent: ${intent?.action}")
         return super.onBind(intent)
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        Log.v(logTag(), "onUnbind() invoked with intent: ${intent?.action}")
+        Log.v(LOG_TAG, "onUnbind() invoked with intent: ${intent?.action}")
         return super.onUnbind(intent)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         Log.v(
-            logTag(),
+            LOG_TAG,
             "onTaskRemoved() invoked with intent data: ${rootIntent?.data}, action: ${rootIntent?.action}"
         )
         savePlayerState()
         if (!(mediaSession?.player?.playWhenReady)!!) {
-            Log.d(logTag(), "onTaskRemoved() invoking stopSelf()")
+            Log.d(LOG_TAG, "onTaskRemoved() invoking stopSelf()")
             stopSelf()
-            Log.d(logTag(), "onTaskRemoved() call to stopSelf() complete")
+            Log.d(LOG_TAG, "onTaskRemoved() call to stopSelf() complete")
         } else {
-            Log.d(logTag(), "onTaskRemoved() not invoking stopSelf()")
+            Log.d(LOG_TAG, "onTaskRemoved() not invoking stopSelf()")
         }
     }
 
     override fun onUpdateNotification(session: MediaSession, startInForegroundRequired: Boolean) {
-        Log.d(logTag(), "onUpdateNotification() $session startInForeground $startInForegroundRequired")
+        Log.d(LOG_TAG, "onUpdateNotification() $session startInForeground $startInForegroundRequired")
         super.onUpdateNotification(session, startInForegroundRequired)
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaLibrarySession? {
-        Log.v(logTag(), "onGetSession() invoked")
+        Log.v(LOG_TAG, "onGetSession() invoked")
        return mediaSession
     }
 
     override fun stopService(name: Intent?): Boolean {
         Log.v(
-            logTag(),
+            LOG_TAG,
             "stopService() invoked with intent data: ${name?.data}, action: ${name?.action}"
         )
         savePlayerState()
@@ -106,22 +108,20 @@ class MediaPlaybackService : MediaLibraryService(),
 
 
     override fun onDestroy() {
-        Log.v(logTag(), "onDestroy() invoked")
+        Log.v(LOG_TAG, "onDestroy() invoked")
         savePlayerState()
         this.mediaSessionCreator.destroySession(this.mediaSession)
         clearListener()
         super.onDestroy()
         scope.cancel()
-        Log.v(logTag(), "onDestroy() invocation complete")
+        Log.v(LOG_TAG, "onDestroy() invocation complete")
     }
 
     private fun savePlayerState() {
-        Log.v(logTag(), "savePlayerState() invoked")
+        Log.v(LOG_TAG, "savePlayerState() invoked")
         playerStateManager.saveState()
-        Log.i(logTag(), "savePlayerState() Player state saved")
+        Log.i(LOG_TAG, "savePlayerState() Player state saved")
     }
 
-    override fun logTag() : String {
-        return "MEDIA_PLAYBACK_SERVICE"
-    }
+
 }

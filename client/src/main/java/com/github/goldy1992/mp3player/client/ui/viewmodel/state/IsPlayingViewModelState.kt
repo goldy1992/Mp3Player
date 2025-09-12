@@ -13,14 +13,18 @@ class IsPlayingViewModelState(
     scope: CoroutineScope
 ) : MediaViewModelState<Boolean>(mediaRepository, scope) {
 
+    companion object {
+        const val LOG_TAG = "IsPlayingViewModelState"
+    }
+
     private val _isPlayingState = MutableStateFlow(false)
 
     init {
-        Log.v(logTag(), "init isPlaying")
+        Log.v(LOG_TAG, "init isPlaying")
         scope.launch {
             mediaRepository.isPlaying()
                 .collect {
-                    Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
+                    Log.d(LOG_TAG, "mediaRepository.isPlaying() collect: current isPlaying: $it")
                     _isPlayingState.value = it
                 }
         }
@@ -30,8 +34,5 @@ class IsPlayingViewModelState(
         return _isPlayingState.asStateFlow()
     }
 
-    override fun logTag(): String {
-        return "IsPlayingViewModelState"
-    }
 
 }

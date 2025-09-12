@@ -48,7 +48,4 @@ class PlaybackParametersFlow
         }
     }
 
-    override fun logTag(): String {
-        TODO("Not yet implemented")
-    }
 }

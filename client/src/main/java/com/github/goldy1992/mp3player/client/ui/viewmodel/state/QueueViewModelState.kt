@@ -13,15 +13,17 @@ class QueueViewModelState (
     mediaRepository: MediaRepository,
     scope: CoroutineScope
 ) : MediaViewModelState<Queue>(mediaRepository, scope) {
-
+    companion object {
+        const val LOG_TAG = "QueueViewModelState"
+    }
     private val _queueState = MutableStateFlow(Queue.EMPTY)
 
     init {
-        Log.v(logTag(), "init isPlaying")
+        Log.v(LOG_TAG, "init isPlaying")
         scope.launch {
             mediaRepository.queue()
                 .collect {
-                    Log.d(logTag(), "mediaRepository.isPlaying() collect: current isPlaying: $it")
+                    Log.d(LOG_TAG, "mediaRepository.isPlaying() collect: current isPlaying: $it")
                     _queueState.value = it
                 }
         }
@@ -29,10 +31,6 @@ class QueueViewModelState (
 
     override fun state(): StateFlow<Queue> {
         return _queueState.asStateFlow()
-    }
-
-    override fun logTag(): String {
-        return "QueueViewModelState"
     }
 
 }

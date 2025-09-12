@@ -25,7 +25,4 @@ class NowPlayingScreenViewModel
 
     val queue = QueueViewModelState(mediaRepository, viewModelScope)
 
-    override fun logTag(): String {
-        return "NowPlayingViewModel"
-    }
 }

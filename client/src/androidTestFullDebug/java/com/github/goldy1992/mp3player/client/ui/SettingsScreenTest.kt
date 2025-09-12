@@ -25,7 +25,7 @@ import com.github.goldy1992.mp3player.client.ui.components.AboutDialog
 import com.github.goldy1992.mp3player.client.ui.components.ReportABugDialog
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreen
 import com.github.goldy1992.mp3player.client.ui.screens.settings.SettingsScreenViewModel
-import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
+import com.github.goldy1992.mp3player.client.data.repositories.permissions.IPermissionsRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

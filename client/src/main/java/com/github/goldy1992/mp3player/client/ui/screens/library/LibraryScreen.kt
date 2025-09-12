@@ -56,7 +56,7 @@ import com.github.goldy1992.mp3player.client.ui.lists.songs.SongList
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils.showNavRail
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils.toggleNavigationDrawer
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

@@ -10,7 +10,6 @@ import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
 import com.github.goldy1992.mp3player.commons.ComponentClassMapper
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.ContentManager
 import com.github.goldy1992.mp3player.service.library.content.observers.MediaStoreObservers
 import com.github.goldy1992.mp3player.service.player.equalizer.FFTAudioProcessor
@@ -29,7 +28,11 @@ open class
         private val player : Player,
         private val mediaLibrarySessionCallback : MediaLibrarySessionCallback,
         private val mediaStoreObservers : MediaStoreObservers
-    ) : LogTagger {
+    )  {
+
+    companion object {
+        const val LOG_TAG = "MediaSessionCreator"
+    }
 
     private var customLayout = listOf<CommandButton>()
 
@@ -65,16 +68,13 @@ open class
 
     fun destroySession(session: MediaLibrarySession?) {
         session?.run {
-            Log.i(logTag(), "Releasing Exoplayer")
+            Log.i(LOG_TAG, "Releasing Exoplayer")
             player.release()
-            Log.i(logTag(), "Exoplayer released, releasing media session")
+            Log.i(LOG_TAG, "Exoplayer released, releasing media session")
             release()
-            Log.i(logTag(), "media session released")
+            Log.i(LOG_TAG, "media session released")
         }
         mediaStoreObservers.unregisterAll()
     }
 
-    override fun logTag(): String {
-        return "MediaSessionCreator"
-    }
 }

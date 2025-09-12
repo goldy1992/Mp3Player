@@ -18,21 +18,25 @@ class AudioDataViewModelState(
     scope: CoroutineScope
 ) : MediaViewModelState<List<Float>>(mediaRepository, scope) {
 
+    companion object {
+        const val LOG_TAG = "AudioDataViewModelState"
+    }
+
     // Expose this data to allow initialisation when initialising the visualizer when paused
      val audioDataState = MutableStateFlow(emptyList<Float>())
 
 
     init {
-        Log.v(logTag(), "init isPlaying")
+        Log.v(LOG_TAG, "init isPlaying")
         scope.launch {
             mediaRepository.audioData()
                 .collect {audioSample ->
-                    Log.d(logTag(), "collecting audio data")
+                    Log.d(LOG_TAG, "collecting audio data")
                     if (playbackState.value.isPlaying) {
                         audioDataState.value = audioDataProcessor.processAudioData(audioSample, FrequencyBandTwentyFour()).toList()
-                        Log.v(logTag(), "mediaRepository.audioData.collect() finished collecting audio data")
+                        Log.v(LOG_TAG, "mediaRepository.audioData.collect() finished collecting audio data")
                     } else {
-                        Log.v(logTag(), "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
+                        Log.v(LOG_TAG, "mediaRepository.audioData.collect() not collecting audio data since song is not playing")
                     }
                 }
         }
@@ -41,11 +45,5 @@ class AudioDataViewModelState(
     override fun state(): StateFlow<List<Float>> {
         return audioDataState.asStateFlow()
     }
-
-    override fun logTag(): String {
-        return "AudioDataViewModelState"
-    }
-
-
 
 }

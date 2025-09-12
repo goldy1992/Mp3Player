@@ -30,6 +30,10 @@ class SearchScreenViewModel
     )
     : PlayPlaylist, PlaySong, MediaViewModel(mediaRepository) {
 
+    companion object {
+        const val logTag = "SearchScreenViewModel"
+    }
+
     private val _searchQuery = MutableStateFlow("")
     val searchQuery : StateFlow<String> = _searchQuery
 
@@ -48,7 +52,7 @@ class SearchScreenViewModel
                 _searchResults.value = SearchResults.NO_RESULTS
             }
             mediaRepository.search(query, Bundle())
-            Log.i(logTag(), "New searchQueryValue: $query")
+            Log.i(LOG_TAG, "New searchQueryValue: $query")
         }
     }
 
@@ -65,10 +69,10 @@ class SearchScreenViewModel
                 if (isNotEmpty(searchQuery.value) && it.itemCount > 0) {
                     val results = mediaRepository.getSearchResults(it.query, 0, it.itemCount)
                     _searchResults.value = results
-                    Log.i(logTag(), "got search results $results")
+                    Log.i(LOG_TAG, "got search results $results")
                 } else {
                     _searchResults.value = SearchResults(State.NO_RESULTS)
-                    Log.i(logTag(), "No search results returned")
+                    Log.i(LOG_TAG, "No search results returned")
                 }
 
             }
@@ -81,8 +85,4 @@ class SearchScreenViewModel
         }
     }
 
-
-    override fun logTag(): String {
-        return "SearchScreenViewModel"
-    }
 }

@@ -31,7 +31,7 @@ import com.github.goldy1992.mp3player.client.ui.components.equalizer.fountainspr
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.pichart.PieChartVisualizer
 import com.github.goldy1992.mp3player.client.ui.components.equalizer.smoothline.SmoothLineEqualizer
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerUtils.getVisualizerName
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 
 private const val LOG_TAG = "SingleVisualizerScreen"

@@ -10,16 +10,16 @@ import com.github.goldy1992.mp3player.client.models.media.MediaEntity
 import com.github.goldy1992.mp3player.client.models.media.Playlist
 import com.github.goldy1992.mp3player.client.models.media.Root
 import com.github.goldy1992.mp3player.client.models.media.Song
-import com.github.goldy1992.mp3player.commons.LogTagger
 
 
-object MediaEntityParser : LogTagger {
+object MediaEntityParser {
+    const val LOG_TAG = "MediaEntityParser"
 
     @Suppress("UNCHECKED_CAST")
     fun <T : MediaEntity> parse(
     parent: T,
     mediaItems : List<MediaItem>) : T {
-        Log.v(logTag(), "parse() invoked with parent: ${parent.javaClass} and ${mediaItems.size} mediaItems")
+        Log.v(LOG_TAG, "parse() invoked with parent: ${parent.javaClass} and ${mediaItems.size} mediaItems")
         if (parent is Root) {
             return MediaEntityUtils.createRootChildren(parent, mediaItems) as T
         }
@@ -44,11 +44,8 @@ object MediaEntityParser : LogTagger {
         }
 
 
-        Log.w(logTag(), "parent of type: ${parent.javaClass} does not contain an implementation! Returning a Song()")
+        Log.w(LOG_TAG, "parent of type: ${parent.javaClass} does not contain an implementation! Returning a Song()")
         return Song() as T
     }
 
-    override fun logTag(): String {
-        return "MediaEntityParser"
-    }
 }

@@ -28,6 +28,7 @@ class QueueFlow
      : FlowBase<OnQueueChangedEventHolder>(scope, onCollect) {
     
     companion object {
+        const val LOG_TAG = "QueueFlow"
         fun create(
             controllerLf: ListenableFuture<Player>,
             @MainDispatcher mainDispatcher: CoroutineDispatcher,
@@ -48,20 +49,20 @@ class QueueFlow
     }
     
     override fun getFlow(): Flow<OnQueueChangedEventHolder> = callbackFlow {
-        Log.v(logTag(), "QueueFlow callbackFlow invoked, awaiting MediaController")
+        Log.v(LOG_TAG, "QueueFlow callbackFlow invoked, awaiting MediaController")
         val controller = controllerFuture.await()
-        Log.v(logTag(), "QueueFlow callbackFlow finished awaiting MediaController")
+        Log.v(LOG_TAG, "QueueFlow callbackFlow finished awaiting MediaController")
         var queue: OnQueueChangedEventHolder
         withContext(mainDispatcher) {
             queue = QueueUtils.getQueue(controller)
         }
-        Log.d(logTag(), "QueueFlow finished initialising with queue ")
+        Log.d(LOG_TAG, "QueueFlow finished initialising with queue ")
         trySend(queue)
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
-                Log.d(logTag(), "QueueFlow.onEvents() invoked ${LoggingUtils.getPlayerEventsLogMessage(events)}")
+                Log.d(LOG_TAG, "QueueFlow.onEvents() invoked ${LoggingUtils.getPlayerEventsLogMessage(events)}")
                 if (events.containsAny(*QueueFlow.events)) {
-                    Log.d(logTag(), "QueueFlow.onEvents() sending queue events ${QueueFlow.events}")
+                    Log.d(LOG_TAG, "QueueFlow.onEvents() sending queue events ${QueueFlow.events}")
                     trySend(QueueUtils.getQueue(player))
                 }
             }
@@ -74,7 +75,4 @@ class QueueFlow
         }
     }
 
-    override fun logTag(): String {
-        return "QueueFlow"
-    }
 }

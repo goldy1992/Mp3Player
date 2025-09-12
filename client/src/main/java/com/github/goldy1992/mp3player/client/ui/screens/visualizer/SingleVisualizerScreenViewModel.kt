@@ -31,7 +31,4 @@ constructor(
             audioData.audioDataState.value = currentAudioData
         }
     }
-    override fun logTag(): String {
-        return "SingleVisualizerScreenViewModel"
-    }
 }

@@ -29,8 +29,4 @@ class CurrentSongViewModelState
     override fun state(): StateFlow<Song> {
         return _currentSongState.asStateFlow()
     }
-
-    override fun logTag(): String {
-        return "CurrentSongViewModelState"
-    }
 }

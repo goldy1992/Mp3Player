@@ -11,7 +11,6 @@ import com.github.goldy1992.mp3player.client.models.media.State
 import com.github.goldy1992.mp3player.client.ui.viewmodel.MediaViewModel
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SetShuffleEnabled
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.ShufflePlayPlaylist
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +26,11 @@ class AlbumScreenViewModel
 constructor(
     savedStateHandle: SavedStateHandle,
     mediaRepository: MediaRepository
-) : SetShuffleEnabled, ShufflePlayPlaylist, MediaViewModel(mediaRepository), LogTagger  {
+) : SetShuffleEnabled, ShufflePlayPlaylist, MediaViewModel(mediaRepository) {
+
+    companion object {
+        const val LOG_TAG = "AlbumScreenViewModel"
+    }
 
     private val albumId : String = checkNotNull(savedStateHandle["albumId"])
     private val albumTitle : String = checkNotNull(savedStateHandle["albumTitle"])
@@ -36,7 +39,7 @@ constructor(
 
     private val albumArtUri : Uri = Uri.parse(String(Base64.decode(albumArtUriBase64Encoded, Base64.DEFAULT)))
     init {
-        Log.d(logTag(), "AlbumScreenViewModel init, decoded album uri: $albumArtUri")
+        Log.d(LOG_TAG, "AlbumScreenViewModel init, decoded album uri: $albumArtUri")
     }
 
     private val _album : MutableStateFlow<Album> = MutableStateFlow(
@@ -98,8 +101,4 @@ constructor(
 
 
 
-
-    override fun logTag(): String {
-        return "AlbumScreenViewModel"
-    }
 }

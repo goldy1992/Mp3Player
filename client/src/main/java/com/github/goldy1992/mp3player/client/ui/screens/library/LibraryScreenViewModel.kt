@@ -32,6 +32,10 @@ class LibraryScreenViewModel
         mediaRepository: MediaRepository,
     ) : PlayPlaylist, MediaViewModel(mediaRepository) {
 
+        companion object {
+            const val LOG_TAG = "LibraryScreenViewModel"
+        }
+
 
     private val _root = MutableStateFlow(Root.NOT_LOADED)
     val root : StateFlow<Root> = _root
@@ -58,7 +62,7 @@ class LibraryScreenViewModel
         viewModelScope.launch {
             mediaRepository.onChildrenChanged()
                 .filter {
-                    Log.d(logTag(), "mediaRepository.onChildrenChanged() filter: id: ${it.parentId}")
+                    Log.d(LOG_TAG, "mediaRepository.onChildrenChanged() filter: id: ${it.parentId}")
                     val isChildOfARootItem = isChildOfRootItem(it.parentId)
                     val isRootItem = it.parentId == _root.value.id
                     isRootItem || isChildOfARootItem
@@ -122,7 +126,7 @@ class LibraryScreenViewModel
 
 
                         else -> {
-                            Log.w(logTag(), "Received unknown id notification: ${it.parentId}")
+                            Log.w(LOG_TAG, "Received unknown id notification: ${it.parentId}")
                         }
                     }
                 }
@@ -134,10 +138,6 @@ class LibraryScreenViewModel
 
     fun setSelectedChip(chip: SelectedLibraryItem) {
         _selectedChip.value = chip
-    }
-
-    override fun logTag(): String {
-        return "LibScreenViewModel"
     }
 
 }

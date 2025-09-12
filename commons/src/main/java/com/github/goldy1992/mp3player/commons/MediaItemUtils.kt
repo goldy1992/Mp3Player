@@ -11,7 +11,9 @@ import com.github.goldy1992.mp3player.commons.VersionUtils.isTiramisuOrHigher
 import java.io.File
 import java.io.Serializable
 
-object MediaItemUtils : LogTagger {
+object MediaItemUtils {
+    const val LOG_TAG = "MediaItemUtils"
+
     private fun hasExtras(item: MediaItem?): Boolean {
         return item != null && item.mediaMetadata.extras != null
     }
@@ -144,7 +146,7 @@ object MediaItemUtils : LogTagger {
 
     @JvmStatic
     fun getDuration(item: MediaItem): Long {
-        Log.v(logTag(), "getDuration() item: $item, duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}, metadata: ${item.mediaMetadata}, extras: ${item.mediaMetadata.extras}")
+        Log.v(LOG_TAG, "getDuration() item: $item, duration: ${item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION)}, metadata: ${item.mediaMetadata}, extras: ${item.mediaMetadata.extras}")
         return item.mediaMetadata.extras?.getLong(MetaDataKeys.DURATION) ?: 1L
     }
 
@@ -161,7 +163,7 @@ object MediaItemUtils : LogTagger {
                 Constants.MEDIA_ITEM_TYPE) as MediaItemType?
         }
         if (mediaItemType == null) {
-            Log.w(logTag(), "no MediaItemType found for item ${item.mediaId}")
+            Log.w(LOG_TAG, "no MediaItemType found for item ${item.mediaId}")
         }
         return mediaItemType ?: MediaItemType.NONE
     }
@@ -204,8 +206,4 @@ object MediaItemUtils : LogTagger {
         return mediaItem.mediaMetadata.releaseYear.toString()
     }
 
-
-    override fun logTag(): String {
-        return "MediaItemUtils"
-    }
 }
