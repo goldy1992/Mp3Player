@@ -11,7 +11,6 @@ import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Pause
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.Play
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToNext
 import com.github.goldy1992.mp3player.client.ui.viewmodel.actions.SkipToPrevious
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,8 +21,11 @@ import kotlinx.coroutines.launch
  */
 abstract class MediaViewModel(
     final override val mediaRepository: MediaRepository,
-) : Pause, Play, SkipToNext, SkipToPrevious, LogTagger, ViewModel() {
+) : Pause, Play, SkipToNext, SkipToPrevious, ViewModel() {
 
+    companion object {
+        const val LOG_TAG = "MediaViewModel"
+    }
     final override val scope: CoroutineScope = viewModelScope
 
     private val _playbackState = MutableStateFlow(
@@ -51,7 +53,7 @@ abstract class MediaViewModel(
         scope.launch {
             mediaRepository.isPlaying()
                 .collect {
-                    Log.i(logTag(), "current playbackState: ${playbackState.value}")
+                    Log.i(LOG_TAG, "current playbackState: ${playbackState.value}")
                     _playbackState.value = PlaybackState(
                         isPlaying = it,
                         currentSong = playbackState.value.currentSong,
@@ -67,7 +69,7 @@ abstract class MediaViewModel(
         scope.launch {
             mediaRepository.currentSong()
                 .collect {
-                    Log.v(logTag(), "currentSong collected with id: ${it.title}")
+                    Log.v(LOG_TAG, "currentSong collected with id: ${it.title}")
                     _playbackState.value = PlaybackState(
                         isPlaying = playbackState.value.isPlaying,
                         currentSong = it,

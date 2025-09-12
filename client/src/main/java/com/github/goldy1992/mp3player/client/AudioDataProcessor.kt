@@ -7,7 +7,6 @@ import com.github.goldy1992.mp3player.client.utils.calculateFrequencyBandsAverag
 import com.github.goldy1992.mp3player.client.utils.createFftTransformedAudioSample
 import com.github.goldy1992.mp3player.commons.AudioSample
 import com.github.goldy1992.mp3player.commons.IoDispatcher
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -17,14 +16,17 @@ import javax.inject.Inject
 class AudioDataProcessor
 
     @Inject
-    constructor(@IoDispatcher private val dispatcher: CoroutineDispatcher) : LogTagger {
+    constructor(@IoDispatcher private val dispatcher: CoroutineDispatcher) {
 
+    companion object {
+        const val LOG_TAG = "AudioDataProcessor"
+    }
     suspend fun processAudioData(audioSample: AudioSample,
                                 frequencyBand: FrequencyBand = FrequencyBandTwentyFour()) : FloatArray {
-        Log.v(logTag(), "processAudioData() invoked.")
+        Log.v(LOG_TAG, "processAudioData() invoked.")
         return withContext(dispatcher) {
             if (audioSample.waveformData.isEmpty()) {
-                Log.w(logTag(), "processAudioData() received empty audio sample")
+                Log.w(LOG_TAG, "processAudioData() received empty audio sample")
                 floatArrayOf()
             }
             else {
@@ -42,8 +44,5 @@ class AudioDataProcessor
     /**
      * @return the name of the log tag given to the class
      */
-    override fun logTag(): String {
-        return "AUDIO_DATA_PROCESSOR"
-    }
 }
 

@@ -1,9 +1,8 @@
 package com.github.goldy1992.mp3player.service.data
 
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.flow.Flow
 
-interface ISavedStateRepository : LogTagger {
+interface ISavedStateRepository {
 
     fun getSavedState() : Flow<SavedState>
     suspend fun updateSavedState(savedState: SavedState)

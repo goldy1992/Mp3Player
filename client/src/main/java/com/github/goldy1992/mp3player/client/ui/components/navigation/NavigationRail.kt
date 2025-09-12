@@ -19,7 +19,7 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.items.Libr
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SearchNavigationRailItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SettingsNavigationRailItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationRailItem
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 
 @Preview
 @Composable

@@ -3,7 +3,7 @@ package com.github.goldy1992.mp3player.client.utils
 import com.github.goldy1992.mp3player.client.models.PlaybackPositionEvent
 import com.github.goldy1992.mp3player.client.models.media.Song
 import com.github.goldy1992.mp3player.client.models.media.State
-import com.github.goldy1992.mp3player.commons.TimerUtils
+import com.github.goldy1992.mp3player.client.utils.TimerUtils
 
 object SeekbarUtils {
 

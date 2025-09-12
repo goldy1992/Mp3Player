@@ -53,8 +53,4 @@ class OnChildrenChangedFlow
             removeListener(messageListener)
         }
     }
-
-    override fun logTag(): String {
-        return "OnChildrenChangedFlow"
-    }
 }

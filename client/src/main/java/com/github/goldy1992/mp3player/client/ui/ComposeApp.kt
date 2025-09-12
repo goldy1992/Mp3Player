@@ -32,7 +32,7 @@ import com.github.goldy1992.mp3player.client.ui.screens.visualizer.SingleVisuali
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionScreen
 import com.github.goldy1992.mp3player.client.ui.screens.visualizer.VisualizerCollectionViewModel
 import com.github.goldy1992.mp3player.commons.Constants.ROOT_APP_URI_PATH
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 
 private const val LOG_TAG = "ComposeApp"
 

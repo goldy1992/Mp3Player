@@ -69,7 +69,7 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.Navigation
 import com.github.goldy1992.mp3player.client.ui.lists.songs.EmptySongsList
 import com.github.goldy1992.mp3player.client.ui.lists.songs.LoadedSongsListWithHeader
 import com.github.goldy1992.mp3player.client.utils.TimeUtils
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

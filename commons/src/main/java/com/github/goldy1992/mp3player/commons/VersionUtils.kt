@@ -2,7 +2,9 @@ package com.github.goldy1992.mp3player.commons
 
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
+import androidx.annotation.Keep
 
+@Keep
 object VersionUtils {
 
     @ChecksSdkIntAtLeast(api=Build.VERSION_CODES.TIRAMISU)

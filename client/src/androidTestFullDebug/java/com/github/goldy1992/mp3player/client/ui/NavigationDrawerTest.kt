@@ -14,9 +14,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.goldy1992.mp3player.client.R
 import com.github.goldy1992.mp3player.client.ui.components.navigation.NavigationDrawerContent
 import com.github.goldy1992.mp3player.client.ui.screens.library.SmallAppBar
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.*
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule

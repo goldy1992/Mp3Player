@@ -1,10 +1,11 @@
-package com.github.goldy1992.mp3player.commons
+package com.github.goldy1992.mp3player.client.utils
 
 import android.Manifest
 import android.os.Build
 import androidx.annotation.RequiresApi
 
-object PermissionsUtils : LogTagger {
+object PermissionsUtils {
+    const val LOG_TAG = "PermissionsUtils"
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private val TIRAMISU_PERMISSIONS =  arrayOf(
@@ -31,9 +32,5 @@ object PermissionsUtils : LogTagger {
                 else -> STANDARD_PERMISSIONS
             }
 
-    }
-
-    override fun logTag(): String {
-        return "PermissionsUtils"
     }
 }

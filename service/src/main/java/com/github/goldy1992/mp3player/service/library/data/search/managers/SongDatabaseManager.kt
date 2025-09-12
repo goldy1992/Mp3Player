@@ -32,7 +32,4 @@ class SongDatabaseManager
         return entry.id
     }
 
-    override fun logTag(): String {
-        return "SongDatabaseManager"
-    }
 }

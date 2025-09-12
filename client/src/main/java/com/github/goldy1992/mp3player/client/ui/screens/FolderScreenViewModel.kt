@@ -66,7 +66,4 @@ class FolderScreenViewModel
         }
     }
 
-    override fun logTag(): String {
-        return "FolderScreenViewModel"
-    }
 }

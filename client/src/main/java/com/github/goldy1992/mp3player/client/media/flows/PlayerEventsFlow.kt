@@ -23,6 +23,7 @@ private constructor(scope: CoroutineScope,
     : FlowBase<Player.Events>(scope, onCollect) {
 
     companion object {
+        const val LOG_TAG = "PlayerEventsFlow"
         fun create(
             scope: CoroutineScope,
             controllerFuture : ListenableFuture<Player>,
@@ -38,7 +39,7 @@ private constructor(scope: CoroutineScope,
         val browser = controllerFuture.await()
         val messageListener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
-                Log.i(logTag(), "newEvent(s): ${LoggingUtils.getPlayerEventsLogMessage(events)}")
+                Log.i(LOG_TAG, "newEvent(s): ${LoggingUtils.getPlayerEventsLogMessage(events)}")
                 super.onEvents(player, events)
                 trySend(events)
             }
@@ -51,8 +52,5 @@ private constructor(scope: CoroutineScope,
         }
     }
 
-    override fun logTag(): String {
-        return "OnCustomFlow"
-    }
 
 }

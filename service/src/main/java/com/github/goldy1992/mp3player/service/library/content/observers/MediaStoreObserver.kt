@@ -6,11 +6,10 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.media3.session.MediaLibraryService.MediaLibrarySession
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.service.library.MediaItemTypeIds
 
 abstract class MediaStoreObserver(private val contentResolver: ContentResolver,
-                                  val mediaItemTypeIds: MediaItemTypeIds) : ContentObserver(Handler(Looper.myLooper() ?: Looper.getMainLooper())), LogTagger {
+                                  val mediaItemTypeIds: MediaItemTypeIds) : ContentObserver(Handler(Looper.myLooper() ?: Looper.getMainLooper())) {
     var mediaSession: MediaLibrarySession? = null
     fun init(mediaLibrarySession: MediaLibrarySession) {
         this.mediaSession = mediaLibrarySession

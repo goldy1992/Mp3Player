@@ -39,14 +39,13 @@ android {
         /*makes the Android Test Orchestrator run its "pm clear" command after each test invocation.
         Ensures app's state is completely cleared between tests. */
         // testInstrumentationRunnerArguments clearPackageData: 'true'
-        consumerProguardFiles("consumer-rules.pro")
+//        consumerProguardFiles("consumer-rules.pro")
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+//            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
         getByName("debug") {
             isDefault = true

@@ -25,6 +25,7 @@ internal constructor(
 {
 
     companion object {
+        const val LOG_TAG = "IsPlayingFlow"
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
             controllerFuture : ListenableFuture<Player>,
@@ -38,9 +39,9 @@ internal constructor(
 
 
     override fun getFlow(): Flow<Boolean> = callbackFlow {
-        Log.v(logTag(), "isPlayingFlow invoked, awaiting MediaController")
+        Log.v(LOG_TAG, "isPlayingFlow invoked, awaiting MediaController")
         val controller = controllerFuture.await()
-        Log.v(logTag(), "isPlayingFlow got MediaController")
+        Log.v(LOG_TAG, "isPlayingFlow got MediaController")
         var isPlaying: Boolean
         withContext(mainDispatcher) {
             isPlaying = controller.isPlaying
@@ -48,22 +49,19 @@ internal constructor(
         trySend(isPlaying)
         val messageListener = object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
-                Log.v(logTag(), "onIsPlayingChanged() invoked, isPlaying: $isPlaying")
+                Log.v(LOG_TAG, "onIsPlayingChanged() invoked, isPlaying: $isPlaying")
                 trySend(isPlaying)
             }
 
         }
         controller.addListener(messageListener)
         awaitClose {
-            Log.d(logTag(), "isPlayingCallbackFlow() awaitClose invoked")
+            Log.d(LOG_TAG, "isPlayingCallbackFlow() awaitClose invoked")
             scope.launch(mainDispatcher) {
                 controller.removeListener(messageListener)
             }
         }
     }
 
-    override fun logTag(): String {
-        return "IsPlayingFlow"
-    }
 
 }

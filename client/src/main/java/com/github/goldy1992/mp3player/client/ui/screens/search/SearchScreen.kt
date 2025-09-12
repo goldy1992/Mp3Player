@@ -69,7 +69,7 @@ import com.github.goldy1992.mp3player.client.ui.lists.folders.FolderListItem
 import com.github.goldy1992.mp3player.client.ui.lists.songs.SongListItem
 import com.github.goldy1992.mp3player.client.utils.NavigationUtils
 import com.github.goldy1992.mp3player.commons.MediaItemType
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 import org.apache.commons.lang3.StringUtils
 import java.util.EnumMap
 

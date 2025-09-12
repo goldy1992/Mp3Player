@@ -2,7 +2,7 @@ package com.github.goldy1992.mp3player.client.ui.components.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 
 object NavigationActions {
     fun navigateToLibrary(navController: NavController) {

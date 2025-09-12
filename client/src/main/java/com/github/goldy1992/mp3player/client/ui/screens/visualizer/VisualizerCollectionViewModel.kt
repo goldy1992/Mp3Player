@@ -21,8 +21,5 @@ constructor(
 ) : MediaViewModel(mediaRepository) {
     val audioData = AudioDataViewModelState(mediaRepository, audioDataProcessor, playbackState, viewModelScope)
 
-    override fun logTag(): String {
-        return "VisualizerViewModel"
-    }
 
 }

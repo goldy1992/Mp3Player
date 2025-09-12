@@ -2,7 +2,6 @@ package com.github.goldy1992.mp3player.service.library.data.search.managers
 
 import android.util.Log
 import com.github.goldy1992.mp3player.commons.IoDispatcher
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.ServiceCoroutineScope
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -32,7 +31,11 @@ class SearchDatabaseManagersFullImpl
         searchDatabase: SearchDatabase,
         @ServiceCoroutineScope scope: CoroutineScope,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ) : LogTagger, SearchDatabaseManagers {
+    ) : SearchDatabaseManagers {
+
+    companion object {
+        const val LOG_TAG = "SearchDatabaseManagersFullImpl"
+    }
 
     private val songDatabaseManager: SongDatabaseManager
     private val folderDatabaseManager: FolderDatabaseManager
@@ -60,7 +63,7 @@ class SearchDatabaseManagersFullImpl
             searchDatabase
         )
         scope.launch(ioDispatcher) {
-            Log.v(logTag(), "init() launching contentManager.isInitialised.collect on ioDispatcher")
+            Log.v(LOG_TAG, "init() launching contentManager.isInitialised.collect on ioDispatcher")
             contentManager.isInitialised.collect { isInitialised ->
                 if (isInitialised) {
                     reindexAll()
@@ -82,10 +85,6 @@ class SearchDatabaseManagersFullImpl
         dbManagerMap[MediaItemType.SONGS] = songDatabaseManager
         dbManagerMap[MediaItemType.FOLDERS] = folderDatabaseManager
         dbManagerMap[MediaItemType.ALBUMS] = albumDatabaseManager
-    }
-
-    override fun logTag(): String {
-        return "SearchDatabaseManagers"
     }
 
     override fun getSongDatabaseManager(): SearchDatabaseManager<Song> {

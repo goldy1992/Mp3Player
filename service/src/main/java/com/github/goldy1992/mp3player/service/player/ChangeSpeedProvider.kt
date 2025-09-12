@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.media3.common.PlaybackParameters
 import androidx.media3.common.Player
 import com.github.goldy1992.mp3player.commons.Constants
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ServiceScoped
 import javax.inject.Inject
 
@@ -13,10 +12,19 @@ import javax.inject.Inject
 class ChangeSpeedProvider
 
 @Inject
-constructor() : LogTagger {
+constructor()  {
+
+
+    companion object {
+        const val LOG_TAG = "ChangeSpeedProvider"
+        private const val MINIMUM_PLAYBACK_SPEED = 0.25f
+        private const val MAXIMUM_PLAYBACK_SPEED = 2f
+
+    }
+
 
     fun changeSpeed(player: Player, args : Bundle) {
-        Log.v(logTag(), "changeSpeed() invoked")
+        Log.v(LOG_TAG, "changeSpeed() invoked")
         val newSpeed: Float = args.getFloat(Constants.CHANGE_PLAYBACK_SPEED)
         changeSpeed(newSpeed, player)
     }
@@ -37,13 +45,4 @@ constructor() : LogTagger {
         }
     }
 
-    companion object {
-        private const val MINIMUM_PLAYBACK_SPEED = 0.25f
-        private const val MAXIMUM_PLAYBACK_SPEED = 2f
-        private const val LOG_TAG = "ChangeSpeedProvider"
-    }
-
-    override fun logTag(): String {
-        return LOG_TAG
-    }
 }

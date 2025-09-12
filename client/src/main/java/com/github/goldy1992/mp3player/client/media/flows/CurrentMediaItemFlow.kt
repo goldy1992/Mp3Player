@@ -27,6 +27,7 @@ class CurrentMediaItemFlow
     ) : FlowBase<MediaItem>(scope, onCollect) {
 
     companion object {
+        const val LOG_TAG = "CurrentMediaItemFlow"
         fun create(
             @ActivityCoroutineScope scope: CoroutineScope,
             controllerLf: ListenableFuture<Player>,
@@ -40,7 +41,7 @@ class CurrentMediaItemFlow
     }
 
     override fun getFlow(): Flow<MediaItem> = callbackFlow {
-        Log.v(logTag(), "currentMediaItemFlow map invoked")
+        Log.v(LOG_TAG, "currentMediaItemFlow map invoked")
         val controller: Player = controllerLf.await()
         var mediaItem: MediaItem?
 
@@ -50,7 +51,7 @@ class CurrentMediaItemFlow
         trySend(mediaItem)
         val messageListener = object : Player.Listener {
             override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                Log.v(logTag(), "onMediaMetadataChanged() invoked, title: ${mediaMetadata.title}")
+                Log.v(LOG_TAG, "onMediaMetadataChanged() invoked, title: ${mediaMetadata.title}")
                 val currentMediaItem = controller.currentMediaItem
                 val metadata = currentMediaItem?.mediaMetadata
                 if (metadata != null && metadata.isBrowsable == false && metadata.isPlayable == true) {
@@ -59,14 +60,14 @@ class CurrentMediaItemFlow
                         .setMediaMetadata(mediaMetadata)
                         .build()
                     Log.v(
-                        logTag(),
+                        LOG_TAG,
                         "onMediaMetadataChanged() try to Send item ${mediaMetadata.title}"
                     )
 
                     trySend(toSend)
                 } else {
                     Log.v(
-                        logTag(),
+                        LOG_TAG,
                         "onMediaMetadataChanged() invalid mediaItem ${if (mediaItem == null ) "null" else "with id " + mediaItem!!.mediaId}"
                     )
                 }
@@ -83,8 +84,5 @@ class CurrentMediaItemFlow
     }
     .filterNotNull()
 
-    override fun logTag(): String {
-        return "CurrentMediaItemFlow"
-    }
 
 }

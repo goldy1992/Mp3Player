@@ -9,7 +9,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntSize
 import com.github.goldy1992.mp3player.client.utils.AudioDataUtils
-import com.github.goldy1992.mp3player.commons.LogTagger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,7 +33,7 @@ class PieChartVisualizerState(
     val insetPx : Float,
     private val isDarkMode : Boolean,
     private val baseColor: Color
-) : LogTagger {
+) {
 
     var canvasSize: IntSize = IntSize.Zero
     private var maxRadius = 10f
@@ -53,10 +52,6 @@ class PieChartVisualizerState(
         defaultRadius = maxRadius * 1.5f
         frequencyRange = maxRadius - defaultRadius
         defaultOffset = Offset((canvasSize.width / 2f), (canvasSize.height / 2f))
-    }
-
-    override fun logTag(): String {
-        return "PieChartVisualizerState"
     }
 
     fun setFrequencies(animatedFrequencies: List<Float>) {

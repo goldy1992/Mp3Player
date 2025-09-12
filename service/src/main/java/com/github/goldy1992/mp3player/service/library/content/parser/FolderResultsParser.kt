@@ -19,7 +19,9 @@ class FolderResultsParser
     @Inject
     constructor() : ResultsParser() {
 
-
+    companion object {
+        const val LOG_TAG = "FolderResultsParser"
+    }
     override fun create(cursor: Cursor?): List<MediaItem> {
         val listToReturn = TreeSet(this)
         val directoryPathMap : MutableMap<String, DirectoryInfo> = HashMap()
@@ -29,7 +31,7 @@ class FolderResultsParser
                 val path = cursor.getString(index)
                 addToDirectoryMap(path, directoryPathMap)
             } else {
-                Log.e(logTag(), "create() could not find column index")
+                Log.e(LOG_TAG, "create() could not find column index")
             }
         }
 
@@ -77,12 +79,6 @@ class FolderResultsParser
         return ComparatorUtils.Companion.caseSensitiveStringCompare.compare(getDirectoryPath(m1), getDirectoryPath(m2))
     }
 
-    /**
-     * @return the name of the log tag given to the class
-     */
-    override fun logTag(): String {
-        return "FolderResultsParser"
-    }
 
     /**
      * Used to store the Directory Information along with the number of files in the directory,

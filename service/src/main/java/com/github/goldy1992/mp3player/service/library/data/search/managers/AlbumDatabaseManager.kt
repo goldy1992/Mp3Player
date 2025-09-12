@@ -29,7 +29,4 @@ class AlbumDatabaseManager
         return entry.id
     }
 
-    override fun logTag(): String {
-        return "AlbumDatabaseManager"
-    }
 }

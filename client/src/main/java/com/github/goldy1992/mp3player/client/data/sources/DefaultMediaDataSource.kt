@@ -14,7 +14,6 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.eventholder
 import com.github.goldy1992.mp3player.client.data.repositories.media.eventholders.SessionCommandEventHolder
 import com.github.goldy1992.mp3player.client.media.IMediaBrowser
 import com.github.goldy1992.mp3player.commons.AudioSample
-import com.github.goldy1992.mp3player.commons.LogTagger
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +29,11 @@ class DefaultMediaDataSource
         private val mediaBrowser : IMediaBrowser,
 
     )
-    : MediaDataSource, LogTagger {
+    : MediaDataSource {
 
+    companion object {
+        const val LOG_TAG = "DefaultMediaDataSource"
+    }
     override fun audioData(): Flow<AudioSample> {
         return mediaBrowser.audioData()
     }
@@ -148,7 +150,7 @@ class DefaultMediaDataSource
         this._currentSearchQuery.value = query
 
         if (isEmpty(query)) {
-            Log.w(logTag(), "search() called with NULL or empty query")
+            Log.w(LOG_TAG, "search() called with NULL or empty query")
         }
         else {
             mediaBrowser.search(query, extras)
@@ -184,7 +186,4 @@ class DefaultMediaDataSource
         mediaBrowser.subscribe(id)
     }
 
-    override fun logTag(): String {
-        return "DefaultMediaDataStore"
-    }
 }

@@ -22,7 +22,7 @@ import com.github.goldy1992.mp3player.client.ui.components.navigation.items.Revi
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SearchNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.SettingsNavigationItem
 import com.github.goldy1992.mp3player.client.ui.components.navigation.items.VisualizerNavigationIcon
-import com.github.goldy1992.mp3player.commons.Screen
+import com.github.goldy1992.mp3player.client.Screen
 
 
 @Preview

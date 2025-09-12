@@ -1,7 +1,9 @@
 package com.github.goldy1992.mp3player.commons
 
+import androidx.annotation.Keep
 import java.util.EnumSet
 
+@Keep
 enum class MediaItemType(
         val rank: Int) {
 

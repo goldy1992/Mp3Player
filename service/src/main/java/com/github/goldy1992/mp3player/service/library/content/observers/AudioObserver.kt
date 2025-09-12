@@ -7,7 +7,6 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.session.MediaLibraryService.LibraryParams
 import com.github.goldy1992.mp3player.commons.IoDispatcher
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.MediaItemType
 import com.github.goldy1992.mp3player.commons.MediaItemUtils.getDirectoryPath
 import com.github.goldy1992.mp3player.service.library.ContentManager
@@ -43,7 +42,7 @@ constructor(
     private val contentManager: ContentManager,
     private val searchDatabaseManagers: SearchDatabaseManagers,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds), LogTagger {
+    mediaItemTypeIds: MediaItemTypeIds) : MediaStoreObserver(contentResolver, mediaItemTypeIds) {
 
     /** {@inheritDoc}  */
     override fun onChange(selfChange: Boolean) {
@@ -66,7 +65,7 @@ constructor(
      * @param userId not used
      */
     override fun onChange(selfChange: Boolean, uri: Uri?, userId: Int) {
-        Log.v(logTag(), "onChange() invoked with uri: ${uri?.path ?: "null"}")
+        Log.v(LOG_TAG, "onChange() invoked with uri: ${uri?.path ?: "null"}")
         if (startsWithUri(uri)) {
                 runBlocking(ioDispatcher) {
                     updateSearchDatabase(uri)
@@ -84,15 +83,15 @@ constructor(
         try {
             id = ContentUris.parseId(uri!!)
         } catch (ex: Exception) {
-            Log.e(logTag(), ExceptionUtils.getStackTrace(ex))
+            Log.e(LOG_TAG, ExceptionUtils.getStackTrace(ex))
         }
         // If we know the id then just get that id
         if (INVALID_ID != id) {
             val result = contentManager.getContentById(id.toString())
-            Log.v(logTag(), "updateSearchDatabase() UPDATING songs and folders index")
+            Log.v(LOG_TAG, "updateSearchDatabase() UPDATING songs and folders index")
             searchDatabaseManagers.getSongDatabaseManager().insert(result)
             searchDatabaseManagers.getFolderDatabaseManager().insert(result)
-            Log.v(logTag(), "updateSearchDatabase() UPDATED songs and folders")
+            Log.v(LOG_TAG, "updateSearchDatabase() UPDATED songs and folders")
             val directoryPath = getDirectoryPath(result)
             if (StringUtils.isNotEmpty(directoryPath)) {
                 mediaSession!!.notifyChildrenChanged(directoryPath, 1, LibraryParams.Builder().build())
@@ -103,14 +102,12 @@ constructor(
         }
     }
 
-    override fun logTag(): String {
-        return "AudioObserver"
-    }
 
     override val uri: Uri
         get() = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 
     companion object {
+        const val LOG_TAG = "AudioObserver"
         private const val INVALID_ID: Long = -1
     }
 

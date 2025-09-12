@@ -8,7 +8,7 @@ import com.github.goldy1992.mp3player.client.data.repositories.media.eventholder
 import com.github.goldy1992.mp3player.commons.ActivityCoroutineScope
 import com.github.goldy1992.mp3player.commons.LoggingUtils
 import com.github.goldy1992.mp3player.commons.MainDispatcher
-import com.github.goldy1992.mp3player.commons.TimerUtils
+import com.github.goldy1992.mp3player.client.utils.TimerUtils
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +28,7 @@ class PlaybackPositionFlow
 
 
     companion object {
+        const val LOG_TAG = "PlaybackPositionFlow"
         fun create(
             @ActivityCoroutineScope scope : CoroutineScope,
             controllerFuture : ListenableFuture<Player>,
@@ -58,12 +59,12 @@ class PlaybackPositionFlow
             }
             val messageListener = object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
-                    Log.v(logTag(), "onEvents() invoked.")
+                    Log.v(LOG_TAG, "onEvents() invoked.")
                     if (events.containsAny(*playbackPositionEvents)) {
                         val currentPosition = player.currentPosition
                         val isPlaying = player.isPlaying
                         Log.d(
-                            logTag(),
+                            LOG_TAG,
                             "onEvents() playbackPosition changed due to ${
                                 LoggingUtils.getPlayerEventsLogMessage(events)
                             } with position $currentPosition, isPlaying: $isPlaying"
@@ -98,8 +99,5 @@ class PlaybackPositionFlow
             }
     }
 
-    override fun logTag(): String {
-        return "PlaybackPositionFlow"
-    }
 }
 

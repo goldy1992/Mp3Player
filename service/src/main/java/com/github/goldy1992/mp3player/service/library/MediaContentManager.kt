@@ -36,6 +36,9 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                                               @ServiceCoroutineScope scope : CoroutineScope,
 ) : ContentManager {
 
+    companion object {
+        const val LOG_TAG = "MediaContentManager"
+    }
     private val rootNode = MediaItemNode(rootAuthenticator.getRootItem())
     private val nodeMap : MutableMap<String, MediaItemNode> = mutableMapOf()
 
@@ -53,7 +56,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
 
         scope.launch {
             permissionRepository.permissionsFlow().collect {
-                Log.v(logTag(), "  permissionRepository.permissionsFlow().collect invoked")
+                Log.v(LOG_TAG, "  permissionRepository.permissionsFlow().collect invoked")
                 if (permissionRepository.hasStorageReadPermissions()) {
                     onPermissionsGranted()
                 }
@@ -73,14 +76,14 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
      * @return all the children of the id specified by the parentId parameter
      */
     override suspend fun getChildren(parentId: String): ContentManagerResult {
-        Log.v(logTag(), "getChildren() invoked with parentId $parentId")
+        Log.v(LOG_TAG, "getChildren() invoked with parentId $parentId")
         val parentNode: MediaItemNode? = nodeMap[parentId]
         val children = parentNode?.getChildren()?.map(MediaItemNode::item) ?: emptyList()
 
         val toReturn = ContentManagerResult( children,
             children.size,
             permissionRepository.hasStorageReadPermissions())
-        Log.d(logTag(), "getChildren() parentId: ${parentId}, children count: ${toReturn.children.size}, hasPermissions: ${toReturn.hasPermissions}")
+        Log.d(LOG_TAG, "getChildren() parentId: ${parentId}, children count: ${toReturn.children.size}, hasPermissions: ${toReturn.hasPermissions}")
         return toReturn
     }
 
@@ -124,19 +127,16 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
         return results
     }
 
-    override fun logTag(): String {
-        return "MediaContentManager"
-    }
 
     private fun onPermissionsGranted() {
-        Log.v(logTag(),"onPermissionsGranted() invoked")
+        Log.v(LOG_TAG,"onPermissionsGranted() invoked")
         if (!_isInitialised.value) {
-            Log.d(logTag(), "onPermissionsGranted() Not yet initialised, building tree")
+            Log.d(LOG_TAG, "onPermissionsGranted() Not yet initialised, building tree")
             for (rootChild in rootNode.getChildren()) {
-                Log.v(logTag(), "onPermissionsGranted() building node: ${rootChild.mediaItemType}")
+                Log.v(LOG_TAG, "onPermissionsGranted() building node: ${rootChild.mediaItemType}")
                 build(rootChild)
             }
-            Log.v(logTag(), "onPermissionsGranted() built tree")
+            Log.v(LOG_TAG, "onPermissionsGranted() built tree")
             _isInitialised.value = true
         }
     }
@@ -178,7 +178,7 @@ class MediaContentManager @Inject constructor(private val permissionRepository: 
                     build(childNode)
                 }
             }
-            Log.d(logTag(), "build() calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
+            Log.d(LOG_TAG, "build() calling notifyChildrenChange(parentId:${node.id}, itemCount: ${node.numberOfChildren()}")
             val extras = Bundle()
             extras.putBoolean(HAS_PERMISSIONS, true)
             mediaSession?.notifyChildrenChanged(node.id, node.numberOfChildren(), LibraryParams.Builder()

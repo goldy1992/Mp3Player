@@ -1,6 +1,6 @@
 package com.github.goldy1992.mp3player.client.repositories.permissions
 
-import com.github.goldy1992.mp3player.commons.data.repositories.permissions.IPermissionsRepository
+import com.github.goldy1992.mp3player.client.data.repositories.permissions.IPermissionsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

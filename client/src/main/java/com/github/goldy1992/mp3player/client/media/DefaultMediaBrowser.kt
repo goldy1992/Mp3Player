@@ -47,7 +47,6 @@ import com.github.goldy1992.mp3player.commons.Constants.CHANGE_PLAYBACK_SPEED
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME
 import com.github.goldy1992.mp3player.commons.Constants.PACKAGE_NAME_KEY
 import com.github.goldy1992.mp3player.commons.Constants.PLAYLIST_ID
-import com.github.goldy1992.mp3player.commons.LogTagger
 import com.github.goldy1992.mp3player.commons.LoggingUtils
 import com.github.goldy1992.mp3player.commons.MainDispatcher
 import com.google.common.collect.ImmutableList
@@ -71,20 +70,20 @@ import androidx.annotation.OptIn as AndroidXOptIn
 /**
  * Default implementation of the [IMediaBrowser].
  */
-class DefaultMediaBrowser
-
-    constructor(
+class DefaultMediaBrowser(
         @ApplicationContext private val context: Context,
         @MainDispatcher private val mainDispatcher : CoroutineDispatcher
-    ) : IMediaBrowser, MediaBrowser.Listener, LogTagger {
-
+    ) : IMediaBrowser, MediaBrowser.Listener {
+    companion object {
+        const val LOG_TAG = "DefaultMediaBrowser"
+    }
     private lateinit var scope : CoroutineScope
     private val _mediaBrowserLFMutableStateFlow: MutableStateFlow<ListenableFuture<MediaBrowser>?> =
         MutableStateFlow(null)
 
     @Suppress("UNCHECKED_CAST")
     override fun init(sessionToken: SessionToken, scope : CoroutineScope) {
-        Log.v(logTag(), "init() invoked")
+        Log.v(LOG_TAG, "init() invoked")
         this.scope = scope
         _mediaBrowserLFMutableStateFlow.value = MediaBrowser
             .Builder(context, sessionToken)
@@ -92,10 +91,10 @@ class DefaultMediaBrowser
             .buildAsync()
 
         scope.launch {
-            Log.d(logTag(), "scope.launch")
+            Log.d(LOG_TAG, "scope.launch")
             _mediaBrowserLFMutableStateFlow.filterNotNull().collect {
                 it as ListenableFuture<Player>
-                Log.d(logTag(), "collecting from mediaBrowserLFSF")
+                Log.d(LOG_TAG, "collecting from mediaBrowserLFSF")
                 AudioDataFlow.create(scope, _customCommandMutableStateFlow) { a : AudioSample ->_audioDataMutableStateFlow.value = a }
                 PlayerEventsFlow.create(scope, it, mainDispatcher) { v -> _playerEventMSF.emit(v) }
                 CurrentMediaItemFlow.create(scope, it, mainDispatcher) {v -> _currentMediaItemFlowMutableStateFlow.value = v}
@@ -109,7 +108,7 @@ class DefaultMediaBrowser
                 QueueFlow.create(it, mainDispatcher, scope) { v -> _queueMutableStateFlow.value = v}
                 RepeatModeFlow.create(scope, it, mainDispatcher) { v -> _repeatModeMutableStateFlow.value = v}
                 ShuffleModeFlow.create(scope, it, mainDispatcher) { v -> _shuffleModeMutableStateFlow.value = v}
-                Log.d(logTag(), "finished mediaBrowserLFSF.collect")
+                Log.d(LOG_TAG, "finished mediaBrowserLFSF.collect")
             }
         }
     }
@@ -237,9 +236,9 @@ class DefaultMediaBrowser
         page: Int,
         pageSize: Int
     ): List<MediaItem> {
-        Log.v(logTag(), "getSearchResults() invoked with query: $query, page: $page, pageSize: $pageSize")
+        Log.v(LOG_TAG, "getSearchResults() invoked with query: $query, page: $page, pageSize: $pageSize")
         if (isEmpty(query)) {
-            Log.w(logTag(), "getSearchResults() called with empty query")
+            Log.w(LOG_TAG, "getSearchResults() called with empty query")
             return listOf()
         }
         val result : LibraryResult<ImmutableList<MediaItem>> =
@@ -254,11 +253,11 @@ class DefaultMediaBrowser
     }
 
     override suspend fun play() {
-        Log.v(logTag(), "play() invoked, awaiting mediaBrowser")
+        Log.v(LOG_TAG, "play() invoked, awaiting mediaBrowser")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
-        Log.d(logTag(), "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}, playbackState: ${LoggingUtils.logPlaybackState(mediaBrowser?.playbackState ?: 0, logTag())}")
+        Log.d(LOG_TAG, "play() mediaBrowser retrieved, isConnected: ${mediaBrowser?.isConnected}, playbackState: ${LoggingUtils.logPlaybackState(mediaBrowser?.playbackState ?: 0, LOG_TAG)}")
         mediaBrowser?.play()
-        Log.v(logTag(), "play() invocation complete")
+        Log.v(LOG_TAG, "play() invocation complete")
     }
 
     override suspend fun play(mediaItem: MediaItem) {
@@ -270,21 +269,21 @@ class DefaultMediaBrowser
     }
 
     override suspend fun playFromPlaylist(items: List<MediaItem>, itemIndex: Int, playlistId: String) {
-        Log.v(logTag(), "playFromPlaylist() invoked with MediaMetadata: $playlistId")
+        Log.v(LOG_TAG, "playFromPlaylist() invoked with MediaMetadata: $playlistId")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
         mediaBrowser?.setMediaItems(items, itemIndex, 0L)
 
-        Log.d(logTag(), "playFromPlaylist() setting playlist metadata to ${playlistId}")
+        Log.d(LOG_TAG, "playFromPlaylist() setting playlist metadata to ${playlistId}")
         mediaBrowser?.play()
         val extras = Bundle()
         extras.putString(PLAYLIST_ID, playlistId)
         mediaBrowser?.playlistMetadata = MediaMetadata.Builder().setExtras(extras).build()
 
-        Log.v(logTag(), "playFromPlaylist() invocation complete")
+        Log.v(LOG_TAG, "playFromPlaylist() invocation complete")
     }
 
     override suspend fun playFromPlaylist(playlistId: String, itemIndex: Int) {
-        Log.v(logTag(), "playFromPlaylist() invoked with id $playlistId")
+        Log.v(LOG_TAG, "playFromPlaylist() invoked with id $playlistId")
         val mediaBrowser = _mediaBrowserLFMutableStateFlow.value?.await()
        mediaBrowser?.getItem(playlistId)
     }
@@ -322,7 +321,7 @@ class DefaultMediaBrowser
     }
 
     override suspend fun setShuffleMode(shuffleModeEnabled: Boolean) {
-        Log.v(logTag(), "setShuffleMode() invoked with value: $shuffleModeEnabled")
+        Log.v(LOG_TAG, "setShuffleMode() invoked with value: $shuffleModeEnabled")
         _mediaBrowserLFMutableStateFlow.value?.await()?.shuffleModeEnabled = shuffleModeEnabled
     }
 
@@ -335,20 +334,20 @@ class DefaultMediaBrowser
     }
 
     override suspend fun stop() {
-        Log.d(logTag(), "stop inoked")
+        Log.d(LOG_TAG, "stop inoked")
         _mediaBrowserLFMutableStateFlow.value?.await()?.stop()
     }
 
     override suspend fun subscribe(id: String) {
-        Log.v(logTag(), "subscribe() invoked with id: $id")
+        Log.v(LOG_TAG, "subscribe() invoked with id: $id")
         _mediaBrowserLFMutableStateFlow.value?.await()?.subscribe(id, LibraryParams.Builder().build())
     }
 
     override fun release() {
-        Log.v(logTag(), "release() invoked, releasing MediaBrowser future")
+        Log.v(LOG_TAG, "release() invoked, releasing MediaBrowser future")
         if (_mediaBrowserLFMutableStateFlow.value != null)
             MediaBrowser.releaseFuture(_mediaBrowserLFMutableStateFlow.value!!)
-        Log.v(logTag(), "release() finished releasing MediaBrowser future")
+        Log.v(LOG_TAG, "release() finished releasing MediaBrowser future")
     }
 
     // The set of all listeners which are made by the Callback Flows
@@ -363,7 +362,7 @@ class DefaultMediaBrowser
         @IntRange(from = 0.toLong()) itemCount: Int,
         params: LibraryParams?
     ) {
-        Log.i(logTag(), "onChildrenChanged() invoked with parent: $parentId, itemCount: $itemCount, params $params")
+        Log.i(LOG_TAG, "onChildrenChanged() invoked with parent: $parentId, itemCount: $itemCount, params $params")
         listeners.forEach { listener -> listener.onChildrenChanged(browser, parentId, itemCount, params) }
     }
 
@@ -378,7 +377,7 @@ class DefaultMediaBrowser
     }
 
     override fun onDisconnected(controller: MediaController) {
-        Log.d(logTag(), "OnDisconnected invoked")
+        Log.d(LOG_TAG, "OnDisconnected invoked")
         listeners.forEach { listener -> listener.onDisconnected(controller) }
     }
 
@@ -406,10 +405,6 @@ class DefaultMediaBrowser
     override fun onExtrasChanged(controller: MediaController, extras: Bundle) {
         listeners.forEach { listener -> listener.onExtrasChanged(controller, extras) }
 
-    }
-
-    override fun logTag(): String {
-        return "DefaultMediaBrowser2"
     }
 
 }
