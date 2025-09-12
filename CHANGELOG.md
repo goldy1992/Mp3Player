@@ -1,3 +1,10 @@
+## [3.7.4](https://github.com/goldy1992/Mp3Player/compare/v3.7.3...v3.7.4) (2025-09-12)
+
+
+### Bug Fixes
+
+* **r8:** Fixed the production runtime errors caused by r8 minimization ([258bc4c](https://github.com/goldy1992/Mp3Player/commit/258bc4c5651082a15f9550d1a4eb2c98df2f78ff))
+
 ## [3.7.3](https://github.com/goldy1992/Mp3Player/compare/v3.7.2...v3.7.3) (2025-09-07)
 
 
