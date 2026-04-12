@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.library.jacoco")
@@ -80,7 +79,7 @@ android {
                     "-opt-in=coil.annotation.ExperimentalCoilApi",
                     "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "-opt-in=kotlin.RequiresOptIn",
-                    "-Xcontext-receivers"
+                    "-Xcontext-parameters"
                 )
             )
         }

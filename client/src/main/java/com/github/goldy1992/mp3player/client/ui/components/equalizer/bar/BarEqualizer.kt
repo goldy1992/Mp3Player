@@ -109,7 +109,7 @@ private fun SharedTransitionScope.BarEqualizerCanvas(
             .sharedBounds(
                 rememberSharedContentState(VisualizerType.BAR),
                 animatedVisibilityScope = animatedVisibilityScope,
-                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
             )
             .fillMaxSize()
 

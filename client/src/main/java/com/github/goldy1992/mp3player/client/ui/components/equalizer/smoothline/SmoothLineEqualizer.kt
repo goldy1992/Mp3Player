@@ -102,7 +102,7 @@ fun SharedTransitionScope.SmoothLineEqualizer(
         .sharedBounds(
             rememberSharedContentState(VisualizerType.LINE),
             animatedVisibilityScope = animatedVisibilityScope,
-            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+            resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds()
         )
         .fillMaxSize()
 

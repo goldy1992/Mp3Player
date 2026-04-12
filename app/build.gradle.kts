@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     id("mp3player.android.application.variant_filter")
@@ -50,12 +49,15 @@ android {
             keyPassword = providers.gradleProperty("full_release_keyPassword").get()
         }
     }
-
+    buildFeatures {
+        resValues = true
+    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
+            ndk.debugSymbolLevel = "FULL"
         }
         getByName("debug") {
             isDefault = true
