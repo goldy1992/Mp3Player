@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     id("mp3player.android.room")
     id("mp3player.android.library.jacoco")
@@ -33,7 +32,7 @@ android {
             jvmTarget.set(JvmTarget.JVM_21)
             freeCompilerArgs.addAll(
                 listOf(
-                    "-Xcontext-receivers",
+                    "-Xcontext-parameters",
                     "-opt-in=androidx.media3.common.util.UnstableApi"
                 )
             )

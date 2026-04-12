@@ -14,7 +14,6 @@ import org.gradle.kotlin.dsl.withType
 class AndroidTestConvention() : Plugin<Project> {
     override fun apply(target: Project) {
             with(target) {
-                apply(plugin = "org.jetbrains.kotlin.android")
                 val mockitoAgentDeclare by configurations.creating
                 mockitoAgentDeclare.isCanBeDeclared = true
                 mockitoAgentDeclare.isCanBeResolved= true
