@@ -16,12 +16,12 @@ class AndroidLibraryBuildConfigConventionPlugin : Plugin<Project> {
             // For Android 36, target JVM 21
             extensions.getByType<JavaPluginExtension>().apply {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(21))
+                    languageVersion.set(JavaLanguageVersion.of(25))
                 }
             }
 
             extensions.getByType<KotlinAndroidProjectExtension>().apply {
-                compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+                compilerOptions.jvmTarget.set(JvmTarget.JVM_25)
             }
 
             configureBuildConfig(extension)

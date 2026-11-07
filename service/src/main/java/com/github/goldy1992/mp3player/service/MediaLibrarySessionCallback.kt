@@ -46,22 +46,25 @@ class MediaLibrarySessionCallback
         controller: MediaSession.ControllerInfo
     ): ConnectionResult {
         Log.v(LOG_TAG, "onConnect() invoked with mediaSession ${session.player} and controller ${controller.uid}")
-        val connectionResult = super.onConnect(session, controller)
+        val baseConnectionResult = ConnectionResult.AcceptedResultBuilder(session, controller).build()
         // add change playback speed command to list of available commands
         val changePlaybackSpeed = SessionCommand(CHANGE_PLAYBACK_SPEED, Bundle())
         val audioDataCommand = SessionCommand(AUDIO_DATA, Bundle())
-        val updatedSessionCommands = connectionResult
+        val updatedSessionCommands = baseConnectionResult
             .availableSessionCommands
             .buildUpon()
             .add(changePlaybackSpeed)
             .add(audioDataCommand)
             .build()
-        val updatedPlayerCommands = connectionResult
+        val updatedPlayerCommands = baseConnectionResult
             .availablePlayerCommands
             .buildUpon()
             .add(Player.COMMAND_SET_PLAYLIST_METADATA)
             .build()
-        return ConnectionResult.accept(updatedSessionCommands,updatedPlayerCommands)
+        return ConnectionResult.AcceptedResultBuilder(session, controller)
+            .setAvailableSessionCommands(updatedSessionCommands)
+            .setAvailablePlayerCommands(updatedPlayerCommands)
+            .build()
     }
 
     override fun onPostConnect(session: MediaSession, controller: MediaSession.ControllerInfo) {

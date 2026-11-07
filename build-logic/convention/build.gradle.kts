@@ -10,12 +10,12 @@ group = "com.github.goldy1992.mp3player.buildlogic"
 // Configure the build-logic plugins to target JDK 21
 // This matches the JDK used to build the project, and is not related to what is running on device.
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions{
-        jvmTarget.set(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_25)
     }
 }
 

@@ -12,7 +12,7 @@ class JavaToolchainsConventionPlugin : Plugin<Project> {
         target.extensions["Java"]
         val javaExtension = target.extensions.getByType<JavaPluginExtension>()
         javaExtension.toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
+            languageVersion.set(JavaLanguageVersion.of(25))
         }
     }
 
